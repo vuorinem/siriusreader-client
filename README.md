@@ -1,4 +1,4 @@
-# `siriusreader`
+# `draconisreader`
 
 This project is bootstrapped by [aurelia-cli](https://github.com/aurelia/cli).
 
