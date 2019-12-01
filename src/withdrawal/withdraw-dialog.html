@@ -23,6 +23,9 @@
           disabled.bind="http.isRequesting">
           Confirm withdrawal
         </button>
+        <p class="text-danger" show.bind="hasError">
+          Error in withdrawal, please contact the experimenter. 
+        </p>
       </div>
     </ux-dialog-body>
 

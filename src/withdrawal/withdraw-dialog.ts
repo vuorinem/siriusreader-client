@@ -8,6 +8,7 @@ import { IWithdrawalDetails } from './i-withdrawal-details';
 export class WithdrawDialog implements DialogComponentActivate<undefined> {
 
     private withdrawal?: IWithdrawalDetails;
+    private hasError: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -28,9 +29,13 @@ export class WithdrawDialog implements DialogComponentActivate<undefined> {
             return;
         }
 
-        await this.withdrawService.postWithdrawal(this.withdrawal);
+        const isWithdrawn = await this.withdrawService.postWithdrawal(this.withdrawal);
 
-        this.dialogController.ok();
+        if (isWithdrawn) {
+            this.dialogController.ok();
+        } else {
+            this.hasError = true;
+        }
     }
 
 }
