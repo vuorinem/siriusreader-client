@@ -16,7 +16,6 @@ export class UserService {
             !!this.userDetails.readingSpeedWordsPerMinute;
     }
 
-    @computedFrom('userDetails')
     public get isDeadlinePassed(): boolean {
         if (!this.userDetails) {
             return false;
@@ -36,7 +35,6 @@ export class UserService {
         private eventAggregator: EventAggregator,
         private http: HttpClient) {
 
-        eventAggregator.subscribe(EventLogin, () => this.load());
         eventAggregator.subscribe(EventLogout, () => this.clear());
     }
 

@@ -7,6 +7,7 @@ import 'styles/app.scss';
 export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
+    .plugin(PLATFORM.moduleName("aurelia-animator-css"))
     .plugin(PLATFORM.moduleName('aurelia-dialog'));
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');

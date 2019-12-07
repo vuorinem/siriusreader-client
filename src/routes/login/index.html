@@ -1,0 +1,20 @@
+<template>
+  <div class="container">
+    <div class="row justify-content-center">
+      <p class="text-center">
+        <img src="/sirius-reader-logo.png" alt="Sirius Reader" />
+      </p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-5">
+        <ul class="nav nav-tabs nav-fill">
+          <li class="nav-item" repeat.for="nav of router.navigation">
+            <a class="nav-link ${ nav.isActive ? 'active' : '' }" href.bind="nav.href">${ nav.title }</a>
+          </li>
+        </ul>
+
+        <router-view></router-view>
+      </div>
+    </div>
+  </div>
+</template>

@@ -2,7 +2,7 @@
   <header class="${ isOpen ? 'menu-open' : 'menu-closed' }">
     <div class="container">
       <div class="d-flex justify-content-end">
-        <nav>
+        <nav show.bind="authService.isAuthenticated">
           <div class="dropdown">
             <button href="#" class="btn btn-sm btn-dark" click.delegate="isOpen = !isOpen">
               <span hide.bind="isOpen" class="oi oi-menu"></span>
@@ -15,7 +15,7 @@
               <a class="dropdown-item text-danger" href="#" click.delegate="withdraw()">
                 <span class="oi oi-ban"></span> Withdraw
               </a>
-              <a class="dropdown-item" href="#" click.delegate="logout()">
+              <a class="dropdown-item" route-href="logout">
                 <span class="oi oi-account-logout"></span> Logout
               </a>
             </div>

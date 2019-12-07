@@ -21,7 +21,6 @@
     "moduleResolution": "node",
     "baseUrl": "src",
     "resolveJsonModule": true,
-    "allowJs": true,
     "importHelpers": true
   },
   "include": [
@@ -31,8 +30,5 @@
   ],
   "exclude": [
     "./test/e2e/**/*.ts"
-  ],
-  "atom": {
-    "rewriteTsconfig": false
-  }
+  ]
 }
