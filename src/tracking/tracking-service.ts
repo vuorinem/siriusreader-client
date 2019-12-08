@@ -47,6 +47,8 @@ export class TrackingService {
             windowHeight: window.innerHeight,
             isMenuOpen: this.applicationState.isMenuOpen,
             isDialogOpen: this.dialogService.hasOpenDialog,
+            isBlurred: !this.applicationState.isFocused,
+            isInactive: !this.applicationState.isActive,
         });
     }
 

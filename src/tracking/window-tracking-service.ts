@@ -1,17 +1,16 @@
+import { ApplicationState } from './../state/application-state';
 import { autoinject, TaskQueue } from 'aurelia-framework';
 import { TrackingService } from './tracking-service';
 
 @autoinject
 export class WindowTrackingService {
-
-    public isFocused: boolean = true;
-
     private onFocus: () => void = () => this.handleFocus(true);
     private onBlur: () => void = () => this.handleFocus(false);
     private onBeforeUnload: () => void = async () => await this.triggerEvent('close');
     
     constructor(
         private taskQueue: TaskQueue,
+        private applicationState: ApplicationState,
         private trackingService: TrackingService) {
         this.attach();
     }
@@ -29,12 +28,11 @@ export class WindowTrackingService {
     }
 
     private handleFocus(isFocused: boolean) {
-        this.triggerEvent(isFocused ? 'focus' : 'blur');
-
         // Set isFocused only after handling task queue so that initial click handlers
         // see the non-focused state
         this.taskQueue.queueTask(() => {
-            this.isFocused = isFocused;
+            this.applicationState.isFocused = isFocused;
+            this.triggerEvent(isFocused ? 'focus' : 'blur');
         });
     }
 

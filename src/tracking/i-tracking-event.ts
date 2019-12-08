@@ -10,4 +10,6 @@ export interface ITrackingEvent {
     windowHeight: number;
     isMenuOpen: boolean;
     isDialogOpen: boolean;
+    isBlurred: boolean;
+    isInactive: boolean;
 }

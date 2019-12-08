@@ -10,7 +10,7 @@
     <div class="book-overlay d-flex align-items-center justify-content-center" show.bind="isContentHidden"
       click.delegate="overlayClick()">
       <p class="inactive-message">
-        <span show.bind="isInactive || !windowTrackingService.isFocused">- Click to activate the reader -</span>
+        <span show.bind="isInitialized && (!applicationState.isActive || !applicationState.isFocused)">- Click to activate the reader -</span>
         <span show.bind="!isInitialized">Loading, please wait...</span>
       </p>
     </div>

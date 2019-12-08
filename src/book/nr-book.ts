@@ -50,21 +50,20 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     private canTriggerPageTurn: boolean = false;
     private browseStyle: BrowseStyle = 'turn';
     private isInitialized: boolean = false;
-    private isInactive: boolean = false;
 
     private touchStartX: number | null = null;
     private touchEndX: number | null = null;
     private touchStartY: number | null = null;
     private touchStartTime: Date | null = null;
 
-    @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'windowTrackingService.isFocused',
-      'isInactive', 'dialogService.hasOpenDialog')
+    @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'applicationState.isFocused',
+      'applicationState.isActive', 'dialogService.hasOpenDialog')
     private get isContentHidden(): boolean {
-        return this.applicationState.isMenuOpen ||
-            this.isInactive ||
-            this.dialogService.hasOpenDialog ||
-            !this.windowTrackingService.isFocused ||
-            !this.isInitialized;
+        return this.dialogService.hasOpenDialog ||
+          this.applicationState.isMenuOpen ||
+          !this.applicationState.isActive ||
+          !this.applicationState.isFocused ||
+          !this.isInitialized;
     }
 
     @computedFrom('readingState.startLocation', 'totalCharacters')
@@ -90,7 +89,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         private bookService: BookService,
         private readingState: ReadingState,
         private readingService: ReadingService,
-        private windowTrackingService: WindowTrackingService,
         private trackingService: TrackingService,
         private highlighter: Highlighter,
         private domUtility: DomUtility) {
@@ -565,7 +563,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     private setInativeTimeout() {
-        this.isInactive = false;
+        this.applicationState.isActive = true;
 
         this.timeoutService.debounce('inactive', InactiveTimeoutInMinutes * 60 * 1000, async () => {
             if (this.isContentHidden) {
@@ -574,7 +572,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
             await this.trackingService.event('inactiveTimeout');
 
-            this.isInactive = true;
+            this.applicationState.isActive = false;
         });
     }
 
