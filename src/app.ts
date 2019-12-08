@@ -67,8 +67,18 @@ export class App implements ConfiguresRouter {
         settings: {
           auth: true,
         },
-      }
+      },
+      {
+        name: "not-found",
+        route: "not-found",
+        moduleId: PLATFORM.moduleName("./routes/not-found"),
+        settings: {
+          auth: true,
+        },
+      },
     ]);
+
+    config.mapUnknownRoutes(PLATFORM.moduleName("./routes/not-found"));
   }
 
   private getAuthorizeStep(): PipelineStep {
@@ -77,7 +87,8 @@ export class App implements ConfiguresRouter {
 
     return {
       run: async (instruction, next) => {
-        const requiresAuth = instruction.getAllInstructions().some(i => i.config.settings.auth);
+        const requiresAuth = instruction.getAllInstructions()
+          .some(i => i.config.settings && i.config.settings.auth);
 
         if (requiresAuth) {
           if (!authService.isAuthenticated) {
@@ -100,7 +111,7 @@ export class App implements ConfiguresRouter {
     return {
       run: async (instruction, next) => {
         applicationState.isMenuOpen = false;
-        
+
         return next();
       }
     }

@@ -19,7 +19,12 @@ export class Introduction {
         name: 'reading-speed',
         route: 'reading-speed',
         moduleId: PLATFORM.moduleName("./reading-speed"),
-      }
+      },
+      {
+        name: 'books',
+        route: 'books',
+        moduleId: PLATFORM.moduleName("./books"),
+      },
     ]);
   }
 }

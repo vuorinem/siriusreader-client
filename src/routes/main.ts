@@ -4,6 +4,8 @@ import { autoinject } from 'aurelia-framework';
 
 @autoinject
 export class Main {
+  private canRead: boolean = false;
+
   constructor(
     private router: Router,
     private userService: UserService) {
@@ -17,11 +19,13 @@ export class Main {
     } else if (!this.userService.isReadingSpeedTested) {
       this.router.navigate("/introduction/reading-speed");
     } else if (!this.userService.user.isBookSelected){
-      this.router.navigate("/books");
+      this.router.navigate("/introduction/books");
     } else if (this.userService.isDeadlinePassed) {
       this.router.navigate("/finish");
     }
 
     // TODO: Questionnaire redirects
+
+    this.canRead = true;
   }
 }
