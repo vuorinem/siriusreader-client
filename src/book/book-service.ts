@@ -57,7 +57,7 @@ export class BookService {
         }
 
         const response = await this.http
-            .fetch(`/book/${this.book.bookId}/${sectionName}`);
+      .fetch(`/book/selected/${sectionName}`);
 
         const responseHtml = await response.text();
         const document = this.domParser.parseFromString(responseHtml, "text/html");
@@ -76,7 +76,7 @@ export class BookService {
         }
 
         const response = await this.http
-            .fetch(`/book/${this.book.bookId}/image/${imageUrl}`);
+      .fetch(`/book/selected/image/${imageUrl}`);
 
         return response.blob();
     }

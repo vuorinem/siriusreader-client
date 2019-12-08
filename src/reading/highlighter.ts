@@ -14,7 +14,6 @@ export class Highlighter {
     private highlights: IHighlight[] = [];
     private highlightedTexts: HighlightedText[] = [];
 
-    private bookId?: number;
     private onHighlightClick?: HighlightClickHandler;
 
     constructor(
@@ -23,10 +22,9 @@ export class Highlighter {
         private domUtility: DomUtility) {
     }
 
-    public async loadHighlights(bookId: number, onHighlightClick?: HighlightClickHandler) {
-        this.bookId = bookId;
+    public async loadHighlights(onHighlightClick?: HighlightClickHandler) {
         this.onHighlightClick = onHighlightClick;
-        this.highlights = await this.readingService.getHighlights(bookId);
+        this.highlights = await this.readingService.getHighlights();
         this.highlightedTexts = [];
     }
 
@@ -69,11 +67,7 @@ export class Highlighter {
     }
 
     public async saveHighlight(highlight: HighlightedText) {
-        if (!this.bookId) {
-            throw new Error("Book has not been loaded");
-        }
-
-        const savedHighlight = await this.readingService.setHighlight(this.bookId, highlight.highlight);
+        const savedHighlight = await this.readingService.setHighlight(highlight.highlight);
 
         highlight.setSaved(savedHighlight);
 
@@ -82,12 +76,8 @@ export class Highlighter {
     }
 
     public async removeHighlight(highlight: HighlightedText) {
-        if (!this.bookId) {
-            throw new Error("Book has not been loaded");
-        }
-
         if (highlight.isSaved) {
-            await this.readingService.deleteHighlight(this.bookId, highlight.highlight);
+            await this.readingService.deleteHighlight(highlight.highlight);
 
             this.highlights.splice(this.highlights.indexOf(highlight.highlight));
             this.highlightedTexts.splice(this.highlightedTexts.indexOf(highlight));
