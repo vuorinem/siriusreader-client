@@ -1,5 +1,5 @@
+import { ApplicationState } from './../state/application-state';
 import { HttpClient } from 'aurelia-fetch-client';
-import { UserService } from './../user/user-service';
 import { BookService } from './../book/book-service';
 import { AuthService } from '../auth/auth-service';
 import { autoinject } from 'aurelia-framework';
@@ -13,7 +13,7 @@ export class TrackingService {
     constructor(
         private authService: AuthService,
         private http: HttpClient,
-        private UserService: UserService,
+        private applicationState: ApplicationState,
         private bookService: BookService,
         private readingState: ReadingState) {
     }
@@ -28,10 +28,6 @@ export class TrackingService {
 
     private async eventInternal(type: string, visibleCharacterCount?: number, visibleWordCount?: number) {
         if (!this.authService.isAuthenticated) {
-            return;
-        }
-
-        if (!this.UserService.isReadingSpeedTested) {
             return;
         }
 
@@ -53,6 +49,7 @@ export class TrackingService {
                 visibleWordCount : this.readingState.wordCount,
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight,
+            // isMenuOpen: this.applicationState.isMenuOpen,
         });
     }
 

@@ -1,3 +1,4 @@
+import { ApplicationState } from './state/application-state';
 import { UserService } from './user/user-service';
 import { PLATFORM } from 'aurelia-pal';
 import { WindowTrackingService } from './tracking/window-tracking-service';
@@ -7,9 +8,8 @@ import { ConfiguresRouter, RouterConfiguration, Router, PipelineStep, Redirect }
 
 @autoinject
 export class App implements ConfiguresRouter {
-  private isMenuOpen: boolean = false;
-
   constructor(
+    private applicationState: ApplicationState,
     private authService: AuthService,
     private userService: UserService,
     private windowTrackingService: WindowTrackingService) {
@@ -19,7 +19,9 @@ export class App implements ConfiguresRouter {
     config.title = "Sirius Reader";
     config.options.pushState = true;
     config.options.root = '/';
+
     config.addAuthorizeStep(this.getAuthorizeStep());
+    config.addPreActivateStep(this.getCloseMenuStep());
 
     config.map([
       {
@@ -69,7 +71,7 @@ export class App implements ConfiguresRouter {
     ]);
   }
 
-  public getAuthorizeStep(): PipelineStep {
+  private getAuthorizeStep(): PipelineStep {
     const authService = this.authService;
     const userService = this.userService;
 
@@ -87,6 +89,18 @@ export class App implements ConfiguresRouter {
           }
         }
 
+        return next();
+      }
+    }
+  }
+
+  private getCloseMenuStep(): PipelineStep {
+    const applicationState = this.applicationState;
+
+    return {
+      run: async (instruction, next) => {
+        applicationState.isMenuOpen = false;
+        
         return next();
       }
     }

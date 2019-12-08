@@ -1,19 +1,24 @@
+import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
 import { DialogService } from 'aurelia-dialog';
 import { TrackingService } from './../tracking/tracking-service';
-import { autoinject, bindable, observable } from 'aurelia-framework';
+import { autoinject, computedFrom } from 'aurelia-framework';
 import { AuthService } from '../auth/auth-service';
 import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
 
 @autoinject
 export class NrMenu {
 
-  @observable private isOpen: boolean = false;
+  @computedFrom('applicationState.isMenuOpen')
+  private get isOpen() {
+    return this.applicationState.isMenuOpen;
+  }
 
   constructor(
     private router: Router,
     private dialogService: DialogService,
+    private applicationState: ApplicationState,
     private authService: AuthService,
     private trackingService: TrackingService) {
   }
@@ -25,7 +30,7 @@ export class NrMenu {
       lock: true,
     }).whenClosed();
 
-    this.isOpen = false;
+    this.applicationState.isMenuOpen = false;
   }
 
   private async withdraw() {
@@ -42,12 +47,10 @@ export class NrMenu {
     this.router.navigateToRoute("logout");
   }
 
-  private isOpenChanged(newValue?: boolean, oldValue?: boolean) {
-    if (oldValue === undefined) {
-      return;
-    }
+  private toggleMenu() {
+    this.applicationState.isMenuOpen = !this.applicationState.isMenuOpen;
 
-    if (this.isOpen) {
+    if (this.applicationState.isMenuOpen) {
       this.trackingService.event('openMenu');
     } else {
       this.trackingService.event('closeMenu');

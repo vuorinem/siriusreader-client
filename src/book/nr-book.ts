@@ -1,3 +1,4 @@
+import { ApplicationState } from './../state/application-state';
 import { HighlightedText } from '../reading/highlighted-text';
 import { Highlighter } from './../reading/highlighter';
 import { TimeoutService } from '../utility/timeout-service';
@@ -24,8 +25,6 @@ const InactiveTimeoutInMinutes = 5;
 
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
-    @bindable({ defaultBindingMode: bindingMode.twoWay }) private isMenuOpen!: boolean;
-
     private book?: IBookDetails;
     private sections: SectionModel[] = [];
 
@@ -58,9 +57,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     private touchStartY: number | null = null;
     private touchStartTime: Date | null = null;
 
-    @computedFrom("isMenuOpen", 'isInitialized', 'windowTrackingService.isFocused', 'isInactive', 'isDialogOpen')
+    @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'windowTrackingService.isFocused',
+      'isInactive', 'isDialogOpen')
     private get isContentHidden(): boolean {
-        return this.isMenuOpen ||
+        return this.applicationState.isMenuOpen ||
             this.isInactive ||
             this.isDialogOpen ||
             !this.windowTrackingService.isFocused ||
@@ -84,6 +84,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     constructor(
         private bindingEngine: BindingEngine,
         private taskQueue: TaskQueue,
+        private applicationState: ApplicationState,
         private timeoutService: TimeoutService,
         private bookService: BookService,
         private readingState: ReadingState,
@@ -100,8 +101,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         if (!this.book) {
             throw new Error('Book has not been selected');
         }
-
-        this.isMenuOpen = false;
 
         this.highlighter.loadHighlights(this.book.bookId, (event, highlight) => this.onHighlightClick(highlight));
 
@@ -400,7 +399,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     private overlayClick() {
         this.setInativeTimeout();
-        this.isMenuOpen = false;
+        this.applicationState.isMenuOpen = false;
     }
 
     private handleKeyDown(event: KeyboardEvent) {

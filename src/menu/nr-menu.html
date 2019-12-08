@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-end">
         <nav show.bind="authService.isAuthenticated">
           <div class="dropdown">
-            <button href="#" class="btn btn-sm btn-dark" click.delegate="isOpen = !isOpen">
+            <button href="#" class="btn btn-sm btn-dark" click.delegate="toggleMenu()">
               <span hide.bind="isOpen" class="oi oi-menu"></span>
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
