@@ -1,3 +1,4 @@
+import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
 import { HttpClient } from 'aurelia-fetch-client';
 import { BookService } from './../book/book-service';
@@ -13,6 +14,7 @@ export class TrackingService {
     constructor(
         private authService: AuthService,
         private http: HttpClient,
+        private dialogService: DialogService,
         private applicationState: ApplicationState,
         private bookService: BookService,
         private readingState: ReadingState) {
@@ -22,11 +24,7 @@ export class TrackingService {
         await this.eventInternal(type);
     }
 
-    public async dialogEvent(type: string, visibleCharacterCount: number, visibleWordCount: number) {
-        await this.eventInternal(type, visibleCharacterCount, visibleWordCount);
-    }
-
-    private async eventInternal(type: string, visibleCharacterCount?: number, visibleWordCount?: number) {
+    private async eventInternal(type: string) {
         if (!this.authService.isAuthenticated) {
             return;
         }
@@ -43,13 +41,12 @@ export class TrackingService {
             timezoneOffset: time.getTimezoneOffset(),
             type: type,
             startLocation: this.readingState.startLocation,
-            visibleCharacterCount: visibleCharacterCount !== undefined ?
-                visibleCharacterCount : this.readingState.characterCount,
-            visibleWordCount: visibleWordCount !== undefined ?
-                visibleWordCount : this.readingState.wordCount,
+            visibleCharacterCount: this.readingState.characterCount,
+            visibleWordCount: this.readingState.wordCount,
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight,
             isMenuOpen: this.applicationState.isMenuOpen,
+            isDialogOpen: this.dialogService.hasOpenDialog,
         });
     }
 
