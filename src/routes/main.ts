@@ -16,6 +16,8 @@ export class Main {
       this.router.navigate("/introduction/consent");
     } else if (!this.userService.isReadingSpeedTested) {
       this.router.navigate("/introduction/reading-speed");
+    } else if (!this.userService.user.isBookSelected){
+      this.router.navigate("/books");
     } else if (this.userService.isDeadlinePassed) {
       this.router.navigate("/finish");
     }

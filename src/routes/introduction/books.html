@@ -1,0 +1,25 @@
+<template>
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-12 col-lg-8">
+      <form submit.trigger="confirm()">
+        <h2>Please rate these books</h2>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="information-sheet-confirm"
+              checked.bind="isConfirmed">
+            <label class="custom-control-label" for="information-sheet-confirm">
+              I have read this information and I am ready to continue to the consent form
+            </label>
+          </div>
+        </div>
+
+        <p class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg" disabled.bind="!canConfirm">
+            Continue
+          </button>
+        </p>
+      </form>
+    </div>
+  </div>
+</template>
