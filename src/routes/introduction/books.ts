@@ -12,6 +12,13 @@ type BookRatingRow = { details: IBookDetails, rating?: number };
 export class Books {
 
   private books: BookRatingRow[] = [];
+  private ratingOptions = [
+    { rating: 1, label: "1 - Not at all interested" },
+    { rating: 2, label: "2" },
+    { rating: 3, label: "3" },
+    { rating: 4, label: "4" },
+    { rating: 5, label: "5 - Very interested" },
+  ];
 
   private get canConfirm(): boolean {
     return this.books.length > 0 &&

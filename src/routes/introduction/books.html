@@ -2,16 +2,27 @@
   <div class="row d-flex justify-content-center">
     <div class="col-md-12 col-lg-8">
       <form submit.trigger="confirm()">
-        <h2>Please rate these books</h2>
+        <h2>Books</h2>
+        <p>
+          Read the following short descriptions of the stories and rate how interested you are to read each of them.
+        </p>
 
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="information-sheet-confirm"
-              checked.bind="isConfirmed">
-            <label class="custom-control-label" for="information-sheet-confirm">
-              I have read this information and I am ready to continue to the consent form
-            </label>
-          </div>
+        <div class="form-group" repeat.for="book of books">
+          <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${ book.details.title }</h5>
+                <h6 class="card-subtitle mb-2 text-muted">by ${ book.details.author }</h6>
+                <p class="card-text">${ book.details.description }</p>
+                <p class="card-text">How interested are you to read this story?</p>
+                <div class="d-flex btn-group btn-group-sm btn-group-toggle">
+                    <label repeat.for="option of ratingOptions"
+                      class="col btn btn-light ${ book.rating === option.rating ? 'active' : '' }">
+                      <input type="radio" name.bind="name" model.bind="option.rating" checked.bind="book.rating">
+                      ${ option.label }
+                    </label>
+                  </div>
+              </div>
+            </div>
         </div>
 
         <p class="text-center">
