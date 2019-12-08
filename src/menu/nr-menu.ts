@@ -26,16 +26,22 @@ export class NrMenu {
   private async openInformationSheet() {
     this.applicationState.isMenuOpen = false;
 
+    this.trackingService.event('openInformation');
+
     await this.dialogService.open({
       viewModel: InformationSheetDialog,
       overlayDismiss: true,
       lock: true,
     }).whenClosed();
+
+    this.trackingService.event('closeInformation');
   }
 
   private async withdraw() {
     this.applicationState.isMenuOpen = false;
     
+    this.trackingService.event('openWithdrawal');
+
     const dialogResult = await this.dialogService.open({
       viewModel: WithdrawDialog,
       overlayDismiss: true,
@@ -43,6 +49,7 @@ export class NrMenu {
     }).whenClosed();
 
     if (dialogResult.wasCancelled) {
+      this.trackingService.event('closeWithdrawal');
       return;
     }
 
