@@ -1,3 +1,4 @@
+import { BookService } from './../book/book-service';
 import { Router } from 'aurelia-router';
 import { UserService } from './../user/user-service';
 import { autoinject } from 'aurelia-framework';
@@ -8,7 +9,8 @@ export class Main {
 
   constructor(
     private router: Router,
-    private userService: UserService) {
+    private userService: UserService,
+    private bookService: BookService) {
   }
 
   public async activate() {
@@ -22,10 +24,11 @@ export class Main {
       this.router.navigate("/introduction/books");
     } else if (this.userService.isDeadlinePassed) {
       this.router.navigate("/finish");
+    } else {
+      await this.bookService.loadSelectedBook();
+      this.canRead = true;
     }
 
     // TODO: Questionnaire redirects
-
-    this.canRead = true;
   }
 }
