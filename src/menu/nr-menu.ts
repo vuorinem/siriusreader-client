@@ -44,7 +44,8 @@ export class NrMenu {
       return;
     }
 
-    this.router.navigateToRoute("logout");
+    this.authService.logout();
+    this.router.navigateToRoute("login");
   }
 
   private toggleMenu() {

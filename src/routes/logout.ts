@@ -1,3 +1,4 @@
+import { TrackingService } from 'tracking/tracking-service';
 import { AuthService } from '../auth/auth-service';
 import { Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
@@ -6,11 +7,13 @@ import { autoinject } from 'aurelia-framework';
 export class Logout {
   constructor(
     private router: Router,
+    private trackingService: TrackingService,
     private authService: AuthService) {
   }
 
-  public activate() {
+  public async activate() {
+    await this.trackingService.event("logout");
     this.authService.logout();
-    this.router.navigateToRoute("main");
+    this.router.navigateToRoute("login");
   }
 }
