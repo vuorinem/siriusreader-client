@@ -21,7 +21,7 @@
       <div class="book-sections animate-${browseStyle}" ref="bookSectionsElement"
         css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px);" is-dialog-open.bind="isDialogOpen"></nr-section>
+          css="transform: translateX(${ section.left }px);"></nr-section>
       </div>
     </div>
     <div class="progress book-progress" click.trigger="progressBarClick($event)">

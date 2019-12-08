@@ -24,16 +24,18 @@ export class NrMenu {
   }
 
   private async openInformationSheet() {
+    this.applicationState.isMenuOpen = false;
+
     await this.dialogService.open({
       viewModel: InformationSheetDialog,
       overlayDismiss: true,
       lock: true,
     }).whenClosed();
-
-    this.applicationState.isMenuOpen = false;
   }
 
   private async withdraw() {
+    this.applicationState.isMenuOpen = false;
+    
     const dialogResult = await this.dialogService.open({
       viewModel: WithdrawDialog,
       overlayDismiss: true,

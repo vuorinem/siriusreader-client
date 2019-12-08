@@ -1,3 +1,4 @@
+import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
 import { HighlightedText } from '../reading/highlighted-text';
 import { Highlighter } from './../reading/highlighter';
@@ -50,7 +51,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     private browseStyle: BrowseStyle = 'turn';
     private isInitialized: boolean = false;
     private isInactive: boolean = false;
-    private isDialogOpen: boolean = false;
 
     private touchStartX: number | null = null;
     private touchEndX: number | null = null;
@@ -58,11 +58,11 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     private touchStartTime: Date | null = null;
 
     @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'windowTrackingService.isFocused',
-      'isInactive', 'isDialogOpen')
+      'isInactive', 'dialogService.hasOpenDialog')
     private get isContentHidden(): boolean {
         return this.applicationState.isMenuOpen ||
             this.isInactive ||
-            this.isDialogOpen ||
+            this.dialogService.hasOpenDialog ||
             !this.windowTrackingService.isFocused ||
             !this.isInitialized;
     }
@@ -84,6 +84,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     constructor(
         private bindingEngine: BindingEngine,
         private taskQueue: TaskQueue,
+        private dialogService: DialogService,
         private applicationState: ApplicationState,
         private timeoutService: TimeoutService,
         private bookService: BookService,

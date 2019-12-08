@@ -1,27 +1,20 @@
-import { ContentDialog } from './content-dialog';
-import { DialogService } from 'aurelia-dialog';
 import { Highlighter } from './../reading/highlighter';
 import { Disposable } from 'aurelia-binding';
 import { SectionModel } from './section-model';
-import { autoinject, BindingEngine, bindingMode } from 'aurelia-framework';
+import { autoinject, BindingEngine } from 'aurelia-framework';
 import { BookService } from './book-service';
 import { bindable } from 'aurelia-framework';
 
 @autoinject
 export class NrSection {
     @bindable private section!: SectionModel;
-    @bindable({ defaultBindingMode: bindingMode.fromView }) private isDialogOpen: boolean = false;
-
     private element: HTMLElement;
 
     private shouldLoadObserver?: Disposable;
 
-    private dialogs = new Map<string, HTMLElement>();
-
     constructor(
         element: Element,
         private bindingEngine: BindingEngine,
-        private dialogService: DialogService,
         private bookService: BookService,
         private highlighter: Highlighter) {
 
@@ -72,8 +65,6 @@ export class NrSection {
             this.element.removeChild(this.element.firstChild)
         }
 
-        this.dialogs.clear();
-
         this.section.isLoaded = false;
     }
 
@@ -103,8 +94,6 @@ export class NrSection {
 
             return;
         }
-
-        this.checkForDialogs(this.element);
 
         this.section.refreshWidth();
 
@@ -167,54 +156,6 @@ export class NrSection {
             return;
         }
 
-        if (href.charAt(0) === '#') {
-            a.addEventListener('click', async (event: MouseEvent) => {
-                event.preventDefault();
-
-                this.openDialog(href.substr(1));
-            });
-        } else {
-            a.removeAttribute('href');
-        }
-    }
-
-    private checkForDialogs(node: Node) {
-        if (!(node instanceof HTMLElement)) {
-            return;
-        }
-
-        for (let i = 0; i < node.childNodes.length; i++) {
-            const childNode = node.childNodes.item(i);
-
-            if (this.isDialog(node)) {
-                this.dialogs.set(node.id, node);
-                node.parentNode!.replaceChild(document.createElement('span'), node)
-                return;
-            }
-
-            this.checkForDialogs(childNode);
-        }
-    }
-
-    private isDialog(node: HTMLElement) {
-        return node.classList.contains("Reader-figure") ||
-            node.classList.contains("Reader-footnote");
-    }
-
-    private async openDialog(id: string) {
-        if (!this.dialogs.has(id)) {
-            return;
-        }
-
-        this.isDialogOpen = true;
-
-        await this.dialogService.open({
-            viewModel: ContentDialog,
-            model: this.dialogs.get(id),
-            overlayDismiss: true,
-            lock: true,
-        }).whenClosed();
-
-        this.isDialogOpen = false;
+        a.removeAttribute('href');
     }
 }
