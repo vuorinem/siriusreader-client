@@ -49,7 +49,7 @@ export class TrackingService {
                 visibleWordCount : this.readingState.wordCount,
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight,
-            // isMenuOpen: this.applicationState.isMenuOpen,
+            isMenuOpen: this.applicationState.isMenuOpen,
         });
     }
 

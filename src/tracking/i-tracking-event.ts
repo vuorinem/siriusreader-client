@@ -8,4 +8,5 @@ export interface ITrackingEvent {
     visibleWordCount: number;
     windowWidth: number;
     windowHeight: number;
+    isMenuOpen: boolean;
 }
