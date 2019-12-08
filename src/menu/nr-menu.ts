@@ -24,29 +24,37 @@ export class NrMenu {
   }
 
   private async openInformationSheet() {
-    this.applicationState.isMenuOpen = false;
-
     this.trackingService.event('openInformation');
 
-    await this.dialogService.open({
+    const dialog = this.dialogService.open({
       viewModel: InformationSheetDialog,
       overlayDismiss: true,
       lock: true,
-    }).whenClosed();
+    });
+
+    await dialog;
+
+    this.applicationState.isMenuOpen = false;
+
+    await dialog.whenClosed();
 
     this.trackingService.event('closeInformation');
   }
 
   private async withdraw() {
-    this.applicationState.isMenuOpen = false;
-    
     this.trackingService.event('openWithdrawal');
 
-    const dialogResult = await this.dialogService.open({
+    const dialog = this.dialogService.open({
       viewModel: WithdrawDialog,
       overlayDismiss: true,
       lock: true,
-    }).whenClosed();
+    });
+
+    await dialog;
+
+    this.applicationState.isMenuOpen = false;
+
+    const dialogResult = await dialog.whenClosed();
 
     if (dialogResult.wasCancelled) {
       this.trackingService.event('closeWithdrawal');
