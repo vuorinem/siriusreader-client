@@ -25,7 +25,7 @@ export class WithdrawDialog implements DialogComponentActivate<undefined> {
     }
 
     public async confirm() {
-        if (!this.withdrawal || !this.withdrawal.name || this.withdrawal.name.trim().length === 0) {
+        if (!this.withdrawal) {
             return;
         }
 

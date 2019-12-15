@@ -13,12 +13,6 @@
         </button>
       </div>
       <div else>
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input id="name" type="text" value.bind="withdrawal.name" class="form-control">
-          <small class="form-text text-muted">Name will only be used for
-            credits and will not be stored</small>
-        </div>
         <button class="btn btn-danger btn-lg btn-block" click.delegate="confirm()"
           disabled.bind="http.isRequesting">
           Confirm withdrawal
