@@ -43,11 +43,11 @@ export class UserService {
             .fetch('/user/current');
 
         if (response.status === 200) {
-        const userDetails = await response.json();
-        this.userDetails = userDetails;
+            const userDetails = await response.json();
+            this.userDetails = userDetails;
         } else {
             this.userDetails = null;
-    }
+        }
     }
 
     public clear() {
@@ -85,6 +85,17 @@ export class UserService {
 
         if (!response.ok) {
             throw Error('Error confirming consent');
+        }
+
+        this.userDetails = await response.json();
+    }
+
+    public async sendConfirmBookOpened() {
+        const response = await this.http
+            .fetch('/user/current/confirm-book-opened', { method: 'post' });
+
+        if (!response.ok) {
+            throw Error('Error confirming that the book has been opened');
         }
 
         this.userDetails = await response.json();
