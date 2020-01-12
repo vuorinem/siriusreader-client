@@ -98,6 +98,12 @@ export class App implements ConfiguresRouter {
           if (!userService.user) {
             await userService.load();
           }
+
+          if (!userService.user) {
+            authService.logout();
+
+            return next.cancel(new Redirect("login"));
+          }
         }
 
         return next();

@@ -38,15 +38,16 @@ export class UserService {
         eventAggregator.subscribe(EventLogout, () => this.clear());
     }
 
-    public async load(): Promise<IUserDetails> {
+    public async load(): Promise<void> {
         const response = await this.http
             .fetch('/user/current');
 
+        if (response.status === 200) {
         const userDetails = await response.json();
-
         this.userDetails = userDetails;
-
-        return userDetails;
+        } else {
+            this.userDetails = null;
+    }
     }
 
     public clear() {
