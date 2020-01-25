@@ -10,129 +10,154 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
   private observsers: Disposable[] = [];
 
-  private likertOptions = [
-    'Strongly Agree',
-    'Agree',
-    'Neutral',
-    'Disagree',
-    'Strongly Disagree',
+  private selectedGenres: string[] = [];
+
+  private yesnoOptions = [
+    'Yes',
+    'No',
   ];
 
-  private frequencyOptions = [
-    'Always',
-    'Often',
-    'Sometimes',
-    'Rarely',
-    'Never',
-  ];
-
-  private likemeOptions = [
-    'Very much like me',
-    'Somewhat like me',
-    'Neutral',
-    'Not much like me',
-    'Not at all like me',
-  ];
-
-  private trueOfMeOptions = [
-    '1 <br/> Not at all <br/> true of me',
-    '2',
-    '3',
-    '4 <br/> Neutral',
-    '5',
-    '6',
-    '7 <br/> Very true <br/> of me',
-  ];
-
-  private genders = [
+  private genderOptions = [
     'Female',
     'Male',
     'Other',
     'Prefer not to say',
   ];
 
-  private yesno = [
-    'Yes',
-    'No',
+  private trueOptions = [
+    '1 <br/> Not at all true',
+    '2',
+    '3',
+    '4 <br/> Somewhat true',
+    '5',
+    '6',
+    '7 <br/> Very true',
   ];
 
-  private yesnounsure = [
-    'Yes',
-    'No',
-    'Unsure',
+  private educationOptions = [
+    'Elementary',
+    'High school',
+    'College',
+    'Undergraduate',
+    'Postgraduate',
   ];
 
-  private gpaOptions = [
-    'Mostly A - First/1st',
-    'Mostly A or B - 1st or 2:1',
-    'Mostly B - Upper Second/2:1',
-    'Mostly B or C - 2:1 or 2:2',
-    'Mostly C - Lower Second/2:2',
-    'Mostly C or D - 2:2 or 3:1',
-    'Mostly D - Third/3:1',
+  private frequencyOptions = [
+    'Every day',
+    'A few times a week',
+    'A few times a month',
+    'A few times a year',
+    'Never',
   ];
 
-  private yearofstudyOptions = [
-    'Level 1 student',
-    'Level 2 student',
-    'Level 3 student',
-    'Level 4 student',
-    'Other'
+  private genreOptions = [
+    'Biographies / autobiographies',
+    'Celebrities / television',
+    'Classic novels',
+    'Crime, thrillers and mystery',
+    'Fantasy',
+    'Graphic novels',
+    'Historical fiction',
+    'History',
+    'Horror',
+    'Humour',
+    'Modern fiction',
+    'Poetry',
+    'Politics / current affairs',
+    'Religion and spirituality',
+    'Romance',
+    'Science',
+    'Science fiction',
+    'Self-help',
+    'Special interests / hobbies',
+    'Sports',
+    'Travel',
   ];
 
-  private taughtInOptions = [
-    'Yes, in school',
-    'Yes, in university',
-    'No',
+  private bookCountOptions = [
+    'More than 50 books',
+    '26-50 books',
+    '16-25 books',
+    '7-15 books',
+    '3-6 books',
+    '1-2 books',
+    'None',
+  ];
+
+  private reasonOptions = [
+    {
+      title: 'To improve health and well being',
+      description: 'For example to relax, to fall asleep or to improve mental health',
+    },
+    {
+      title: 'Intellectual improvement',
+      description: 'For example to gain general knowledge, or to learn a language',
+    },
+    {
+      title: 'Personal development',
+      description: ' For example to increase creativeness, self-esteem or empathy',
+    },
+    {
+      title: 'Social reasons',
+      description: 'For example to take part in cultural activities or to enhance understanding of others',
+    },
+    {
+      title: 'Enjoyment',
+      description: 'For example because you enjoy reading, like books or it makes you happy',
+    },
+    {
+      title: 'Boredom',
+      description: 'For example to avoid boredom or to pass time',
+    },
+    {
+      title: 'I only read if I have to',
+      description: '',
+    },
+    {
+      title: 'I do not read',
+      description: '',
+    },
+  ]
+
+  private enjoymentOptions = [
+    'Very much',
+    'Somewhat',
+    'Moderately',
+    'A little',
+    'Not at all',
+  ];
+
+  private previouslyReadOptions = [
+    'No, this was my first time reading this story',
+    'Yes, I have read this story before',
     'Not sure',
   ];
 
-  private devices = [
-    'Desktop computer',
-    'Laptop computer',
-    'iPad/Tablet computer',
-    'Dedicated e-reader (e.g. Kindle)',
-    'With an audio application',
-    'I never read course material electronically'
+  private progressOptions = [
+    '100% - The entire story',
+    '90%',
+    '80%',
+    '70%',
+    '60%',
+    '50% - Half of the story',
+    '40%',
+    '30%',
+    '20%',
+    '10%',
+    '0% - None of the story',
   ];
-
-  private selectedDevices: string[] = [];
-  private isOtherSelected: boolean = false;
-  @observable private deviceOther: string = "";
-
-  private articleParts = [
-    'The abstract',
-    'The introduction',
-    'The method',
-    'The results',
-    'The discussion',
-    'The conclusion',
-    'The references',
-  ];
-
-  private selectedArticleParts: string[] = [];
 
   private get name(): string {
     return 'question-' + this.question.number;
   }
 
   constructor(private bindingEngine: BindingEngine) {
-
   }
 
   public bind() {
-    if (this.question.questionType === 'devices') {
-      this.observsers.push(this.bindingEngine.collectionObserver(this.selectedDevices).subscribe(() => {
-        this.value = this.selectedDevices.join(',');
-
-        if (this.isOtherSelected && this.deviceOther.length > 0) {
-          this.value += "," + this.deviceOther;
-        }
-      }));
-    }
-    if (this.question.questionType === 'articleparts') {
-      this.observsers.push(this.bindingEngine.collectionObserver(this.selectedArticleParts).subscribe(() => {
-        this.value = this.selectedArticleParts.join(',');
+    if (this.question.questionType === 'genres') {
+      this.observsers.push(this.bindingEngine.collectionObserver(this.selectedGenres).subscribe(() => {
+        this.value = this.selectedGenres.join(',');
       }));
     }
   }
@@ -142,10 +167,6 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     while (observer = this.observsers.pop()) {
       observer.dispose();
     }
-  }
-
-  private deviceOtherChanged() {
-    this.isOtherSelected = this.deviceOther.length > 0;
   }
 
 }
