@@ -21,6 +21,16 @@ export class Introduction {
         moduleId: PLATFORM.moduleName("./reading-speed"),
       },
       {
+        name: 'questionnaire11',
+        route: 'questionnaire11',
+        moduleId: PLATFORM.moduleName("./questionnaire11"),
+      },
+      {
+        name: 'questionnaire12',
+        route: 'questionnaire12',
+        moduleId: PLATFORM.moduleName("./questionnaire12"),
+      },
+      {
         name: 'books',
         route: 'books',
         moduleId: PLATFORM.moduleName("./books"),

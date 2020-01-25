@@ -23,6 +23,10 @@ export class Main {
       this.router.navigate("/introduction/consent");
     } else if (!this.userService.isReadingSpeedTested) {
       this.router.navigate("/introduction/reading-speed");
+    } else if (!this.userService.isQuestionnaireAnswered('questionnaire11')) {
+      this.router.navigate("/introduction/questionnaire11");
+    } else if (!this.userService.isQuestionnaireAnswered('questionnaire12')) {
+      this.router.navigate("/introduction/questionnaire12");
     } else if (!this.userService.user.isBookSelected) {
       this.router.navigate("/introduction/books");
     } else if (this.userService.isDeadlinePassed) {
@@ -43,7 +47,5 @@ export class Main {
 
       this.canRead = true;
     }
-
-    // TODO: Questionnaire redirects
   }
 }

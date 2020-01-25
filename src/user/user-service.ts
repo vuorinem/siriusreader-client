@@ -115,4 +115,12 @@ export class UserService {
     this.userDetails = await response.json();
   }
 
+  public isQuestionnaireAnswered(name: string): boolean {
+    if (!this.userDetails) {
+      return false;
+    }
+
+    return this.userDetails.answeredQuestionnaires.some(q => q === name);
+  }
+
 }
