@@ -35,7 +35,7 @@ export class QuestionnaireService {
             throw new Error('Error sending questionnaire answers');
         }
 
-        this.userService.load();
+        await this.userService.load();
     }
 
 }
