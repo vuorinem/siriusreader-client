@@ -1,6 +1,7 @@
 import { Aurelia } from 'aurelia-framework'
 import * as environment from '../config/environment.json';
 import { PLATFORM } from 'aurelia-pal';
+import 'utility/custom-event-polyfill';
 
 import 'styles/app.scss';
 import { DialogConfiguration } from 'aurelia-dialog';
