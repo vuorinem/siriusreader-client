@@ -1,7 +1,7 @@
 export const bookConfig: {
-    columnGap: number,
-    padding: number,
+  columnGap: number,
+  padding: number,
 } = {
-        columnGap: 60,
-        padding: 20,
-    };
+  columnGap: 60,
+  padding: 20,
+};

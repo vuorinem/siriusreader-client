@@ -1,3 +1,3 @@
 export interface IBookmark {
-    location: number;
+  location: number;
 }

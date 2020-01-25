@@ -1,4 +1,4 @@
 export interface ISectionDetails {
-    name: string;
-    characters: number;
+  name: string;
+  characters: number;
 }

@@ -7,26 +7,26 @@ import { QuestionAndAnswer } from './question-and-answer';
 @autoinject
 export class NrQuestionnaire implements ComponentAttached {
 
-    @bindable private name!: string;
+  @bindable private name!: string;
 
-    private questionnaire!: IQuestionnaireDetails;
-    private questionsAndAndswers: QuestionAndAnswer[] = [];
+  private questionnaire!: IQuestionnaireDetails;
+  private questionsAndAndswers: QuestionAndAnswer[] = [];
 
-    constructor(
-        private http: HttpClient,
-        private questionnaireService: QuestionnaireService) {
-    }
+  constructor(
+    private http: HttpClient,
+    private questionnaireService: QuestionnaireService) {
+  }
 
-    public async attached() {
-        this.questionnaire = await this.questionnaireService.getQuestionnaire(this.name);
+  public async attached() {
+    this.questionnaire = await this.questionnaireService.getQuestionnaire(this.name);
 
-        this.questionsAndAndswers = this.questionnaire.questions
-            .map(question => new QuestionAndAnswer(question, { questionNumber: question.number }));
-    }
+    this.questionsAndAndswers = this.questionnaire.questions
+      .map(question => new QuestionAndAnswer(question, { questionNumber: question.number }));
+  }
 
-    private async submit() {
-        await this.questionnaireService.sendAnswers(this.name,
-            this.questionsAndAndswers.map(i => i.answer));
-    }
+  private async submit() {
+    await this.questionnaireService.sendAnswers(this.name,
+      this.questionsAndAndswers.map(i => i.answer));
+  }
 
 }

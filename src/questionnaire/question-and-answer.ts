@@ -3,9 +3,9 @@ import { IQuestionDetails } from './i-question-details';
 
 export class QuestionAndAnswer {
 
-    constructor(
-        public question: IQuestionDetails,
-        public answer: IAnswer) {
-    }
-    
+  constructor(
+    public question: IQuestionDetails,
+    public answer: IAnswer) {
+  }
+
 }

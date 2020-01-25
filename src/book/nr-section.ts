@@ -7,155 +7,155 @@ import { bindable } from 'aurelia-framework';
 
 @autoinject
 export class NrSection {
-    @bindable private section!: SectionModel;
-    private element: HTMLElement;
+  @bindable private section!: SectionModel;
+  private element: HTMLElement;
 
-    private shouldLoadObserver?: Disposable;
+  private shouldLoadObserver?: Disposable;
 
-    constructor(
-        element: Element,
-        private bindingEngine: BindingEngine,
-        private bookService: BookService,
-        private highlighter: Highlighter) {
+  constructor(
+    element: Element,
+    private bindingEngine: BindingEngine,
+    private bookService: BookService,
+    private highlighter: Highlighter) {
 
-        this.element = element as HTMLElement;
+    this.element = element as HTMLElement;
+  }
+
+  public bind() {
+    this.section.element = this.element;
+
+    this.shouldLoadObserver = this.bindingEngine
+      .propertyObserver(this.section, 'shouldLoad')
+      .subscribe(() => this.shouldLoadChanged());
+  }
+
+  public unbind() {
+    if (this.shouldLoadObserver) {
+      this.shouldLoadObserver.dispose();
+    }
+  }
+
+  public attached() {
+    this.update();
+  }
+
+  public detached() {
+    this.clear();
+  }
+
+  private shouldLoadChanged() {
+    this.update();
+  }
+
+  private update() {
+    if (!this.section.shouldLoad) {
+      this.clear();
+      return;
     }
 
-    public bind() {
-        this.section.element = this.element;
-
-        this.shouldLoadObserver = this.bindingEngine
-            .propertyObserver(this.section, 'shouldLoad')
-            .subscribe(() => this.shouldLoadChanged());
+    if (this.section.isLoaded) {
+      return;
     }
 
-    public unbind() {
-        if (this.shouldLoadObserver) {
-            this.shouldLoadObserver.dispose();
-        }
+    this.load();
+  }
+
+  private clear() {
+    while (this.element.firstChild) {
+      this.element.removeChild(this.element.firstChild)
     }
 
-    public attached() {
-        this.update();
+    this.section.isLoaded = false;
+  }
+
+  private async load() {
+    if (!this.section.url) {
+      return;
     }
 
-    public detached() {
-        this.clear();
+    this.section.isLoading = true;
+
+    const sectionNodes = await this.bookService.getSection(this.section.url);
+
+    const loaderPromises: Promise<void>[] = [];
+
+    while (sectionNodes.length > 0) {
+      const node = sectionNodes.item(0);
+
+      loaderPromises.push(...this.replaceContent(node!));
+
+      this.element.appendChild(node!);
     }
 
-    private shouldLoadChanged() {
-        this.update();
+    await Promise.all(loaderPromises);
+
+    if (!this.element.lastElementChild || !this.element.firstElementChild) {
+      this.section.isLoading = false;
+
+      return;
     }
 
-    private update() {
-        if (!this.section.shouldLoad) {
-            this.clear();
-            return;
-        }
+    this.section.refreshWidth();
 
-        if (this.section.isLoaded) {
-            return;
-        }
+    this.section.isLoading = false;
+    this.section.isLoaded = true;
 
-        this.load();
+    this.highlighter.showSectionHighlights(this.section);
+  }
+
+  private replaceContent(node: Node): Promise<void>[] {
+    const loadPromises: Promise<void>[] = [];
+
+    if (node instanceof HTMLImageElement) {
+      loadPromises.push(this.replaceImageSrcWithBlobUrl(node));
+    } else if (node instanceof HTMLAnchorElement) {
+      this.checkForLink(node);
     }
 
-    private clear() {
-        while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild)
-        }
-
-        this.section.isLoaded = false;
+    for (let i = 0; i < node.childNodes.length; i++) {
+      loadPromises.push(...this.replaceContent(node.childNodes.item(i)));
     }
 
-    private async load() {
-        if (!this.section.url) {
-            return;
-        }
+    return loadPromises;
+  }
 
-        this.section.isLoading = true;
+  private async replaceImageSrcWithBlobUrl(img: HTMLImageElement) {
+    // Get original src without baseUrl
+    const imageSrc = img.getAttribute("src");
 
-        const sectionNodes = await this.bookService.getSection(this.section.url);
-
-        const loaderPromises: Promise<void>[] = [];
-
-        while (sectionNodes.length > 0) {
-            const node = sectionNodes.item(0);
-
-            loaderPromises.push(...this.replaceContent(node!));
-
-            this.element.appendChild(node!);
-        }
-
-        await Promise.all(loaderPromises);
-
-        if (!this.element.lastElementChild || !this.element.firstElementChild) {
-            this.section.isLoading = false;
-
-            return;
-        }
-
-        this.section.refreshWidth();
-
-        this.section.isLoading = false;
-        this.section.isLoaded = true;
-
-        this.highlighter.showSectionHighlights(this.section);
+    if (!imageSrc) {
+      return;
     }
 
-    private replaceContent(node: Node): Promise<void>[] {
-        const loadPromises: Promise<void>[] = [];
+    // Clear node src to prevent trying to load wrong url
+    img.src = "";
 
-        if (node instanceof HTMLImageElement) {
-            loadPromises.push(this.replaceImageSrcWithBlobUrl(node));
-        } else if (node instanceof HTMLAnchorElement) {
-            this.checkForLink(node);
-        }
+    const blob = await this.bookService.getImage(imageSrc);
 
-        for (let i = 0; i < node.childNodes.length; i++) {
-            loadPromises.push(...this.replaceContent(node.childNodes.item(i)));
-        }
+    await this.setImgSrc(img, URL.createObjectURL(blob));
+  }
 
-        return loadPromises;
+  private async setImgSrc(img: HTMLImageElement, src: string): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const onImgLoaded = () => {
+        img.removeEventListener('load', onImgLoaded);
+
+        resolve();
+      };
+
+      img.addEventListener('load', onImgLoaded);
+
+      img.src = src;
+    });
+  }
+
+  private checkForLink(a: HTMLAnchorElement) {
+    const href = a.getAttribute('href');
+
+    if (!href) {
+      return;
     }
 
-    private async replaceImageSrcWithBlobUrl(img: HTMLImageElement) {
-        // Get original src without baseUrl
-        const imageSrc = img.getAttribute("src");
-
-        if (!imageSrc) {
-            return;
-        }
-
-        // Clear node src to prevent trying to load wrong url
-        img.src = "";
-
-        const blob = await this.bookService.getImage(imageSrc);
-
-        await this.setImgSrc(img, URL.createObjectURL(blob));
-    }
-
-    private async setImgSrc(img: HTMLImageElement, src: string): Promise<void> {
-        return new Promise<void>((resolve) => {
-            const onImgLoaded = () => {
-                img.removeEventListener('load', onImgLoaded);
-
-                resolve();
-            };
-
-            img.addEventListener('load', onImgLoaded);
-
-            img.src = src;
-        });
-    }
-
-    private checkForLink(a: HTMLAnchorElement) {
-        const href = a.getAttribute('href');
-
-        if (!href) {
-            return;
-        }
-
-        a.removeAttribute('href');
-    }
+    a.removeAttribute('href');
+  }
 }

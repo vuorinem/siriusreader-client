@@ -1,4 +1,4 @@
 export interface IAnswer {
-    questionNumber: number;
-    answer?: string;
+  questionNumber: number;
+  answer?: string;
 }

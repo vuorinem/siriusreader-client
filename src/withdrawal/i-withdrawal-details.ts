@@ -1,3 +1,3 @@
 export interface IWithdrawalDetails {
-    emailHash: string;
+  emailHash: string;
 }

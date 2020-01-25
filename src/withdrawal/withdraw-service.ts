@@ -7,24 +7,24 @@ import { IWithdrawalDetails } from './i-withdrawal-details';
 @autoinject
 export class WithdrawService {
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {
+  }
 
-    public async getWithdrawal(): Promise<IWithdrawalDetails> {
-        const response = await this.http
-            .fetch(`/user/withdrawal`);
+  public async getWithdrawal(): Promise<IWithdrawalDetails> {
+    const response = await this.http
+      .fetch(`/user/withdrawal`);
 
-        return await response.json();
-    }
+    return await response.json();
+  }
 
-    public async postWithdrawal(withdrawal: IWithdrawalDetails): Promise<boolean> {
-        const response = await this.http
-            .fetch(`/user/withdrawal`, {
-                method: 'post',
-                body: json(withdrawal),
-            });
+  public async postWithdrawal(withdrawal: IWithdrawalDetails): Promise<boolean> {
+    const response = await this.http
+      .fetch(`/user/withdrawal`, {
+        method: 'post',
+        body: json(withdrawal),
+      });
 
-        return response.ok;
-    }
+    return response.ok;
+  }
 
 }

@@ -1,6 +1,6 @@
-import {Aurelia} from 'aurelia-framework'
+import { Aurelia } from 'aurelia-framework'
 import * as environment from '../config/environment.json';
-import {PLATFORM} from 'aurelia-pal';
+import { PLATFORM } from 'aurelia-pal';
 
 import 'styles/app.scss';
 import { DialogConfiguration } from 'aurelia-dialog';

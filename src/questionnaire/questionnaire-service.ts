@@ -8,34 +8,34 @@ import { IAnswer } from './i-answer';
 @autoinject
 export class QuestionnaireService {
 
-    constructor(
-        private http: HttpClient,
-        private userService: UserService) {
+  constructor(
+    private http: HttpClient,
+    private userService: UserService) {
+  }
+
+  public async getQuestionnaire(questionnaireName: string): Promise<IQuestionnaireDetails> {
+    const response = await this.http
+      .fetch(`/questionnaire/${questionnaireName}`);
+
+    if (!response.ok) {
+      throw Error('Error trying to load questionnaire');
     }
 
-    public async getQuestionnaire(questionnaireName: string): Promise<IQuestionnaireDetails> {
-        const response = await this.http
-            .fetch(`/questionnaire/${questionnaireName}`);
+    return response.json();
+  }
 
-        if (!response.ok) {
-            throw Error('Error trying to load questionnaire');
-        }
+  public async sendAnswers(questionnaireName: string, answers: IAnswer[]): Promise<void> {
+    const response = await this.http
+      .fetch(`/questionnaire/${questionnaireName}/answers`, {
+        method: 'post',
+        body: json(answers),
+      });
 
-        return response.json();
+    if (!response.ok) {
+      throw new Error('Error sending questionnaire answers');
     }
 
-    public async sendAnswers(questionnaireName: string, answers: IAnswer[]): Promise<void> {
-        const response = await this.http
-            .fetch(`/questionnaire/${questionnaireName}/answers`, {
-                method: 'post',
-                body: json(answers),
-            });
-
-        if (!response.ok) {
-            throw new Error('Error sending questionnaire answers');
-        }
-
-        await this.userService.load();
-    }
+    await this.userService.load();
+  }
 
 }

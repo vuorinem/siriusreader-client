@@ -1,3 +1,3 @@
 export interface IVerificationResponse {
-    isEmailRegistered: boolean;
+  isEmailRegistered: boolean;
 }
