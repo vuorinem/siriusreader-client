@@ -48,13 +48,23 @@
       ${ option }
     </label>
   </div>
-  <div if.bind="question.questionType === 'reason'" class="d-flex btn-group btn-group-sm btn-group-toggle">
-    <label repeat.for="option of reasonOptions" class="col btn btn-light ${ value === option.title ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option.title" checked.bind="value">
-      ${ option.title }
-      <br />
-      <small class="muted">${ option.description }</small>
-    </label>
+  <div if.bind="question.questionType === 'reason'" class="custom-control custom-radio">
+    <div repeat.for="option of reasonOptions" class="custom-control custom-radio">
+      <input type="radio" class="custom-control-input" id="${ name }-reason-${ $index }" name.bind="name"
+        value.bind="option.title" checked.bind="value">
+      <label class="custom-control-label" for="${ name }-reason-${ $index }">
+        ${ option.title }
+        <br />
+        <small class="muted">${ option.description }</small>
+      </label>
+    </div>
+    <div class="custom-control custom-radio">
+      <input type="radio" class="custom-control-input" id="${ name }-reason-other" name.bind="name"
+        value.bind="reasonOther" checked.bind="value">
+      <label class="custom-control-label" for="${ name }-reason-other">
+        Other: <input type="text" value.bind="reasonOther" class="form-control" />
+      </label>
+    </div>
   </div>
   <div if.bind="question.questionType === 'enjoyment'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of enjoymentOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">

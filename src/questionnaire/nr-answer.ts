@@ -12,6 +12,9 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
   private selectedGenres: string[] = [];
 
+  @observable
+  private reasonOther: string = "";
+
   private yesnoOptions = [
     'Yes',
     'No',
@@ -167,6 +170,10 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     while (observer = this.observsers.pop()) {
       observer.dispose();
     }
+  }
+
+  private reasonOtherChanged() {
+    this.value = this.reasonOther;
   }
 
 }
