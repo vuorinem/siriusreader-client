@@ -1,3 +1,4 @@
+import { PLATFORM } from 'aurelia-pal';
 import { HttpClient } from 'aurelia-fetch-client';
 import { bindable, ComponentAttached, autoinject } from 'aurelia-framework';
 import { IQuestionnaireDetails } from './i-questionnaire-details';
@@ -13,6 +14,7 @@ export class NrQuestionnaire implements ComponentAttached {
   private questionsAndAndswers: QuestionAndAnswer[] = [];
 
   constructor(
+    private element: Element,
     private http: HttpClient,
     private questionnaireService: QuestionnaireService) {
   }
@@ -27,6 +29,13 @@ export class NrQuestionnaire implements ComponentAttached {
   private async submit() {
     await this.questionnaireService.sendAnswers(this.name,
       this.questionsAndAndswers.map(i => i.answer));
+
+    const submitEvent = new CustomEvent('submitted', {
+      bubbles: false,
+      cancelable: false,
+    });
+
+    this.element.dispatchEvent(submitEvent);
   }
 
 }
