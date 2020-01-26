@@ -66,8 +66,8 @@
       </label>
     </div>
   </div>
-  <div if.bind="question.questionType === 'enjoyment'" class="d-flex btn-group btn-group-sm btn-group-toggle">
-    <label repeat.for="option of enjoymentOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
+  <div if.bind="question.questionType === 'amount'" class="d-flex btn-group btn-group-sm btn-group-toggle">
+    <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
       <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
       ${ option }
     </label>

@@ -122,7 +122,7 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     },
   ]
 
-  private enjoymentOptions = [
+  private amountOptions = [
     'Very much',
     'Somewhat',
     'Moderately',
