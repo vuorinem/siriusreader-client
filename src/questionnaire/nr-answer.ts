@@ -11,6 +11,7 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   private observsers: Disposable[] = [];
 
   private selectedGenres: string[] = [];
+  private selectedDevices: string[] = [];
 
   @observable
   private reasonOther: string = "";
@@ -150,6 +151,15 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     '0% - None of the story',
   ];
 
+  private deviceOptions = [
+    'Dedicated e-reader with an e-ink screen (such as Kindle Paperwhite, Kobo or Nook)',
+    'Desktop computer',
+    'Laptop',
+    'Smartphone',
+    'Tablet computer (such as iPad)',
+    'Other device with internet access such as a smartwatch or an iPod',
+  ];
+
   private get name(): string {
     return 'question-' + this.question.number;
   }
@@ -161,6 +171,12 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     if (this.question.questionType === 'genres') {
       this.observsers.push(this.bindingEngine.collectionObserver(this.selectedGenres).subscribe(() => {
         this.value = this.selectedGenres.join(',');
+      }));
+    }
+
+    if (this.question.questionType === 'devices') {
+      this.observsers.push(this.bindingEngine.collectionObserver(this.selectedDevices).subscribe(() => {
+        this.value = this.selectedDevices.join(',');
       }));
     }
   }

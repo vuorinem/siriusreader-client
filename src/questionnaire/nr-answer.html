@@ -84,6 +84,13 @@
       ${ option }
     </label>
   </div>
+  <div if.bind="question.questionType === 'devices'" class="">
+    <div repeat.for="option of deviceOptions" class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="${ name }-devices-${ $index }" name.bind="name"
+        value.bind="option" checked.bind="selectedDevices">
+      <label class="custom-control-label" for="${ name }-devices-${ $index }">${ option }</label>
+    </div>
+  </div>
   <textarea if.bind="question.questionType==='open'" type="text" value.bind="value" class="form-control"
     name.bind="name"></textarea>
 </template>
