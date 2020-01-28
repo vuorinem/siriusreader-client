@@ -2,7 +2,7 @@ import { autoinject, PLATFORM } from 'aurelia-framework';
 import { RouterConfiguration } from 'aurelia-router';
 
 @autoinject
-export class Introduction {
+export class Index {
   public configureRouter(config: RouterConfiguration): void {
     config.map([
       {

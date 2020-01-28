@@ -45,14 +45,6 @@ export class App implements ConfiguresRouter {
         },
       },
       {
-        name: "questionnaire",
-        route: "questionnaire",
-        moduleId: PLATFORM.moduleName("./routes/questionnaire"),
-        settings: {
-          auth: true,
-        },
-      },
-      {
         name: "main",
         route: "",
         moduleId: PLATFORM.moduleName("./routes/main"),
@@ -63,7 +55,7 @@ export class App implements ConfiguresRouter {
       {
         name: "finish",
         route: "finish",
-        moduleId: PLATFORM.moduleName("./routes/finish"),
+        moduleId: PLATFORM.moduleName("./routes/finish/index"),
         settings: {
           auth: true,
         },

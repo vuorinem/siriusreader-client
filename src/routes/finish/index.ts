@@ -2,7 +2,7 @@ import { autoinject, PLATFORM } from 'aurelia-framework';
 import { RouterConfiguration } from 'aurelia-router';
 
 @autoinject
-export class Introduction {
+export class Index {
   public configureRouter(config: RouterConfiguration): void {
     config.map([
       {
@@ -10,7 +10,16 @@ export class Introduction {
         route: 'confirm',
         moduleId: PLATFORM.moduleName("./confirm"),
       },
-      // TODO: Add final questionnaire
+      {
+        name: 'questionnaire21',
+        route: 'questionnaire21',
+        moduleId: PLATFORM.moduleName("./questionnaire21"),
+      },
+      {
+        name: 'questionnaire22',
+        route: 'questionnaire22',
+        moduleId: PLATFORM.moduleName("./questionnaire22"),
+      },
       {
         name: 'debrief',
         route: 'debrief',
