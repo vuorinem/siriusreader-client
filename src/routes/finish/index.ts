@@ -21,6 +21,11 @@ export class Index {
         moduleId: PLATFORM.moduleName("./questionnaire22"),
       },
       {
+        name: 'questionnaire3',
+        route: 'questionnaire3',
+        moduleId: PLATFORM.moduleName("./questionnaire3"),
+      },
+      {
         name: 'debrief',
         route: 'debrief',
         moduleId: PLATFORM.moduleName("./debrief"),

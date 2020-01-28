@@ -34,6 +34,8 @@ export class Main {
         this.router.navigate("/finish/questionnaire21");
       } else if (!this.userService.isQuestionnaireAnswered('questionnaire22')) {
         this.router.navigate("/finish/questionnaire22");
+      } else if (!this.userService.isQuestionnaireAnswered('questionnaire3')) {
+        this.router.navigate("/finish/questionnaire3");
       } else {
         this.router.navigate("/finish/debrief");
       }
