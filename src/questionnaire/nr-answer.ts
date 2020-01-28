@@ -1,4 +1,4 @@
-import { Disposable, observable } from 'aurelia-binding';
+import { Disposable, observable, computedFrom } from 'aurelia-binding';
 import { IQuestionDetails } from './i-question-details';
 import { bindable, bindingMode, ComponentBind, ComponentUnbind, autoinject, BindingEngine } from 'aurelia-framework';
 
@@ -162,6 +162,28 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
   private get name(): string {
     return 'question-' + this.question.number;
+  }
+
+  @computedFrom('value')
+  private get timeSpentHours(): number {
+    const numberValue = parseInt(this.value);
+
+    if (!numberValue) {
+      return 0;
+    }
+
+    return Math.floor(numberValue / 60);
+  }
+
+  @computedFrom('value')
+  private get timeSpentMinutes(): number {
+    const numberValue = parseInt(this.value);
+
+    if (!numberValue) {
+      return 0;
+    }
+
+    return numberValue % 60;
   }
 
   constructor(private bindingEngine: BindingEngine) {

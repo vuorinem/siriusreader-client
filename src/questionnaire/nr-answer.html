@@ -91,6 +91,11 @@
       <label class="custom-control-label" for="${ name }-devices-${ $index }">${ option }</label>
     </div>
   </div>
+  <div if.bind="question.questionType === 'timeSpent'" class="">
+    <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="10"
+      max="150" step="10" />
+    <p><b>${ timeSpentHours }</b> hours <b>${ timeSpentMinutes }</b> minutes.</p>
+  </div>
   <textarea if.bind="question.questionType==='open'" type="text" value.bind="value" class="form-control"
     name.bind="name"></textarea>
 </template>
