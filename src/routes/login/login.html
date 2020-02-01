@@ -30,10 +30,14 @@
       Error connecting to the reader, please try again later
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info" show.bind="!isEmailAddressSet">
       If you forgot your password, you can
       <a route-href="register">reset your password</a>
       with a verification code.
+    </div>
+
+    <div class="alert alert-info" show.bind="isEmailAddressSet">
+      You can now sign in using your password.
     </div>
   </form>
 </template>

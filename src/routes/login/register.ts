@@ -127,7 +127,7 @@ export class Register {
           this.error = "Could not register, please try again later.";
         }
       } else {
-        this.router.navigateToRoute("login");
+        this.router.navigateToRoute("login", { email: this.emailAddress });
       }
     } catch (ex) {
       this.error = "Could not register, please try again later.";

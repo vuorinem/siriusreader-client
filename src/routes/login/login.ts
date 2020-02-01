@@ -11,6 +11,7 @@ export class Login {
   private isError: boolean = false;
   private isConnectionError: boolean = false;
   private isLoading: boolean = false;
+  private isEmailAddressSet: boolean = false;
 
   constructor(
     private router: Router,
@@ -23,7 +24,10 @@ export class Login {
       this.router.navigateToRoute("main");
     }
 
-    this.emailAddress = params.email;
+    if (params.email) {
+      this.isEmailAddressSet = true;
+      this.emailAddress = params.email;
+    }
   }
 
   private async signIn() {
