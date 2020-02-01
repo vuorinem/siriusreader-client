@@ -66,6 +66,9 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
     // moduleIds is the replacement for HashedModuleIdsPlugin and NamedModulesPlugin deprecated in https://github.com/webpack/webpack/releases/tag/v4.16.0
     // changes module id's to use hashes be based on the relative path of the module, required for long term cacheability
     moduleIds: 'hashed',
+    // Workaround for Aurelia Dialog issue with webpack
+    // see: https://github.com/aurelia/dialog/issues/361
+    concatenateModules: false,
     // Use splitChunks to breakdown the App/Aurelia bundle down into smaller chunks
     // https://webpack.js.org/plugins/split-chunks-plugin/
     splitChunks: {
