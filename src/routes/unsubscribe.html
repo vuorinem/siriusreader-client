@@ -1,0 +1,35 @@
+<template>
+  <div class="container">
+    <div class="row justify-content-center">
+      <p class="text-center">
+        <img src="/sirius-reader-logo.png" alt="Sirius Reader" />
+      </p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-5">
+        <h1>Unsubscribe</h1>
+        <div show.bind="!!emailAddress && !isConfirmed">
+          <p>Do you want to unsubscribe from ORB Reader email reminders?</p>
+          <p>Email address to unsubscribe: <b>${ emailAddress }</b></p>
+          <p>
+            <button click.delegate="confirm()" class="btn btn-danger" disabled.bind="http.isRequesting">Yes, unsubscribe</button>
+            <a route-href="login" class="btn btn-default" disabled.bind="http.isRequesting">No</a>
+          </p>
+        </div>
+        <div show.bind="!!emailAddress && isConfirmed">
+          <p class="alert alert-info">
+            You have been unsubscribed from email reminders.
+          </p>
+          <p>
+            <a route-href="login">Go to login page</a>
+          </p>
+        </div>
+        <div show.bind="!emailAddress">
+          <p class="alert alert-danger">
+            The link for unsubscribing is incorrect.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

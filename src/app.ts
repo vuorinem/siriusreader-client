@@ -28,7 +28,13 @@ export class App implements ConfiguresRouter {
         name: "login",
         route: "login",
         moduleId: PLATFORM.moduleName("./routes/login/index"),
-      }, {
+      },
+      {
+        name: "unsubscribe",
+        route: "unsubscribe/*id",
+        moduleId: PLATFORM.moduleName("./routes/unsubscribe"),
+      },
+      {
         name: "logout",
         route: "logout",
         moduleId: PLATFORM.moduleName("./routes/logout"),
