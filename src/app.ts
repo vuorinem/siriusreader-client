@@ -115,6 +115,7 @@ export class App implements ConfiguresRouter {
     return {
       run: async (instruction, next) => {
         applicationState.isMenuOpen = false;
+        applicationState.isReading = false;
 
         return next();
       }
