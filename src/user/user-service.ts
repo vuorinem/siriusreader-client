@@ -101,20 +101,6 @@ export class UserService {
     this.userDetails = await response.json();
   }
 
-  public async sendConfirmDebriefSheet(name: string) {
-    const response = await this.http
-      .fetch('/user/current/confirm-debrief', {
-        method: 'post',
-        body: json({ name: name }),
-      });
-
-    if (!response.ok) {
-      throw Error('Error confirming debriefing');
-    }
-
-    this.userDetails = await response.json();
-  }
-
   public isQuestionnaireAnswered(name: string): boolean {
     if (!this.userDetails) {
       return false;
