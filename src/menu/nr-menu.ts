@@ -24,8 +24,6 @@ export class NrMenu {
   }
 
   private async openInformationSheet() {
-    this.trackingService.event('openInformation');
-
     const dialog = this.dialogService.open({
       viewModel: InformationSheetDialog,
       overlayDismiss: true,
@@ -35,6 +33,8 @@ export class NrMenu {
     await dialog;
 
     this.applicationState.isMenuOpen = false;
+    
+    this.trackingService.event('openInformation');
 
     await dialog.whenClosed();
 
@@ -42,8 +42,6 @@ export class NrMenu {
   }
 
   private async withdraw() {
-    this.trackingService.event('openWithdrawal');
-
     const dialog = this.dialogService.open({
       viewModel: WithdrawDialog,
       overlayDismiss: true,
@@ -53,6 +51,8 @@ export class NrMenu {
     await dialog;
 
     this.applicationState.isMenuOpen = false;
+
+    this.trackingService.event('openWithdrawal');
 
     const dialogResult = await dialog.whenClosed();
 
