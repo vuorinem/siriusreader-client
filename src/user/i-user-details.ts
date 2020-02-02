@@ -4,6 +4,7 @@ export interface IUserDetails {
   isConsentConfirmed: boolean;
   isBookSelected: boolean;
   isBookOpened: boolean;
+  isBookFinished: boolean;
   readingSpeedWordsPerMinute: number;
   answeredQuestionnaires: string[];
 }

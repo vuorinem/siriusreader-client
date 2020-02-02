@@ -101,6 +101,17 @@ export class UserService {
     this.userDetails = await response.json();
   }
 
+  public async sendConfirmBookFinished() {
+    const response = await this.http
+      .fetch('/user/current/confirm-book-finished', { method: 'post' });
+
+    if (!response.ok) {
+      throw Error('Error confirming that the book has been finished');
+    }
+
+    this.userDetails = await response.json();
+  }
+
   public isQuestionnaireAnswered(name: string): boolean {
     if (!this.userDetails) {
       return false;
