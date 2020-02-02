@@ -398,6 +398,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private overlayClick() {
     this.setInativeTimeout();
     this.applicationState.isMenuOpen = false;
+    this.trackingService.event('closeMenu');
   }
 
   private handleKeyDown(event: KeyboardEvent) {
