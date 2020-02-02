@@ -1,15 +1,23 @@
+import { Router } from 'aurelia-router';
+import { UserService } from 'user/user-service';
 import { autoinject, PLATFORM } from 'aurelia-framework';
 import { RouterConfiguration } from 'aurelia-router';
 
 @autoinject
 export class Index {
+  constructor(
+    private router: Router,
+    private userService: UserService) {
+  }
+
+  public activate() {
+    if (!this.userService.isDeadlinePassed && !this.userService.user.isBookFinished) {
+      this.router.navigate('main');
+    }
+  }
+
   public configureRouter(config: RouterConfiguration): void {
     config.map([
-      {
-        name: 'confirm',
-        route: 'confirm',
-        moduleId: PLATFORM.moduleName("./confirm"),
-      },
       {
         name: 'questionnaire21',
         route: 'questionnaire21',
