@@ -9,7 +9,7 @@
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right ${ isOpen ? 'show' : '' }">
-              <a class="dropdown-item" href="confirm-finish">
+              <a class="dropdown-item" href="confirm-finish" show.bind="applicationState.isReading">
                 <span class="oi oi-task"></span> Finish
               </a>
               <a class="dropdown-item" href="#" click.delegate="openInformationSheet()">
