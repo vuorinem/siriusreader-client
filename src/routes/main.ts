@@ -1,3 +1,4 @@
+import { ApplicationState } from './../state/application-state';
 import { BookInformationDialog } from './../book/book-information-dialog';
 import { DialogService } from 'aurelia-dialog';
 import { BookService } from './../book/book-service';
@@ -7,16 +8,17 @@ import { autoinject } from 'aurelia-framework';
 
 @autoinject
 export class Main {
-  private canRead: boolean = false;
-
   constructor(
     private router: Router,
     private dialogService: DialogService,
     private userService: UserService,
-    private bookService: BookService) {
+    private bookService: BookService,
+    private applicationState: ApplicationState) {
   }
 
   public async activate() {
+    this.applicationState.isReading = false;
+
     if (!this.userService.user.isInformationSheetConfirmed) {
       this.router.navigate("/introduction/information");
     } else if (!this.userService.user.isConsentConfirmed) {
@@ -53,7 +55,7 @@ export class Main {
         await this.userService.sendConfirmBookOpened();
       }
 
-      this.canRead = true;
+      this.applicationState.isReading = true;
     }
   }
 }

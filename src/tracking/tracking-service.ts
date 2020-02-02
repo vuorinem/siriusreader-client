@@ -49,6 +49,7 @@ export class TrackingService {
       isDialogOpen: this.dialogService.hasOpenDialog,
       isBlurred: !this.applicationState.isFocused,
       isInactive: !this.applicationState.isActive,
+      isReading: this.applicationState.isReading,
     });
   }
 
