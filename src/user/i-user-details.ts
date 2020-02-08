@@ -7,4 +7,5 @@ export interface IUserDetails {
   isBookFinished: boolean;
   readingSpeedWordsPerMinute: number;
   answeredQuestionnaires: string[];
+  isIntrinsicCondition: boolean | null;
 }
