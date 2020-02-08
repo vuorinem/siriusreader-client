@@ -186,6 +186,11 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     return numberValue % 60;
   }
 
+  @computedFrom('question')
+  private get isRequired(): boolean {
+    return this.question.label.toLowerCase() === 'age';
+  }
+
   constructor(private bindingEngine: BindingEngine) {
   }
 
