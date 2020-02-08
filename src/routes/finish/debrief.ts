@@ -6,6 +6,10 @@ export class Debrief {
 
   @computedFrom('userService.user')
   private get isIntrinsic(): boolean {
+    if (!this.userService.user) {
+      return false;
+    }
+
     return this.userService.user.isIntrinsicCondition;
   }
 
