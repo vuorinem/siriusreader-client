@@ -6,7 +6,7 @@ import { TrackingService } from './tracking-service';
 export class WindowTrackingService {
   private onFocus: () => void = () => this.handleFocus(true);
   private onBlur: () => void = () => this.handleFocus(false);
-  private onBeforeUnload: () => void = async () => await this.triggerEvent('close');
+  private onBeforeUnload: () => void = () => this.triggerEvent('close');
 
   constructor(
     private taskQueue: TaskQueue,
