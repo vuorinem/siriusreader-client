@@ -1,6 +1,4 @@
 import { ApplicationState } from './../state/application-state';
-import { BookInformationDialog } from './../book/book-information-dialog';
-import { DialogService } from 'aurelia-dialog';
 import { BookService } from './../book/book-service';
 import { Router } from 'aurelia-router';
 import { UserService } from './../user/user-service';
@@ -10,7 +8,6 @@ import { autoinject } from 'aurelia-framework';
 export class Main {
   constructor(
     private router: Router,
-    private dialogService: DialogService,
     private userService: UserService,
     private bookService: BookService,
     private applicationState: ApplicationState) {
@@ -43,17 +40,6 @@ export class Main {
       }
     } else {
       await this.bookService.loadSelectedBook();
-
-      if (!this.userService.user.isBookOpened) {
-        await this.dialogService.open({
-          viewModel: BookInformationDialog,
-          model: this.bookService.book,
-          overlayDismiss: true,
-          lock: true,
-        }).whenClosed();
-
-        await this.userService.sendConfirmBookOpened();
-      }
 
       this.applicationState.isReading = true;
     }

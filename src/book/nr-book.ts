@@ -1,3 +1,4 @@
+import { UserService } from 'user/user-service';
 import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
 import { HighlightedText } from '../reading/highlighted-text';
@@ -13,6 +14,7 @@ import { autoinject, ComponentAttached, ComponentDetached, TaskQueue } from 'aur
 import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
+import { BookInformationDialog } from './book-information-dialog';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -85,6 +87,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private timeoutService: TimeoutService,
+    private userService: UserService,
     private bookService: BookService,
     private readingState: ReadingState,
     private readingService: ReadingService,
@@ -114,6 +117,28 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private async load(): Promise<void> {
+    if (!this.userService.user.isBookOpened) {
+      const dialog = this.dialogService.open({
+        viewModel: BookInformationDialog,
+        model: this.bookService.book,
+        overlayDismiss: true,
+        lock: true,
+        rejectOnCancel: true,
+      });
+
+      await dialog;
+
+      this.trackingService.event('bookDialogOpen');
+
+      const dialogCloseCallback = async () => {
+        await this.userService.sendConfirmBookOpened();
+
+        this.trackingService.event('bookDialogClose');
+      };
+
+      dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
+    }
+
     const viewWidth = this.getViewWidthInPixels();
 
     this.book = this.bookService.book;
