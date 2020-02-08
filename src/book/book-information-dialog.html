@@ -1,13 +1,40 @@
 <template>
-  <ux-dialog class="col-md-12">
+  <ux-dialog class="col-md-8">
     <ux-dialog-header>
-      <h3>Reading information</h3>
+      <h3>Thank you for rating the summaries!</h3>
     </ux-dialog-header>
 
     <ux-dialog-body>
-      <h5>${ book.title }</h5>
-      <h6 class="text-muted">by ${ book.author }</h6>
-      <p>${ book.description }</p>
+      <p class="text-center">
+        <img src="/orb-small.png" class="img-fluid" />
+      </p>
+      <p class="text-justify">
+        Your short story is: <b>${ book.title }</b> by ${ book.author }
+      </p>
+      <p class="text-justify">
+        Your short story has been borrowed from the ORB Reader's library and it will be opened on the ORB Reader after
+        you click the below button.
+      </p>
+      <p class="text-justify">
+        You can read the story at your convenience on any device with internet access by using the URL
+        <mark>orbreader.com</mark>. The ORB Reader will save your progress and bookmark your place in the article so you can
+        log out and back in any time you want.
+      </p>
+      <p class="text-justify">
+        In the right-hand corner menu you can find a timer that tells you how much time you have left to read the short
+        story before it is automatically returned to the ORB Reader's library. If you finish reading the story early,
+        you can return it before the due date by clicking 'finish reading'. Note that returning the story early means
+        that you can no longer go back to it.
+      </p>
+      <p class="text-justify">
+        After your story has been returned to the ORB Library, you will be redirected to two final questionnaires. You
+        have 2 days to answer to both questionnaires after the story reading due date has passed. Once you have finished
+        the questionnaires, the experimenter will contact you to arrange the payment of compensation.
+      </p>
+      <p class="text-justify">
+        You can withdraw from the study at any point without loss of compensation by selecting 'withdraw' from the menu.
+        From the same menu you can also access the information form at any time during the study.
+      </p>
     </ux-dialog-body>
 
     <ux-dialog-footer>
