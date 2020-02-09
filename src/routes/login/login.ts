@@ -8,6 +8,7 @@ export class Login {
   private emailAddress: string = "";
   private password: string = "";
 
+  private errorMessage?: string;
   private isError: boolean = false;
   private isConnectionError: boolean = false;
   private isLoading: boolean = false;
@@ -33,18 +34,20 @@ export class Login {
   private async signIn() {
     this.isError = false;
     this.isConnectionError = false;
+    this.errorMessage = undefined;
 
     try {
       this.isLoading = true;
-      const isAuthenticateSuccessful = await this.authService.authenticate(this.emailAddress, this.password);
+      const authenticationResult = await this.authService.authenticate(this.emailAddress, this.password);
 
       this.password = "";
 
-      if (isAuthenticateSuccessful) {
+      if (authenticationResult.isAuthenticated) {
         this.trackingService.event('login');
         this.router.navigateToRoute("main");
       } else {
         this.isError = true;
+        this.errorMessage = authenticationResult.error;
       }
     } catch (error) {
       this.isConnectionError = true;

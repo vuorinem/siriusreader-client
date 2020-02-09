@@ -1,3 +1,4 @@
+import { IAuthenticationResult } from './i-authentication-result';
 import { ITokenResponse } from './i-token-response';
 import { autoinject, computedFrom } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
@@ -67,7 +68,7 @@ export class AuthService {
     });
   }
 
-  public async authenticate(email: string, password: string): Promise<boolean> {
+  public async authenticate(email: string, password: string): Promise<IAuthenticationResult> {
     const request = new URLSearchParams();
     request.append("grant_type", "password");
     request.append("username", email);
@@ -82,15 +83,22 @@ export class AuthService {
         },
       });
 
+    const result: IAuthenticationResult = {
+      isAuthenticated: response.ok,
+    };
+
     if (!response.ok) {
-      return false;
+      const responseContent = await response.json();
+      result.error = responseContent.error;
+
+      return result;
     }
 
     this.setToken(await response.json());
 
     this.eventAggregator.publish(EventLogin);
 
-    return true;
+    return result;
   }
 
   public logout() {

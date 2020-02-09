@@ -22,7 +22,11 @@
       </div>
     </div>
 
-    <div class="alert alert-danger" show.bind="isError">
+    <div class="alert alert-danger" show.bind="isError && !!errorMessage">
+      ${ errorMessage }
+    </div>
+
+    <div class="alert alert-danger" show.bind="isError && !errorMessage">
       Could not log in, please check your email address and password.
     </div>
 
