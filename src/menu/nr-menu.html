@@ -9,6 +9,10 @@
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right ${ isOpen ? 'show' : '' }">
+              <div class="deadline-counter text-muted p-2">
+                <b>${ timeUntilDeadline & throttle:1000 }</b> until deadline
+              </div>
+              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="confirm-finish" show.bind="applicationState.isReading">
                 <span class="oi oi-task"></span> Finish
               </a>
