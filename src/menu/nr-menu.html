@@ -1,7 +1,10 @@
 <template>
   <header class="${ isOpen ? 'menu-open' : 'menu-closed' }">
     <div class="container">
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-between">
+        <a class="logo" route-href="main">
+          <img src="/orb-icon.png" alt="ORB Logo" class="img-fluid" />
+        </a>
         <nav show.bind="authService.isAuthenticated">
           <div class="dropdown">
             <button href="#" class="btn btn-sm btn-dark" click.delegate="toggleMenu()">
