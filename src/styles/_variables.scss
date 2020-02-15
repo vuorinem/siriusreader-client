@@ -21,7 +21,8 @@ $container-max-widths: (
 $zindex-dropdown: 999; // Needs to be smaller than aurelia dialog and overlay z-index (currently 1000)
 
 $title-height: 42px;
-$bg-book: #FFF;
+$bg-book: rgb(183,183,185);
+$bg-book-fold: darken($bg-book, 10%);
 $text-book: #404040;
 $spacing-bottom: 30px;
 $book-progress-height: 20px;
@@ -29,3 +30,10 @@ $column-gap: 60px;
 $book-padding: 20px;
 $book-padding-top: 10px;
 $book-padding-bottom: 10px;
+
+$theme-colors: (
+  "primary": #0D40D1,
+);
+
+$body-bg: rgb(183,183,185);
+$body-color: #000;

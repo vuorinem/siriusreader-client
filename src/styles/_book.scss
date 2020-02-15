@@ -23,12 +23,12 @@ nr-book {
         left: 0;
         width: 100%;
         height: calc(100% - #{$title-height});
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: rgba($body-bg, 0.9);
 
         .inactive-message {
             font-size: 1.3rem;
             font-weight: 500;
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba($body-bg, 0.95);
             padding: 10px;
         }
     }
@@ -43,7 +43,7 @@ nr-book {
             background: linear-gradient(90deg,
                 $bg-book,
                 $bg-book 48%,
-                darken($bg-book, 10%) 50%,
+                $bg-book-fold 50%,
                 $bg-book 52%);
         }
         
@@ -162,6 +162,7 @@ nr-book {
         height: $book-progress-height;
         font-size: 0.9rem;
         letter-spacing: 0.07rem;
+        background-color: $bg-book-fold;
     }
 
     nr-highlight-menu {
