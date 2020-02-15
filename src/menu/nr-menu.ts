@@ -30,19 +30,19 @@ export class NrMenu {
       return '';
     }
 
-    const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+    const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
     if (differenceInDays > 0) {
       return differenceInDays + ' day' + (differenceInDays > 1 ? 's' : '');
     }
 
-    const differenceInHours = Math.floor(differenceInMilliseconds / (1000 * 60 * 60));
+    const differenceInHours = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60));
 
     if (differenceInHours > 0) {
       return differenceInHours + ' hour' + (differenceInHours > 1 ? 's' : '');
     }
 
-    const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+    const differenceInMinutes = Math.ceil(differenceInMilliseconds / (1000 * 60));
 
     return differenceInMinutes + ' minutes' + (differenceInMinutes > 1 ? 's' : '');
   }
