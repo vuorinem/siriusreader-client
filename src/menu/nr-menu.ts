@@ -19,6 +19,10 @@ export class NrMenu {
   }
 
   private get timeUntilDeadline() {
+    if (!this.deadline) {
+      return;
+    }
+
     const differenceInMilliseconds = this.deadline.getTime() - new Date().getTime();
 
     if (differenceInMilliseconds < 0) {
@@ -44,7 +48,11 @@ export class NrMenu {
   }
 
   @computedFrom('userService.user')
-  private get deadline(): Date {
+  private get deadline(): Date | undefined {
+    if (!this.userService.user) {
+      return undefined;
+    }
+
     return new Date(this.userService.user.deadline);
   }
 
