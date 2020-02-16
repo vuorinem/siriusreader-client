@@ -1,4 +1,4 @@
-$icon-font-path: "~open-iconic/font/fonts/";
+﻿$icon-font-path: "~open-iconic/font/fonts/";
 @import "~open-iconic/font/css/open-iconic-bootstrap";
 
 $grid-breakpoints: (
@@ -21,7 +21,7 @@ $zindex-dropdown: 999; // Needs to be smaller than aurelia dialog and overlay z-
 $title-height: 42px;
 $bg-book: rgb(183,183,185);
 $bg-book-fold: darken($bg-book, 10%);
-$text-book: #404040;
+$text-book: #000;
 $spacing-bottom: 30px;
 $book-progress-height: 20px;
 $column-gap: 60px;
