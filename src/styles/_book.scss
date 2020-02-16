@@ -5,6 +5,10 @@ div.app-content {
     height: 100%;
 }
 
+div.app-container.is-reading {
+  background-color: $bg-book;
+}
+
 nr-book {
     > .container {
         height: calc(100% - #{$title-height});
@@ -23,12 +27,12 @@ nr-book {
         left: 0;
         width: 100%;
         height: calc(100% - #{$title-height});
-        background-color: rgba($body-bg, 0.9);
+        background-color: rgba($bg-book, 0.9);
 
         .inactive-message {
             font-size: 1.3rem;
             font-weight: 500;
-            background-color: rgba($body-bg, 0.95);
+            background-color: rgba($bg-book, 0.95);
             padding: 10px;
         }
     }

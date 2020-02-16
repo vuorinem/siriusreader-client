@@ -1,7 +1,7 @@
 ﻿<template>
   <require from="menu/nr-menu"></require>
 
-  <div class="app-container">
+  <div class="app-container ${ applicationState.isReading ? 'is-reading' : '' }">
     <div class="app-content">
       <nr-menu></nr-menu>
       <router-view></router-view>
