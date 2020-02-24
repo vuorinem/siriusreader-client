@@ -2,27 +2,29 @@
   <div class="row d-flex justify-content-center">
     <div class="col-md-12 col-lg-8">
       <form submit.trigger="confirm()">
-        <h2>Books</h2>
+        <h2>Story Selection</h2>
         <p>
-          Read the following short descriptions of the stories and rate how interested you are to read each of them.
+          Read the following short descriptions of the stories and rate how interested you would be in reading each of
+          them. The short summaries have been extracted from the stories and so they are representative of the way the
+          stories have been written.
         </p>
 
         <div class="form-group" repeat.for="book of books">
           <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">${ book.details.title }</h5>
-                <h6 class="card-subtitle mb-2 text-muted">by ${ book.details.author }</h6>
-                <p class="card-text">${ book.details.description }</p>
-                <p class="card-text">How interested are you to read this story?</p>
-                <div class="d-flex btn-group btn-group-sm btn-group-toggle">
-                    <label repeat.for="option of ratingOptions"
-                      class="col btn btn-light ${ book.rating === option.rating ? 'active' : '' }">
-                      <input type="radio" name.bind="name" model.bind="option.rating" checked.bind="book.rating">
-                      ${ option.label }
-                    </label>
-                  </div>
+            <div class="card-body">
+              <h5 class="card-title">${ book.details.title }</h5>
+              <h6 class="card-subtitle mb-2 text-muted">by ${ book.details.author }</h6>
+              <p class="card-text">${ book.details.description }</p>
+              <p class="card-text">How interested are you to read this story?</p>
+              <div class="d-flex btn-group btn-group-sm btn-group-toggle">
+                <label repeat.for="option of ratingOptions"
+                  class="col btn btn-light ${ book.rating === option.rating ? 'active' : '' }">
+                  <input type="radio" name.bind="name" model.bind="option.rating" checked.bind="book.rating">
+                  ${ option.label }
+                </label>
               </div>
             </div>
+          </div>
         </div>
 
         <p class="text-center">
