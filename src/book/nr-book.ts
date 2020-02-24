@@ -15,6 +15,7 @@ import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
+import * as environment from '../../config/environment.json';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -644,6 +645,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {
+    if (!environment.isHighlightingEnabled) {
+      return false;
+    }
+
     if (!this.readingState.section) {
       return false;
     }
