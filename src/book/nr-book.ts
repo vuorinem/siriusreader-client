@@ -755,6 +755,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private handleDebugKey(event: KeyboardEvent) {
+    if (!environment.debug) {
+      return;
+    }
+
     if (!event.shiftKey || !event.key) {
       return;
     }
