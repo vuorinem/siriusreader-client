@@ -47,11 +47,11 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   ];
 
   private frequencyOptions = [
-    'Every day',
-    'A few times a week',
-    'A few times a month',
-    'A few times a year',
     'Never',
+    'A few times a year',
+    'A few times a month',
+    'A few times a week',
+    'Every day',
   ];
 
   private genreOptions = [
@@ -79,13 +79,13 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   ];
 
   private bookCountOptions = [
-    'More than 50 books',
-    '26-50 books',
-    '16-25 books',
-    '7-15 books',
-    '3-6 books',
-    '1-2 books',
     'None',
+    '1-2 books',
+    '3-6 books',
+    '7-15 books',
+    '16-25 books',
+    '26-50 books',
+    'More than 50 books',
   ];
 
   private reasonOptions = [
@@ -124,11 +124,11 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   ]
 
   private amountOptions = [
-    'Very much',
-    'Somewhat',
-    'Moderately',
-    'A little',
     'Not at all',
+    'A little',
+    'Moderately',
+    'Somewhat',
+    'Very much',
   ];
 
   private previouslyReadOptions = [
@@ -138,17 +138,17 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   ];
 
   private progressOptions = [
-    '100% - The entire story',
-    '90%',
-    '80%',
-    '70%',
-    '60%',
-    '50% - Half of the story',
-    '40%',
-    '30%',
-    '20%',
-    '10%',
     '0% - None of the story',
+    '10%',
+    '20%',
+    '30%',
+    '40%',
+    '50% - Half of the story',
+    '60%',
+    '70%',
+    '80%',
+    '90%',
+    '100% - The entire story',
   ];
 
   private deviceOptions = [
