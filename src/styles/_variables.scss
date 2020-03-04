@@ -19,7 +19,7 @@ $container-max-widths: (
 $zindex-dropdown: 999; // Needs to be smaller than aurelia dialog and overlay z-index (currently 1000)
 
 $title-height: 42px;
-$bg-book: rgb(183,183,185);
+$bg-book: #DBDBDD;
 $bg-book-fold: darken($bg-book, 10%);
 $text-book: #000;
 $spacing-bottom: 30px;
