@@ -15,7 +15,7 @@
               <h5 class="card-title">${ book.details.title }</h5>
               <h6 class="card-subtitle mb-2 text-muted">by ${ book.details.author }</h6>
               <p class="card-text">${ book.details.description }</p>
-              <p class="card-text">How interested are you to read this story?</p>
+              <h6 class="card-text">How interested are you to read this story?</h6>
               <div class="d-flex btn-group btn-group-sm btn-group-toggle">
                 <label repeat.for="option of ratingOptions"
                   class="col btn btn-light ${ book.rating === option.rating ? 'active' : '' }">
