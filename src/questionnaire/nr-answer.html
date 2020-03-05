@@ -1,37 +1,37 @@
 <template>
   <div if.bind="question.questionType === 'true'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of trueOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       <span innerhtml.bind="option | sanitizeHTML"></span>
     </label>
   </div>
   <div if.bind="question.questionType === 'gender'" class="btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of genderOptions" class="btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
   <div if.bind="question.questionType === 'yesno'" class="btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of yesnoOptions" class="btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
   <div if.bind="question.questionType === 'number'" class="row">
     <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-      <input type="number" value.bind="value" class="form-control" name.bind="name" required.bind="isRequired" />
+      <input type="number" value.bind="value" class="form-control" name.bind="name" required.bind="question.isRequired" />
     </div>
   </div>
   <div if.bind="question.questionType === 'education'" class="">
     <div repeat.for="option of educationOptions" class="custom-control custom-radio">
       <input type="radio" class="custom-control-input" id="${ name }-education-${ $index }" name.bind="name"
-        value.bind="option" checked.bind="value">
+        value.bind="option" checked.bind="value" required.bind="question.isRequired">
       <label class="custom-control-label" for="${ name }-education-${ $index }">${ option }</label>
     </div>
   </div>
   <div if.bind="question.questionType === 'frequency'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of frequencyOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
@@ -44,14 +44,14 @@
   </div>
   <div if.bind="question.questionType === 'bookCount'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of bookCountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
   <div if.bind="question.questionType === 'reason'" class="custom-control custom-radio">
     <div repeat.for="option of reasonOptions" class="custom-control custom-radio">
       <input type="radio" class="custom-control-input" id="${ name }-reason-${ $index }" name.bind="name"
-        value.bind="option.title" checked.bind="value">
+        value.bind="option.title" checked.bind="value" required.bind="question.isRequired">
       <label class="custom-control-label" for="${ name }-reason-${ $index }">
         ${ option.title }
         <br />
@@ -68,19 +68,19 @@
   </div>
   <div if.bind="question.questionType === 'amount'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
   <div if.bind="question.questionType === 'previouslyRead'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of previouslyReadOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
   <div if.bind="question.questionType === 'progress'" class="d-flex btn-group btn-group-sm btn-group-toggle">
     <label repeat.for="option of progressOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value">
+      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
       ${ option }
     </label>
   </div>
@@ -93,9 +93,9 @@
   </div>
   <div if.bind="question.questionType === 'timeSpent'" class="">
     <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="10"
-      max="150" step="10" />
+      max="150" step="10" required.bind="question.isRequired" />
     <p><b>${ timeSpentHours }</b> hours <b>${ timeSpentMinutes }</b> minutes.</p>
   </div>
   <textarea if.bind="question.questionType==='open'" type="text" value.bind="value" class="form-control"
-    name.bind="name"></textarea>
+    name.bind="name" required.bind="question.isRequired"></textarea>
 </template>

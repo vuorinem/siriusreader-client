@@ -5,7 +5,7 @@
     <div class="col-md-12 col-lg-8">
       <h1>${ questionnaire.label }</h1>
       <p innerhtml.bind="questionnaire.description | sanitizeHTML"></p>
-      <form submit.trigger="submit()">
+      <form submit.trigger="submit()" ref="formElement">
         <div class="form-group" repeat.for="questionAndAndswer of questionsAndAndswers">
           <label>
             ${ questionAndAndswer.question.number }.

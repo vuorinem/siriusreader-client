@@ -10,6 +10,8 @@ export class NrQuestionnaire implements ComponentAttached, ComponentDetached {
 
   @bindable private name!: string;
 
+  private formElement!: HTMLFormElement;
+
   private questionnaire!: IQuestionnaireDetails;
   private questionsAndAndswers: QuestionAndAnswer[] = [];
 
@@ -35,6 +37,12 @@ export class NrQuestionnaire implements ComponentAttached, ComponentDetached {
   }
 
   private async submit() {
+    if (this.formElement.checkValidity() === false) {
+      this.formElement.classList.add('was-validated');
+
+      return;
+    }
+
     await this.questionnaireService.sendAnswers(this.name,
       this.questionsAndAndswers.map(i => i.answer));
 

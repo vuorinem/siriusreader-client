@@ -186,11 +186,6 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     return numberValue % 60;
   }
 
-  @computedFrom('question')
-  private get isRequired(): boolean {
-    return this.question.label.toLowerCase() === 'age';
-  }
-
   constructor(private bindingEngine: BindingEngine) {
   }
 
@@ -205,6 +200,12 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
       this.observsers.push(this.bindingEngine.collectionObserver(this.selectedDevices).subscribe(() => {
         this.value = this.selectedDevices.join(',');
       }));
+    }
+
+    if (this.question.questionType === 'timeSpent') {
+      if (!this.value) {
+        this.value = "10";
+      }
     }
   }
 
