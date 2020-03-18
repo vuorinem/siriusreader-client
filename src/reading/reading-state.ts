@@ -237,23 +237,27 @@ export class ReadingState {
       return true;
     }
 
+    // Check if node ends in the view
+    range.selectNode(currentNode);
+    let rangeRight = range.getBoundingClientRect().right;
+    if (rangeRight < view.right) {
+      return true;
+    }
+
     range.setStart(currentNode, 0);
-    const length = currentNode.length;
-    let rangeRight: number = 0;
 
     // Binary search to find the location that has the last one visible in the view
-
     let leftIndex = 0;
-    let rightIndex = length;
+    let rightIndex = currentNode.length;
 
-    while (leftIndex < rightIndex) {
+    while (leftIndex < rightIndex - 1) {
       const middleIndex = Math.floor((leftIndex + rightIndex) / 2);
 
       range.setEnd(currentNode, middleIndex);
       rangeRight = range.getBoundingClientRect().right;
 
       if (rangeRight < view.right) {
-        leftIndex = middleIndex + 1;
+        leftIndex = middleIndex;
       } else {
         rightIndex = middleIndex;
       }
