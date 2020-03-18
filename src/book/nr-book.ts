@@ -641,6 +641,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       section.pageWidth = viewWidth;
     }
 
+    if (this.readingState.section) {
+      this.readingState.section.refreshWidth();
+    }
+
     this.jumpToLocation(this.readingState.startLocation);
   }
 
