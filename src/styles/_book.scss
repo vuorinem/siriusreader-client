@@ -71,11 +71,21 @@ nr-book {
             padding-bottom: $book-padding-bottom;
 
             &.animate-turn {
-                transition: transform 0.2s linear;
+                transition: transform 0.3s ease-out;
+
+                &.transitioning {
+                  animation: turn 0.3s ease-out;
+                }
             }
 
             &.animate-jump {
                 transition: transform 0.001s linear;
+            }
+
+            @keyframes turn {
+                50% { opacity: 1; }
+                50% { opacity: 0.4; }
+                100% { opacity: 1; }
             }
 
             nr-section {

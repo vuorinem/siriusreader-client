@@ -18,7 +18,7 @@
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
       touchstart.trigger="touchStart($event)" touchend.trigger="touchEnd($event)"
       touchcancel.trigger="touchCancel($event)" touchmove.trigger="touchMove($event)">
-      <div class="book-sections animate-${browseStyle}" ref="bookSectionsElement"
+      <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}" ref="bookSectionsElement"
         css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
           css="transform: translateX(${ section.left }px);"></nr-section>
