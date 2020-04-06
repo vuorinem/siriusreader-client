@@ -461,7 +461,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     // Distance to the next view is book content width - paddings + one column gap
-    return this.bookContentElement.clientWidth - bookConfig.padding * 2 + bookConfig.columnGap;
+    const contentRect = this.bookContentElement.getBoundingClientRect();
+    return contentRect.width - bookConfig.padding * 2 + bookConfig.columnGap;
   }
 
   private move(moveByPixels: number, source: string) {
