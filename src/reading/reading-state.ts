@@ -8,6 +8,7 @@ import { DomUtility } from './dom-utility';
 export class ReadingState {
   private currentStartSection?: SectionModel;
   private currentView?: ClientRect | DOMRect;
+  private currentViewOffset: number = 0;
   private currentRange: Range;
   private startRange: Range;
   private currentText: string = "";
@@ -61,6 +62,24 @@ export class ReadingState {
     return this.textUtility.calculateVisibleCharacters(range.toString());
   }
 
+  @computedFrom('section.pageWidth', 'currentViewOffset')
+  public get currentPage(): number {
+    if (!this.section) {
+      return 0;
+    }
+
+    return Math.ceil(this.currentViewOffset / this.section.pageWidth) + 1;
+  }
+
+  @computedFrom('section.pageCount')
+  public get sectionPageCount(): number {
+    if (!this.section) {
+      return 0;
+    }
+
+    return this.section.pageCount;
+  }
+
   constructor(
     private textUtility: TextUtility,
     private domUtility: DomUtility,
@@ -69,8 +88,9 @@ export class ReadingState {
     this.startRange = document.createRange();
   }
 
-  public setCurrentView(view: ClientRect | DOMRect, sections: SectionModel[]) {
+  public setCurrentView(view: ClientRect | DOMRect, offset: number, sections: SectionModel[]) {
     this.currentView = view;
+    this.currentViewOffset = offset;
 
     const startRange = document.createRange();
     const endRange = document.createRange();

@@ -45,6 +45,8 @@ export class TrackingService {
       visibleWordCount: this.readingState.wordCount,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
+      pageInSection: this.readingState.currentPage,
+      totalPagesInSection: this.readingState.sectionPageCount,
       isMenuOpen: this.applicationState.isMenuOpen,
       isDialogOpen: this.dialogService.hasOpenDialog,
       isBlurred: !this.applicationState.isFocused,

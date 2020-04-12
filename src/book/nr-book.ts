@@ -593,7 +593,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    this.readingState.setCurrentView(this.bookContentElement.getBoundingClientRect(), this.sections);
+    this.readingState.setCurrentView(this.bookContentElement.getBoundingClientRect(), this.currentViewOffset, this.sections);
 
     if (!this.readingState.section) {
       return;

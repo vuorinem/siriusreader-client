@@ -8,6 +8,8 @@ export interface ITrackingEvent {
   visibleWordCount: number;
   windowWidth: number;
   windowHeight: number;
+  pageInSection: number;
+  totalPagesInSection: number;
   isMenuOpen: boolean;
   isDialogOpen: boolean;
   isBlurred: boolean;

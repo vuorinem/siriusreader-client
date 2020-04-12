@@ -25,6 +25,11 @@ export class SectionModel {
     return this.left + this.width;
   }
 
+  @computedFrom('width', 'pageWidth')
+  public get pageCount(): number {
+    return Math.ceil(this.width / this.pageWidth);
+  }
+
   constructor({ url, characters, previousSection }: { url: string, characters: number, previousSection?: SectionModel }) {
     this.url = url;
     this.characters = characters;
