@@ -9,7 +9,7 @@ export class TimeoutService {
       clearTimeout(timer);
     }
 
-    this.debounceTimers.set(key, setTimeout(() => {
+    this.debounceTimers.set(key, window.setTimeout(() => {
       this.debounceTimers.delete(key);
       callback();
     }, timeout));
