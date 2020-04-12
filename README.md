@@ -25,28 +25,3 @@ For long time aurelia-cli user, you can still use `au run` with those arguments 
 ## Build for production
 
 Run `npm run build`, or the old way `au build --env prod`.
-
-## Unit tests
-
-Run `au test` (or `au karma`).
-
-To run in watch mode, `au test --watch` or `au karma --watch`.
-
-## Integration (e2e) tests
-
-You need the app running for integration test.
-
-First, run `au run` and keep it running.
-
-Then run `au cypress` to run cypress in interactive mode.
-
-To perform a test-run and reports the results, do `au cypress --run`.
-
-To ask the `cypress` to start the application first and then start testing: `au cypress --start`
-
-The two following flags are useful when using `--start` flag:
- * To change dev server port, do `au cypress --start --port 8888`.
- * To change dev server host, do `au cypress --start --host 127.0.0.1`
-
-
-**PS:** It is also possible to mix the flags `au cypress --run --start --port 7070 --host 127.0.0.1`

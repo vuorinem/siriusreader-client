@@ -33,5 +33,3 @@ node_modules
 /src/environment.js
 /src/environment.ts
 /dist
-/test/coverage-jest
-/test/coverage-karma

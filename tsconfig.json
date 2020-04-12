@@ -3,9 +3,6 @@
   "compilerOptions": {
     "module": "esnext",
     "skipLibCheck": true,
-    "types": [
-      "jasmine"
-    ],
     "typeRoots": [
       "./node_modules/@types"
     ],
@@ -25,10 +22,6 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./test/**/*.ts",
     "./types/**/*.d.ts"
-  ],
-  "exclude": [
-    "./test/e2e/**/*.ts"
   ]
 }

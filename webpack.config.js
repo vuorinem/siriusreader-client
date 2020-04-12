@@ -232,9 +232,6 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
     new ProvidePlugin({
       'Promise': ['promise-polyfill', 'default']
     }),
-    new ModuleDependenciesPlugin({
-      'aurelia-testing': ['./compile-spy', './view-spy']
-    }),
     new HtmlWebpackPlugin({
       template: 'index.ejs',
       metadata: {
