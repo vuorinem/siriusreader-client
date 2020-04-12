@@ -16,7 +16,6 @@ import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
 import * as environment from '../../config/environment.json';
-import { isAboutEqual } from 'utility/is-about-equal';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -516,7 +515,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    if (!this.readingState.section.nextSection && isAboutEqual(this.readingState.section.right, newViewOffset)) {
+    if (!this.readingState.section.nextSection && this.readingState.section.right - 1 < newViewOffset) {
       // Trying to turn page after the end of the book
       return;
     }
