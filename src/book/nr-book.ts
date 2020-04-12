@@ -16,6 +16,7 @@ import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
 import * as environment from '../../config/environment.json';
+import { isAboutEqual } from 'utility/is-about-equal';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -41,6 +42,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private currentViewOffset: number = 0;
   private isTransitioning: boolean = false;
   private totalCharacters: number = 0;
+  private viewWidth: number = 0;
 
   private observers: Disposable[] = [];
 
@@ -80,6 +82,29 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     return this.readingState.startLocation * 100 / this.totalCharacters;
+  }
+
+  @computedFrom('bookConfig.columnGap')
+  private get columnGap(): number {
+    return bookConfig.columnGap;
+  }
+
+  @computedFrom('columnCount')
+  private get columnWidth(): string {
+    if (this.columnCount === 1) {
+      return '100vw';
+    } else {
+      return 'auto';
+    }
+  }
+
+  @computedFrom('viewWidth', 'bookConfig.oneColumnThreshold')
+  private get columnCount(): number {
+    if (this.viewWidth < bookConfig.oneColumnThreshold) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
   constructor(
@@ -140,7 +165,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
     }
 
-    const viewWidth = this.getViewWidthInPixels();
+    this.viewWidth = this.getViewWidthInPixels();
 
     this.book = this.bookService.book;
 
@@ -169,7 +194,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     for (const section of this.sections) {
-      section.pageWidth = viewWidth;
+      section.pageWidth = this.viewWidth;
+      section.columnCount = this.columnCount;
     }
 
     const startLocation = await this.readingService.getLocation();
@@ -216,7 +242,9 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private jumpToLocationInSection(section: SectionModel, sectionLocation: number) {
-    const offsetFromCurrentView = this.domUtility.findOffsetForLocation(section.element, sectionLocation);
+    const offsetFromCurrentPage = this.domUtility.findOffsetForLocation(section.element, sectionLocation);
+    const viewRect = this.bookContentElement.getBoundingClientRect();
+    const offsetFromCurrentView = offsetFromCurrentPage - viewRect.left;
     const offsetFromStart = offsetFromCurrentView + this.currentViewOffset;
 
     this.jumpToOffset(offsetFromStart);
@@ -448,11 +476,11 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private moveForward(source: string) {
-    this.move(this.getViewWidthInPixels(), source + 'Forward');
+    this.move(this.viewWidth, source + 'Forward');
   }
 
   private moveBack(source: string) {
-    this.move(-this.getViewWidthInPixels(), source + 'Backward');
+    this.move(-this.viewWidth, source + 'Backward');
   }
 
   private getViewWidthInPixels(): number {
@@ -461,8 +489,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     // Distance to the next view is book content width - paddings + one column gap
-    const contentRect = this.bookContentElement.getBoundingClientRect();
-    return contentRect.width - bookConfig.padding * 2 + bookConfig.columnGap;
+    const contentRect = this.bookSectionsElement.getBoundingClientRect();
+    return contentRect.width - bookConfig.padding * 2 + this.columnGap;
   }
 
   private move(moveByPixels: number, source: string) {
@@ -488,7 +516,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    if (!this.readingState.section.nextSection && Math.round(this.readingState.section.right) <= newViewOffset) {
+    if (!this.readingState.section.nextSection && isAboutEqual(this.readingState.section.right, newViewOffset)) {
       // Trying to turn page after the end of the book
       return;
     }
@@ -503,13 +531,12 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private jumpToOffset(offset: number) {
-    const viewWidth = this.getViewWidthInPixels();
-    const jumpToPage = Math.floor(offset / viewWidth);
-    const jumpToPixels = jumpToPage * viewWidth;
+    const jumpToPage = Math.floor(offset / this.viewWidth);
+    const jumpToPixels = jumpToPage * this.viewWidth;
 
     this.startTransitionTo(jumpToPixels, 'jump');
 
-    this.updateSectionVisibility(viewWidth);
+    this.updateSectionVisibility(this.viewWidth);
   }
 
   private updateSectionVisibility(movementSize: number) {
@@ -636,17 +663,20 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    const viewWidth = this.getViewWidthInPixels();
+    this.viewWidth = this.getViewWidthInPixels();
 
     for (const section of this.sections) {
-      section.pageWidth = viewWidth;
+      section.pageWidth = this.viewWidth;
+      section.columnCount = this.columnCount;
     }
 
-    if (this.readingState.section) {
-      this.readingState.section.refreshWidth();
-    }
+    this.taskQueue.queueTask(() => {
+      if (this.readingState.section) {
+        this.readingState.section.refreshWidth();
+      }
 
-    this.jumpToLocation(this.readingState.startLocation);
+      this.jumpToLocation(this.readingState.startLocation);
+    });
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {

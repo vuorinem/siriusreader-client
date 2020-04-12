@@ -1,5 +1,4 @@
 import { observable, computedFrom } from 'aurelia-framework';
-import { bookConfig } from './book-config';
 
 export class SectionModel {
   public element!: HTMLElement;
@@ -14,8 +13,10 @@ export class SectionModel {
   public previousSection?: SectionModel;
   public nextSection?: SectionModel;
 
-  @observable public pageWidth?: number;
+  public pageWidth?: number;
   @observable public left: number = 0;
+
+  public columnCount: number = 1;
 
   private width: number = 0;
 
@@ -39,22 +40,20 @@ export class SectionModel {
       return;
     }
 
-    if (!this.element.lastElementChild || !this.element.firstElementChild) {
+    if (!this.element.firstElementChild) {
       this.width = this.pageWidth;
 
       return;
     }
 
     const oldWidth = this.width;
+    let newWidth = this.getWidth(this.element);
 
-    let newWidth = this.getRight(this.element.lastElementChild)
-      - this.element.firstElementChild.getBoundingClientRect().left
-      + bookConfig.columnGap;
-
-    // Make sure the width is a multiple of half page width
-    const widthOverflow = newWidth % (this.pageWidth / 2);
+    // Make sure the width is a multiple column width
+    const columnWidth = this.pageWidth / this.columnCount;
+    const widthOverflow = newWidth % columnWidth;
     if (widthOverflow > 0.1) {
-      newWidth += this.pageWidth / 2 - widthOverflow;
+      newWidth += columnWidth - widthOverflow;
     }
 
     if (oldWidth !== newWidth) {
@@ -64,18 +63,30 @@ export class SectionModel {
     }
   }
 
-  private getRight(element: Element): number {
-    const rect = element.getBoundingClientRect();
+  private getWidth(element: Element): number {
+    let left: number | null = null;
+    let right: number | null = null;
 
-    if (rect.width > 0) {
-      return rect.right;
+    let child = element.firstElementChild;
+
+    while (child !== null) {
+      const rect = child.getBoundingClientRect();
+      child = child.nextElementSibling;
+
+      if (rect.width === 0) {
+        continue;
+      }
+
+      if (left === null || rect.left < left) {
+        left = rect.left;
+      }
+
+      if (right === null || rect.right > right) {
+        right = rect.right;
+      }
     }
 
-    if (element.previousElementSibling != null) {
-      return this.getRight(element.previousElementSibling);
-    }
-
-    return 0;
+    return right - left;
   }
 
   private leftChanged(newLeft: number, oldLeft: number) {
@@ -83,12 +94,6 @@ export class SectionModel {
       this.moveNextSection(newLeft);
     } else {
       this.moveNextSection(newLeft - oldLeft);
-    }
-  }
-
-  private pageWidthChanged(newPageWidth: number, oldPageWidth?: number) {
-    if (oldPageWidth !== undefined) {
-      this.refreshWidth();
     }
   }
 
