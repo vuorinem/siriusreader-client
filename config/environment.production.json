@@ -1,7 +1,5 @@
 {
   "debug": false,
   "testing": false,
-  "apiUrl": "https://draconis-api.azurewebsites.net",
-  "tokenEndpoint": "https://draconis-api.azurewebsites.net/connect/token",
   "isHighlightingEnabled": false
 }

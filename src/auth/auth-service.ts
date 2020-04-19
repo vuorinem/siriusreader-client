@@ -9,6 +9,9 @@ import 'url-search-params-polyfill';
 const TokenStorageKey = "nr-token";
 const RefreshTimeoutKey = "nr-token-refresh";
 
+const apiUrl = process.env.apiUrl && environment.apiUrl;
+const tokenEndpoint = process.env.tokenEndpoint && environment.tokenEndpoint;
+
 export const EventLogin = "login";
 export const EventLogout = "logout";
 
@@ -44,7 +47,7 @@ export class AuthService {
 
     const authService = this;
 
-    this.http.baseUrl = environment.apiUrl;
+    this.http.baseUrl = apiUrl;
 
     this.http.interceptors.push({
       request(request: Request) {
@@ -75,7 +78,7 @@ export class AuthService {
     request.append("password", password);
 
     const response = await this.http
-      .fetch(environment.tokenEndpoint, {
+      .fetch(tokenEndpoint, {
         method: "post",
         body: request.toString(),
         headers: {
@@ -117,7 +120,7 @@ export class AuthService {
     request.append("refresh_token", this.tokenDetails.refresh_token);
 
     const response = await this.http
-      .fetch(environment.tokenEndpoint, {
+      .fetch(tokenEndpoint, {
         method: "post",
         body: request.toString(),
         headers: {
