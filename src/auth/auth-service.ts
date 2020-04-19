@@ -9,8 +9,8 @@ import 'url-search-params-polyfill';
 const TokenStorageKey = "nr-token";
 const RefreshTimeoutKey = "nr-token-refresh";
 
-const apiUrl = process.env.apiUrl && environment.apiUrl;
-const tokenEndpoint = process.env.tokenEndpoint && environment.tokenEndpoint;
+const apiUrl = process.env.apiUrl || environment.apiUrl;
+const tokenEndpoint = process.env.tokenEndpoint || environment.tokenEndpoint;
 
 export const EventLogin = "login";
 export const EventLogout = "logout";
