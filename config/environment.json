@@ -1,7 +1,7 @@
 {
   "debug": true,
   "testing": false,
-  "apiUrl": "http://localhost:62693",
-  "tokenEndpoint": "http://localhost:62693/connect/token",
+  "apiUrl": "https://localhost:62594",
+  "tokenEndpoint": "https://localhost:62594/connect/token",
   "isHighlightingEnabled": false
 }
