@@ -1,7 +1,7 @@
 {
-  "name": "draconisreader",
-  "description": "Draconis Reader",
-  "version": "0.1.0",
+  "name": "siriusreader",
+  "description": "Sirius Reader",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "dependencies": {
     "aurelia-animator-css": "^1.0.4",

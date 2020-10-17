@@ -1,5 +1,5 @@
 {
-  "name": "draconis-reader",
+  "name": "siriusreader",
   "type": "project:application",
   "paths": {
     "root": "src",
