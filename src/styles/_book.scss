@@ -98,7 +98,14 @@ nr-book {
                 column-fill: auto;
                 /* Other column properties are managed in JS */
 
-                img {
+                img.cover,
+                .title,
+                .copyright {
+                    break-before: column;
+                    break-after: column;
+                }
+
+                img.cover {
                     max-width: calc(100% - 2 * #{$book-padding});
                     padding: 0;
                     display: block;
@@ -107,8 +114,18 @@ nr-book {
 
                 h1,
                 h2 {
+                    break-before: column;
                     margin-top: 2em;
                     text-align: center;
+                }
+
+                .title {
+                    h1,
+                    h2 {
+                        break-before: initial;
+                        margin-top: 2em;
+                        text-align: center;
+                    }
                 }
 
                 h3,
