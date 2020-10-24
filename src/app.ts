@@ -18,7 +18,7 @@ export class App implements ConfiguresRouter {
   }
 
   public configureRouter(config: RouterConfiguration, router: Router) {
-    config.title = "ORB Reader";
+    config.title = "Sirius Reader";
     config.options.pushState = true;
     config.options.root = '/';
 
