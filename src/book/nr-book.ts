@@ -45,7 +45,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private observers: Disposable[] = [];
 
-  private onTransitionend: () => void = () => this.handleTransitionend();
   private onKeyDown: (e: KeyboardEvent) => void = e => this.handleKeyDown(e);
   private onWheel: (e: WheelEvent) => void = e => this.handleWheel(e);
   private onWindowResize: () => void = () => this.handleWindowResize();
@@ -126,7 +125,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   public detached() {
-    this.bookSectionsElement!.removeEventListener('transitionend', this.onTransitionend);
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('wheel', this.onWheel);
     window.removeEventListener('resize', this.onWindowResize);
@@ -192,27 +190,21 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       section.endLocation = this.totalCharacters;
     }
 
-    for (const section of this.sections) {
-      section.pageWidth = this.viewWidth;
-      section.columnCount = this.columnCount;
-    }
+    await this.refreshSectionWidths();
 
     const startLocation = await this.readingService.getLocation();
-    this.jumpToLocation(startLocation);
-
-    this.observers = this.sections.map(section => this.bindingEngine
-      .propertyObserver(section, 'left')
-      .subscribe((newLeft: number, oldLeft: number) => this.sectionLeftChanged(section, oldLeft)));
+    await this.jumpToLocation(startLocation);
 
     this.setInativeTimeout();
 
-    this.bookSectionsElement!.addEventListener('transitionend', this.onTransitionend, false);
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
     window.addEventListener('resize', this.onWindowResize, false);
+
+    this.isInitialized = true;
   }
 
-  private jumpToLocation(location: number): void {
+  private async jumpToLocation(location: number): Promise<void> {
     if (this.sections.length == 0) {
       return;
     }
@@ -228,25 +220,18 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       }
     }
 
-    if (section.isLoaded) {
-      this.jumpToLocationInSection(section, location - section.startLocation);
-    } else {
-      const observer = this.bindingEngine.propertyObserver(section, 'isLoaded').subscribe(() => {
-        this.jumpToLocationInSection(section, location - section.startLocation);
-        observer.dispose();
-      });
-    }
+    await section.load();
 
-    section.shouldLoad = true;
+    await this.jumpToLocationInSection(section, location - section.startLocation);
   }
 
-  private jumpToLocationInSection(section: SectionModel, sectionLocation: number) {
+  private async jumpToLocationInSection(section: SectionModel, sectionLocation: number): Promise<void> {
     const offsetFromCurrentPage = this.domUtility.findOffsetForLocation(section.element, sectionLocation);
     const viewRect = this.bookContentElement.getBoundingClientRect();
     const offsetFromCurrentView = offsetFromCurrentPage - viewRect.left;
     const offsetFromStart = offsetFromCurrentView + this.currentViewOffset;
 
-    this.jumpToOffset(offsetFromStart);
+    await this.jumpToOffset(offsetFromStart);
   }
 
   private isLink(target: EventTarget | null): boolean {
@@ -522,63 +507,66 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     this.trackingService.event(source);
 
-    this.startTransitionTo(newViewOffset, 'turn');
+    this.transitionTo(newViewOffset, 'turn');
 
     this.taskQueue.queueTask(() => {
-      this.updateSectionVisibility(Math.abs(moveByPixels));
+      this.updateSectionVisibility();
     });
   }
 
-  private jumpToOffset(offset: number) {
+  private async jumpToOffset(offset: number): Promise<void> {
     const jumpToPage = Math.floor(offset / this.viewWidth);
     const jumpToPixels = jumpToPage * this.viewWidth;
 
-    this.startTransitionTo(jumpToPixels, 'jump');
+    await this.transitionTo(jumpToPixels, 'jump');
 
-    this.updateSectionVisibility(this.viewWidth);
+    this.updateSectionVisibility();
   }
 
-  private updateSectionVisibility(movementSize: number) {
-    for (const section of this.sections) {
-      if (section.right < this.currentViewOffset - movementSize) {
+  private async updateSectionVisibility(): Promise<void> {
+    const sectionLoadPromises = this.sections.map(section => {
+      if (section.right < this.currentViewOffset - this.viewWidth) {
         // Page is past the view
-        section.shouldLoad = false;
-        continue;
+        section.unload();
+        return Promise.resolve();
       }
 
-      if (section.left > this.currentViewOffset + movementSize) {
+      if (section.left > this.currentViewOffset + this.viewWidth) {
         // Page is not yet in the view
-        section.shouldLoad = false;
-        continue;
+        section.unload();
+        return Promise.resolve();
       }
 
-      if (!section.shouldLoad) {
-        // The section is visible (or almost visible) but not loaded, set it to load
-        section.shouldLoad = true;
-      }
-    }
+      return section.load();
+    });
+
+    await Promise.all(sectionLoadPromises);
   }
 
-  private startTransitionTo(offset: number, browseStyle: BrowseStyle) {
-    this.closeHighlightMenu();
+  private async transitionTo(offset: number, browseStyle: BrowseStyle): Promise<void> {
+    if (this.currentViewOffset === offset) {
+      return;
+    }
 
+    this.closeHighlightMenu();
     this.isTransitioning = true;
 
-    if (this.currentViewOffset !== offset) {
+    return new Promise(resolve => {
+      const onTransitioned = () => {
+        this.bookSectionsElement!.removeEventListener('transitionend', onTransitioned);
+        this.isTransitioning = false;
+        this.triggerOpenPage();
+
+        resolve();
+      }
+
+      this.bookSectionsElement!.addEventListener('transitionend', onTransitioned, false);
       this.browseStyle = browseStyle;
       this.currentViewOffset = offset;
-    } else {
-      this.handleTransitionend();
-    }
+    });
   }
 
-  private handleTransitionend() {
-    if (!this.isInitialized) {
-      this.isInitialized = true;
-    }
-
-    this.isTransitioning = false;
-
+  private triggerOpenPage() {
     this.taskQueue.queueTask(() => {
       this.updateReadingStateAndProgress();
 
@@ -602,10 +590,19 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.readingService.setLocation(this.readingState.startLocation);
   }
 
-  private sectionLeftChanged(section: SectionModel, oldLeft: number) {
-    if (this.readingState.section === section) {
-      // Section left from current view has moved, so move the current view as well
-      this.currentViewOffset += section.left - oldLeft;
+  private async refreshSectionWidths(): Promise<void> {
+    const currentSectionLeft = this.readingState.section?.left;
+
+    for (const section of this.sections) {
+      section.pageWidth = this.viewWidth;
+      section.columnCount = this.columnCount;
+      section.refreshWidth();
+
+      if (this.readingState.section === section) {
+        const sectionMovedBy = section.left - currentSectionLeft;
+        const newOffset = this.currentViewOffset + sectionMovedBy;
+        await this.jumpToOffset(newOffset);
+      }
     }
   }
 
@@ -662,20 +659,13 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
+    const locationBeforeResize = this.readingState.startLocation;
+
     this.viewWidth = this.getViewWidthInPixels();
 
-    for (const section of this.sections) {
-      section.pageWidth = this.viewWidth;
-      section.columnCount = this.columnCount;
-    }
+    await this.refreshSectionWidths();
 
-    this.taskQueue.queueTask(() => {
-      if (this.readingState.section) {
-        this.readingState.section.refreshWidth();
-      }
-
-      this.jumpToLocation(this.readingState.startLocation);
-    });
+    await this.jumpToLocation(locationBeforeResize);
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {

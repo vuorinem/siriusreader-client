@@ -1,10 +1,11 @@
-import { observable, computedFrom } from 'aurelia-framework';
+import { NrSection } from './nr-section';
+import { computedFrom } from 'aurelia-framework';
 
 export class SectionModel {
   public element!: HTMLElement;
+  public viewModel!: NrSection;
   public url: string;
   public characters: number;
-  public shouldLoad: boolean = false;
   public isLoading: boolean = false;
   public isLoaded: boolean = false;
   public startLocation: number = 0;
@@ -14,11 +15,16 @@ export class SectionModel {
   public nextSection?: SectionModel;
 
   public pageWidth?: number;
-  @observable public left: number = 0;
 
   public columnCount: number = 1;
 
+  private internalLeft: number = 0;
   private width: number = 0;
+
+  @computedFrom('internalLeft')
+  public get left(): number {
+    return this.internalLeft;
+  }
 
   @computedFrom('left', 'width')
   public get right(): number {
@@ -40,18 +46,34 @@ export class SectionModel {
     }
   }
 
+  public async load() {
+    await this.viewModel.load();
+  }
+
+  public unload() {
+    this.viewModel.clear();
+  }
+
+  public moveTo(newLeft: number) {
+    if (newLeft != this.internalLeft) {
+      this.internalLeft = newLeft;
+      this.refreshNextSection();
+    }
+  }
+
   public refreshWidth() {
     if (!this.pageWidth) {
       return;
     }
 
-    if (!this.element.firstElementChild) {
-      this.width = this.pageWidth;
+    const oldWidth = this.width;
 
+    if (!this.element?.firstElementChild) {
+      this.width = this.pageWidth;
+      this.refreshNextSection();
       return;
     }
 
-    const oldWidth = this.width;
     let newWidth = this.getWidth(this.element);
 
     // Make sure the width is a multiple column width
@@ -63,8 +85,7 @@ export class SectionModel {
 
     if (oldWidth !== newWidth) {
       this.width = newWidth;
-
-      this.moveNextSection(newWidth - oldWidth);
+      this.refreshNextSection();
     }
   }
 
@@ -94,17 +115,9 @@ export class SectionModel {
     return right - left;
   }
 
-  private leftChanged(newLeft: number, oldLeft: number) {
-    if (oldLeft === undefined) {
-      this.moveNextSection(newLeft);
-    } else {
-      this.moveNextSection(newLeft - oldLeft);
-    }
-  }
-
-  private moveNextSection(moveBy: number) {
+  private refreshNextSection() {
     if (this.nextSection) {
-      this.nextSection.left += moveBy;
+      this.nextSection.moveTo(this.right);
     }
   }
 }

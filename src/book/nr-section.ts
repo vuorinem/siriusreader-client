@@ -1,7 +1,6 @@
 import { Highlighter } from './../reading/highlighter';
-import { Disposable } from 'aurelia-binding';
 import { SectionModel } from './section-model';
-import { autoinject, BindingEngine } from 'aurelia-framework';
+import { autoinject } from 'aurelia-framework';
 import { BookService } from './book-service';
 import { bindable } from 'aurelia-framework';
 
@@ -10,11 +9,8 @@ export class NrSection {
   @bindable private section!: SectionModel;
   private element: HTMLElement;
 
-  private shouldLoadObserver?: Disposable;
-
   constructor(
     element: Element,
-    private bindingEngine: BindingEngine,
     private bookService: BookService,
     private highlighter: Highlighter) {
 
@@ -23,44 +19,14 @@ export class NrSection {
 
   public bind() {
     this.section.element = this.element;
-
-    this.shouldLoadObserver = this.bindingEngine
-      .propertyObserver(this.section, 'shouldLoad')
-      .subscribe(() => this.shouldLoadChanged());
-  }
-
-  public unbind() {
-    if (this.shouldLoadObserver) {
-      this.shouldLoadObserver.dispose();
-    }
-  }
-
-  public attached() {
-    this.update();
+    this.section.viewModel = this;
   }
 
   public detached() {
     this.clear();
   }
 
-  private shouldLoadChanged() {
-    this.update();
-  }
-
-  private update() {
-    if (!this.section.shouldLoad) {
-      this.clear();
-      return;
-    }
-
-    if (this.section.isLoaded) {
-      return;
-    }
-
-    this.load();
-  }
-
-  private clear() {
+  public clear() {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild)
     }
@@ -68,8 +34,8 @@ export class NrSection {
     this.section.isLoaded = false;
   }
 
-  private async load() {
-    if (!this.section.url) {
+  public async load() {
+    if (!this.section.url || this.section.isLoaded) {
       return;
     }
 
