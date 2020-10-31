@@ -8,19 +8,17 @@ export class DomUtility {
   }
 
   public findOffsetForLocation(root: Node, location: number): number {
-    const range = this.findRangeEndByLocation(root, location, true);
+    const range = this.findRangeEndByLocation(root, location + 1, true);
 
     if (!(range.endContainer instanceof CharacterData) || range.endOffset === 0) {
       // Location is at a non-text node or at the start of a text node
       return this.getNodeClientLeft(range.endContainer);
     } else if (range.endOffset === range.endContainer.length) {
-      // Location is at the end of a texxt node
+      // Location is at the end of a text node
       return range.endContainer.parentElement!.getBoundingClientRect().right;
     } else {
       // Location is in the middle of a text node
       range.setStart(range.endContainer, 0);
-      // Location points to between the pages, get offset for the first character in the page
-      range.setEnd(range.endContainer, range.endOffset + 1)
       return range.getBoundingClientRect().right;
     }
   }
