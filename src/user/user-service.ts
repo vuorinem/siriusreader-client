@@ -46,7 +46,7 @@ export class UserService {
       const userDetails = await response.json();
       this.userDetails = userDetails;
     } else {
-      this.userDetails = null;
+      this.clear();
     }
   }
 
