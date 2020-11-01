@@ -9,8 +9,12 @@ export class ReadingService {
   constructor(private http: HttpClient) {
   }
 
-  public async getLocation(): Promise<number> {
+  public async getLocation(): Promise<number | undefined> {
     const response = await this.http.fetch(`/book/selected/bookmark`);
+
+    if (response.status === 204) {
+      return undefined;
+    }
 
     const bookmark: IBookmark = await response.json();
 

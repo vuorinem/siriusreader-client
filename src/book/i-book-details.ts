@@ -5,5 +5,6 @@ export interface IBookDetails {
   title: string;
   author: string;
   description: string;
+  contentStartLocation: number;
   sections: ISectionDetails[];
 }

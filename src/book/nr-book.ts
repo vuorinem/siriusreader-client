@@ -192,7 +192,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     await this.refreshSectionWidths();
 
-    const startLocation = await this.readingService.getLocation();
+    const startLocation = await this.readingService.getLocation() ?? this.book.contentStartLocation;
     await this.jumpToLocation(startLocation);
 
     this.setInativeTimeout();
