@@ -198,8 +198,10 @@ export class AuthService {
     }
 
     if (this.tokenDetails && this.expiresAt) {
-      const timeout = this.expiresAt.getTime() - (new Date().getTime());
-      this.refreshTimerHandler = window.setTimeout(() => this.refresh(), timeout);
+      const expiresInMilliseconds = this.expiresAt.getTime() - (new Date().getTime());
+      this.refreshTimerHandler = window.setTimeout(
+        () => this.refresh(),
+        expiresInMilliseconds / 2);
     }
   }
 
