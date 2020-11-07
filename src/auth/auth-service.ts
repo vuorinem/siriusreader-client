@@ -22,19 +22,11 @@ export class AuthService {
   private storage: Storage;
 
   private refreshTimerHandler?: number;
+  private refreshAction?: Promise<boolean>;
 
   @computedFrom("tokenDetails")
   public get isAuthenticated(): boolean {
     return !!this.tokenDetails;
-  }
-
-  @computedFrom("tokenDetails")
-  public get token(): string | undefined {
-    if (!this.tokenDetails) {
-      return;
-    }
-
-    return this.tokenDetails.access_token;
   }
 
   constructor(
@@ -50,9 +42,10 @@ export class AuthService {
     this.http.baseUrl = apiUrl;
 
     this.http.interceptors.push({
-      request(request: Request) {
-        if (authService.token) {
-          request.headers.append('Authorization', 'Bearer ' + authService.token);
+      async request(request: Request) {
+        const token = await authService.getToken();
+        if (token) {
+          request.headers.append('Authorization', 'Bearer ' + token);
         }
 
         return request;
@@ -69,6 +62,20 @@ export class AuthService {
         return response;
       }
     });
+  }
+
+  public async getToken(): Promise<string | undefined> {
+    if (!this.tokenDetails) {
+      return;
+    }
+
+    if (this.expiresAt && this.expiresAt < new Date()) {
+      if (!(await this.refresh())) {
+        return;
+      }
+    }
+
+    return this.tokenDetails.access_token;
   }
 
   public async authenticate(email: string, password: string): Promise<IAuthenticationResult> {
@@ -111,30 +118,15 @@ export class AuthService {
   }
 
   public async refresh(): Promise<boolean> {
-    if (!this.tokenDetails) {
-      return false;
-    }
-
-    const request = new URLSearchParams();
-    request.append("grant_type", "refresh_token");
-    request.append("refresh_token", this.tokenDetails.refresh_token);
-
-    const response = await this.http
-      .fetch(tokenEndpoint, {
-        method: "post",
-        body: request.toString(),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+    if (!this.refreshAction) {
+      this.refreshAction = new Promise(async resolve => {
+        const result = await this.forceRefresh();
+        this.refreshAction = undefined;
+        resolve(result);
       });
-
-    if (!response.ok) {
-      this.setToken(null);
-    } else {
-      this.setToken(await response.json());
     }
 
-    return this.isAuthenticated;
+    return this.refreshAction;
   }
 
   private setToken(tokenResponse: ITokenResponse | null) {
@@ -191,17 +183,50 @@ export class AuthService {
     this.setRefreshTimer();
   }
 
-  private setRefreshTimer() {
-    if (this.refreshTimerHandler) {
-      clearTimeout(this.refreshTimerHandler);
-      this.refreshTimerHandler = undefined;
+  private async forceRefresh(): Promise<boolean> {
+    this.clearRefreshTimer();
+
+    if (!this.tokenDetails) {
+      return false;
     }
+
+    const request = new URLSearchParams();
+    request.append("grant_type", "refresh_token");
+    request.append("refresh_token", this.tokenDetails.refresh_token);
+
+    const response = await this.http
+      .fetch(tokenEndpoint, {
+        method: "post",
+        body: request.toString(),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+    if (!response.ok) {
+      this.setToken(null);
+    } else {
+      this.setToken(await response.json());
+    }
+
+    return this.isAuthenticated;
+  }
+
+  private setRefreshTimer() {
+    this.clearRefreshTimer();
 
     if (this.tokenDetails && this.expiresAt) {
       const expiresInMilliseconds = this.expiresAt.getTime() - (new Date().getTime());
       this.refreshTimerHandler = window.setTimeout(
         () => this.refresh(),
         expiresInMilliseconds / 2);
+    }
+  }
+
+  private clearRefreshTimer() {
+    if (this.refreshTimerHandler) {
+      clearTimeout(this.refreshTimerHandler);
+      this.refreshTimerHandler = undefined;
     }
   }
 
