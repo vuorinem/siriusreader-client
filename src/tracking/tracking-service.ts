@@ -11,7 +11,10 @@ import * as environment from '../../config/environment.json';
 
 const apiUrl = process.env.apiUrl || environment.apiUrl;
 
+const StateCheckIntervalInSeconds = 5;
+const ConnectionCheckIntervalInSeconds = 5;
 const InitialRetryTimeoutInSeconds = 1;
+const ConnectionRetryInSeconds = 5;
 const MaxRetryTimeout = 20;
 
 @autoinject
@@ -39,15 +42,24 @@ export class TrackingService {
       })
       .build();
 
+    this.connection.keepAliveIntervalInMilliseconds = ConnectionCheckIntervalInSeconds * 1000;
+
     this.eventAggregator.subscribe(EventLogin, () => this.connect());
     this.eventAggregator.subscribe(EventLogout, () => this.disconnect());
+    this.connection.onclose(() => this.eventInternal('ConnectionClosed', false));
+    this.connection.onreconnected(() => this.eventInternal('Reconnected', true));
+    this.connection.onreconnecting(() => this.eventInternal('Reconnecting', false));
+
+    window.setInterval(() => {
+      this.sendCached();
+    }, StateCheckIntervalInSeconds * 1000);
   }
 
   public async event(type: string) {
-    await this.eventInternal(type);
+    await this.eventInternal(type, true);
   }
 
-  private async eventInternal(type: string) {
+  private async eventInternal(type: string, send: boolean) {
     if (!this.authService.isAuthenticated) {
       return;
     }
@@ -58,7 +70,7 @@ export class TrackingService {
 
     const time = new Date();
 
-    await this.send({
+    const event = {
       bookId: this.bookService.book.bookId,
       time: time,
       timezoneOffset: time.getTimezoneOffset(),
@@ -75,16 +87,20 @@ export class TrackingService {
       isBlurred: !this.applicationState.isFocused,
       isInactive: !this.applicationState.isActive,
       isReading: this.applicationState.isReading,
-    });
-  }
+    } as ITrackingEvent;
 
-  private async send(event: ITrackingEvent) {
     this.eventCache.push(event);
 
-    await this.sendCached();
+    if (send) {
+      await this.sendCached();
+    }
   }
 
   private async sendCached() {
+    if (this.eventCache.length === 0) {
+      return;
+    }
+
     const eventsToSend = this.eventCache;
     this.eventCache = [];
 
@@ -101,7 +117,9 @@ export class TrackingService {
       if (this.retryTimeoutSeconds < MaxRetryTimeout) {
         await this.scheduleSend(this.retryTimeoutSeconds * 1000);
       } else {
-        throw new Error('Error in tracking service');
+        // Disconnect and try to reconnect
+        await this.connection.stop();
+        await this.scheduleSend(ConnectionRetryInSeconds * 1000);
       }
     }
   }
@@ -121,8 +139,6 @@ export class TrackingService {
   }
 
   private async connect() {
-    // TODO: check if connection has broken down?
-
     if (this.connection.state === signalR.HubConnectionState.Disconnected) {
       await this.connection.start();
     }
