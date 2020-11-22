@@ -4,9 +4,10 @@ import { TrackingService } from './tracking-service';
 
 @autoinject
 export class WindowTrackingService {
-  private onFocus: () => void = () => this.handleFocus(true);
-  private onBlur: () => void = () => this.handleFocus(false);
-  private onBeforeUnload: () => void = () => this.triggerEvent('close');
+  private onFocus = () => this.handleFocus(true);
+  private onBlur = () => this.handleFocus(false);
+  private onVisibilityChange = () => this.handleVisibilityChange()
+  private onBeforeUnload = () => this.triggerEvent('close');
 
   constructor(
     private taskQueue: TaskQueue,
@@ -16,12 +17,14 @@ export class WindowTrackingService {
   }
 
   public attach() {
+    window.document.addEventListener('visibilitychange', this.onVisibilityChange, false);
     window.addEventListener('focus', this.onFocus, false);
     window.addEventListener('blur', this.onBlur, false);
     window.addEventListener('beforeunload', this.onBeforeUnload, false);
   }
 
   public detach() {
+    window.document.removeEventListener('visibilitychange', this.onVisibilityChange, false);
     window.removeEventListener('focus', this.onFocus, false);
     window.removeEventListener('blur', this.onBlur, false);
     window.removeEventListener('beforeunload', this.onBeforeUnload, false);
@@ -33,6 +36,13 @@ export class WindowTrackingService {
     this.taskQueue.queueTask(() => {
       this.applicationState.isFocused = isFocused;
       this.triggerEvent(isFocused ? 'focus' : 'blur');
+    });
+  }
+
+  private handleVisibilityChange() {
+    this.taskQueue.queueTask(() => {
+      this.applicationState.isHidden = window.document.hidden;
+      this.triggerEvent(this.applicationState.isHidden ? 'hide' : 'show');
     });
   }
 
