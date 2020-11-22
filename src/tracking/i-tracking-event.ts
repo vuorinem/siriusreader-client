@@ -13,6 +13,7 @@ export interface ITrackingEvent {
   isMenuOpen: boolean;
   isDialogOpen: boolean;
   isBlurred: boolean;
+  isHidden: boolean;
   isInactive: boolean;
   isReading: boolean;
 }

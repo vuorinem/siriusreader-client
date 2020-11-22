@@ -18,6 +18,11 @@ export class NrMenu {
     return this.applicationState.isMenuOpen;
   }
 
+  @computedFrom('trackingService.hasConnectionProblem')
+  private get hasConnectionProblem() {
+    return this.trackingService.hasConnectionProblem;
+  }
+
   private get timeUntilDeadline() {
     if (!this.deadline) {
       return;

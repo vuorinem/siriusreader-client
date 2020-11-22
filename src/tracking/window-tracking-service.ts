@@ -7,7 +7,7 @@ export class WindowTrackingService {
   private onFocus = () => this.handleFocus(true);
   private onBlur = () => this.handleFocus(false);
   private onVisibilityChange = () => this.handleVisibilityChange()
-  private onBeforeUnload = () => this.triggerEvent('close');
+  private onBeforeUnload = () => this.trackingService.eventImmediate('close');
 
   constructor(
     private taskQueue: TaskQueue,
@@ -21,6 +21,9 @@ export class WindowTrackingService {
     window.addEventListener('focus', this.onFocus, false);
     window.addEventListener('blur', this.onBlur, false);
     window.addEventListener('beforeunload', this.onBeforeUnload, false);
+
+    this.handleFocus(window.document.hasFocus());
+    this.handleVisibilityChange();
   }
 
   public detach() {

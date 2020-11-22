@@ -109,6 +109,8 @@ export class App implements ConfiguresRouter {
           }
 
           if (!userService.user) {
+            await this.trackingService.stop();
+
             authService.logout();
 
             return next.cancel(new Redirect("login"));

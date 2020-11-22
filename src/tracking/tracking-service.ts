@@ -1,33 +1,37 @@
 import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
 import { BookService } from './../book/book-service';
-import { AuthService, EventLogin, EventLogout } from '../auth/auth-service';
+import { AuthService } from '../auth/auth-service';
 import { autoinject } from 'aurelia-framework';
 import { ReadingState } from './../reading/reading-state';
 import { ITrackingEvent } from './i-tracking-event';
 import * as signalR from "@microsoft/signalr";
-import { EventAggregator } from 'aurelia-event-aggregator';
 import * as environment from '../../config/environment.json';
 
 const apiUrl = process.env.apiUrl || environment.apiUrl;
 
+const SendDelayInMilliseconds = 500;
 const StateCheckIntervalInSeconds = 5;
 const ConnectionCheckIntervalInSeconds = 5;
 const InitialRetryTimeoutInSeconds = 1;
 const ConnectionRetryInSeconds = 5;
 const MaxRetryTimeout = 20;
 
+const EventCacheStorageKey = 'event-cache';
+
 @autoinject
 export class TrackingService {
+  public hasConnectionProblem = false;
+
   private connection: signalR.HubConnection;
   private eventCache: ITrackingEvent[] = [];
+  private useInMemoryCache = false;
 
   private retryTimeout?: number;
   private retryTimeoutSeconds: number = InitialRetryTimeoutInSeconds;
 
   constructor(
     private authService: AuthService,
-    private eventAggregator: EventAggregator,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private bookService: BookService,
@@ -44,19 +48,27 @@ export class TrackingService {
 
     this.connection.keepAliveIntervalInMilliseconds = ConnectionCheckIntervalInSeconds * 1000;
 
-    this.eventAggregator.subscribe(EventLogin, () => this.connect());
-    this.eventAggregator.subscribe(EventLogout, () => this.disconnect());
-    this.connection.onclose(() => this.eventInternal('ConnectionClosed', false));
     this.connection.onreconnected(() => this.eventInternal('Reconnected', true));
     this.connection.onreconnecting(() => this.eventInternal('Reconnecting', false));
 
     window.setInterval(() => {
-      this.sendCached();
+      this.scheduleSend(SendDelayInMilliseconds, false);
     }, StateCheckIntervalInSeconds * 1000);
   }
 
   public async event(type: string) {
     await this.eventInternal(type, true);
+  }
+
+  public eventImmediate(type: string) {
+    this.eventInternal(type, false);
+    this.sendCached();
+  }
+
+  public async stop() {
+    await this.scheduleSend(0);
+    await this.disconnect();
+    this.hasConnectionProblem = false;
   }
 
   private async eventInternal(type: string, send: boolean) {
@@ -85,53 +97,57 @@ export class TrackingService {
       isMenuOpen: this.applicationState.isMenuOpen,
       isDialogOpen: this.dialogService.hasOpenDialog,
       isBlurred: !this.applicationState.isFocused,
+      isHidden: this.applicationState.isHidden,
       isInactive: !this.applicationState.isActive,
       isReading: this.applicationState.isReading,
     } as ITrackingEvent;
 
-    this.eventCache.push(event);
+    this.addEventToCache(event);
 
     if (send) {
-      await this.sendCached();
+      await this.scheduleSend(SendDelayInMilliseconds);
     }
   }
 
   private async sendCached() {
-    if (this.eventCache.length === 0) {
+    const eventsToSend = this.getCache();
+
+    if (eventsToSend.length === 0) {
       return;
     }
-
-    const eventsToSend = this.eventCache;
-    this.eventCache = [];
 
     try {
       await this.connect();
       await this.connection.send('TrackEvents', eventsToSend);
+      this.clearCache();
       this.retryTimeoutSeconds = InitialRetryTimeoutInSeconds;
     } catch {
-      // Sending events failed, push back to cache
-      this.eventCache.push(...eventsToSend);
-
       // Schedule a retry unless we already tried too many times
+      this.hasConnectionProblem = true;
       this.retryTimeoutSeconds = this.retryTimeoutSeconds + 2;
       if (this.retryTimeoutSeconds < MaxRetryTimeout) {
         await this.scheduleSend(this.retryTimeoutSeconds * 1000);
       } else {
         // Disconnect and try to reconnect
-        await this.connection.stop();
+        await this.disconnect();
         await this.scheduleSend(ConnectionRetryInSeconds * 1000);
       }
     }
   }
 
-  private async scheduleSend(timeout: number) {
+  private async scheduleSend(timeout: number, resetIfAlreadyScheduled = true) {
     if (this.retryTimeout) {
+      if (!resetIfAlreadyScheduled) {
+        return;
+      }
+
       window.clearTimeout(this.retryTimeout);
       this.retryTimeout = undefined;
     }
 
     return new Promise<void>(async resolve => {
       this.retryTimeout = window.setTimeout(async () => {
+        this.retryTimeout = undefined;
         await this.sendCached();
         resolve();
       }, timeout);
@@ -141,15 +157,61 @@ export class TrackingService {
   private async connect() {
     if (this.connection.state === signalR.HubConnectionState.Disconnected) {
       await this.connection.start();
+      this.hasConnectionProblem = false;
     }
   }
 
   private async disconnect() {
-    if (this.eventCache.length > 0) {
-      await this.sendCached();
+    await this.connection.stop();
+  }
+
+  private addEventToCache(event: ITrackingEvent) {
+    const cache = this.getCache();
+
+    cache.push(event);
+
+    if (this.useInMemoryCache) {
+      this.eventCache = cache;
+    } else {
+      try {
+        window.localStorage.setItem(EventCacheStorageKey, JSON.stringify(cache));
+      } catch (error) {
+        this.useInMemoryCache = true;
+        this.eventCache = cache;
+      }
+    }
+  }
+
+  private clearCache() {
+    if (this.useInMemoryCache) {
+      this.eventCache = [];
+    } else {
+      try {
+        window.localStorage.setItem(EventCacheStorageKey, JSON.stringify([]));
+      } catch (error) {
+        this.useInMemoryCache = true;
+        this.eventCache = [];
+      }
+    }
+  }
+
+  private getCache(): ITrackingEvent[] {
+    if (this.useInMemoryCache) {
+      return this.eventCache;
     }
 
-    await this.connection.stop();
+    try {
+      const storageItem = window.localStorage.getItem(EventCacheStorageKey);
+
+      if (storageItem === null) {
+        return [];
+      }
+
+      return JSON.parse(storageItem);
+    } catch (error) {
+      this.useInMemoryCache = true;
+      return this.eventCache;
+    }
   }
 
 }
