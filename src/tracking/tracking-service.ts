@@ -110,6 +110,10 @@ export class TrackingService {
   }
 
   private async sendCached() {
+    if (!this.authService.isAuthenticated) {
+      return;
+    }
+
     const eventsToSend = this.getCache();
 
     if (eventsToSend.length === 0) {
