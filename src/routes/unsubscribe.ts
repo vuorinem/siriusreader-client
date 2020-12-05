@@ -3,7 +3,7 @@ import { HttpClient } from 'aurelia-fetch-client';
 
 @autoinject
 export class Unsubscribe {
-  private id: string;
+  private id?: string;
   private emailAddress?: string;
   private isConfirmed: boolean = false;
 

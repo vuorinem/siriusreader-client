@@ -10,7 +10,7 @@ export class Debrief {
       return false;
     }
 
-    return this.userService.user.isIntrinsicCondition;
+    return this.userService.user.isIntrinsicCondition ?? false;
   }
 
   constructor(private userService: UserService) {

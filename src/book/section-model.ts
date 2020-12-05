@@ -33,6 +33,10 @@ export class SectionModel {
 
   @computedFrom('width', 'pageWidth')
   public get pageCount(): number {
+    if (!this.pageWidth) {
+      return 0;
+    }
+
     return Math.ceil(this.width / this.pageWidth);
   }
 
@@ -110,6 +114,10 @@ export class SectionModel {
       if (right === null || rect.right > right) {
         right = rect.right;
       }
+    }
+
+    if (right === null || left === null) {
+      return 0;
     }
 
     return right - left;

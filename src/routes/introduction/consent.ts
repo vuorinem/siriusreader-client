@@ -21,7 +21,7 @@ export class Consent {
   }
 
   public activate() {
-    if (this.userService.user.isConsentConfirmed) {
+    if (!this.userService.user || this.userService.user.isConsentConfirmed) {
       this.router.navigateToRoute("main");
     }
   }

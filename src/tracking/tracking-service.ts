@@ -40,7 +40,7 @@ export class TrackingService {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(apiUrl + '/hubs/tracking', {
         accessTokenFactory: async () => {
-          return await this.authService.getToken();
+          return await this.authService.getToken() ?? '';
         },
         logger: environment.debug ? signalR.LogLevel.Information : signalR.LogLevel.Error,
       })

@@ -21,7 +21,7 @@ export class Information {
   }
 
   public activate() {
-    if (this.userService.user.isInformationSheetConfirmed) {
+    if (!this.userService.user || this.userService.user.isInformationSheetConfirmed) {
       this.router.navigateToRoute("main");
     }
   }

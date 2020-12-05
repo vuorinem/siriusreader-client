@@ -36,8 +36,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private highlightMenuX: number = 0;
   private highlightMenuY: number = 0;
 
-  private bookContentElement?: HTMLDivElement;
-  private bookSectionsElement?: HTMLDivElement;
+  private bookContentElement!: HTMLDivElement;
+  private bookSectionsElement!: HTMLDivElement;
   private currentViewOffset: number = 0;
   private isTransitioning: boolean = false;
   private totalCharacters: number = 0;
@@ -140,6 +140,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private async load(): Promise<void> {
+    if (!this.userService.user || !this.bookService.book) {
+      throw new Error('Error loading book');
+    }
+
     if (!this.userService.user.isBookOpened) {
       const dialog = this.dialogService.open({
         viewModel: BookInformationDialog,
@@ -598,7 +602,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       section.columnCount = this.columnCount;
       section.refreshWidth();
 
-      if (this.readingState.section === section) {
+      if (currentSectionLeft !== undefined && this.readingState.section === section) {
         const sectionMovedBy = section.left - currentSectionLeft;
         const newOffset = this.currentViewOffset + sectionMovedBy;
         await this.jumpToOffset(newOffset);
@@ -609,7 +613,11 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private isSelectionEmpty(): boolean {
     const selection = window.getSelection();
 
-    return !(selection.toString().length > 0);
+    if (!selection || selection.toString().length === 0) {
+      return true;
+    }
+
+    return false;
   }
 
   private setInativeTimeout() {

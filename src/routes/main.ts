@@ -16,7 +16,9 @@ export class Main {
   public async activate() {
     this.applicationState.isReading = false;
 
-    if (!this.userService.user.isInformationSheetConfirmed) {
+    if (!this.userService.user) {
+      this.router.navigate("/login");
+    } else if (!this.userService.user.isInformationSheetConfirmed) {
       this.router.navigate("/introduction/information");
     } else if (!this.userService.user.isConsentConfirmed) {
       this.router.navigate("/introduction/consent");

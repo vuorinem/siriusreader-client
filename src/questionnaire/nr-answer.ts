@@ -212,6 +212,10 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
   @computedFrom('value')
   private get timeSpentHours(): number {
+    if (!this.value) {
+      return 0;
+    }
+
     const numberValue = parseInt(this.value);
 
     if (!numberValue) {
@@ -223,6 +227,10 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
   @computedFrom('value')
   private get timeSpentMinutes(): number {
+    if (!this.value) {
+      return 0;
+    }
+
     const numberValue = parseInt(this.value);
 
     if (!numberValue) {

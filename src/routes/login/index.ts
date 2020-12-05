@@ -4,7 +4,7 @@ import { autoinject, PLATFORM } from 'aurelia-framework';
 
 @autoinject
 export class Index implements RoutableComponentActivate, ConfiguresRouter {
-  private router: Router;
+  private router?: Router;
 
   constructor(private authService: AuthService) {
   }
@@ -32,7 +32,7 @@ export class Index implements RoutableComponentActivate, ConfiguresRouter {
 
   public activate() {
     if (this.authService.isAuthenticated) {
-      this.router.navigateToRoute("main");
+      this.router!.navigateToRoute("main");
     }
   }
 }

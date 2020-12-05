@@ -64,7 +64,7 @@ export class ReadingState {
 
   @computedFrom('section.pageWidth', 'currentViewOffset')
   public get currentPage(): number {
-    if (!this.section) {
+    if (!this.section || !this.section.pageWidth) {
       return 0;
     }
 

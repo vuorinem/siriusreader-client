@@ -10,7 +10,7 @@ export class ConfirmFinish {
   }
 
   public activate() {
-    if (this.userService.user.isBookFinished) {
+    if (!this.userService.user || this.userService.user.isBookFinished) {
       this.router.navigateToRoute("main");
     }
   }

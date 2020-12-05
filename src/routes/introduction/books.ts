@@ -34,7 +34,7 @@ export class Books {
   }
 
   public async activate() {
-    if (this.userService.user.isBookSelected) {
+    if (!this.userService.user || this.userService.user.isBookSelected) {
       this.router.navigateToRoute("main");
     }
 
