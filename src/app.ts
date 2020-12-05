@@ -1,3 +1,4 @@
+import { EventType } from './tracking/event-type';
 import { TrackingService } from './tracking/tracking-service';
 import { ApplicationState } from './state/application-state';
 import { UserService } from './user/user-service';
@@ -135,7 +136,7 @@ export class App implements ConfiguresRouter {
     }
   }
 
-  private getTrackEventStep(eventType: string): PipelineStep {
+  private getTrackEventStep(eventType: EventType): PipelineStep {
     const trackingService = this.trackingService;
 
     return {

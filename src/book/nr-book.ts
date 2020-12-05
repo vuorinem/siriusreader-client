@@ -1,3 +1,4 @@
+import { NavigationEventSource, NavigationEventType } from './../tracking/event-type';
 import { UserService } from 'user/user-service';
 import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
@@ -463,12 +464,12 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.handleDebugKey(event);
   }
 
-  private moveForward(source: string) {
-    this.move(this.viewWidth, source + 'Forward');
+  private moveForward(source: NavigationEventSource) {
+    this.move(this.viewWidth, source + 'Forward' as NavigationEventType);
   }
 
-  private moveBack(source: string) {
-    this.move(-this.viewWidth, source + 'Backward');
+  private moveBack(source: NavigationEventSource) {
+    this.move(-this.viewWidth, source + 'Backward' as NavigationEventType);
   }
 
   private getViewWidthInPixels(): number {
@@ -481,7 +482,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     return contentRect.width - bookConfig.padding * 2 + this.columnGap;
   }
 
-  private move(moveByPixels: number, source: string) {
+  private move(moveByPixels: number, source: NavigationEventType) {
     if (this.sections.some(section => section.isLoading)) {
       // Do not allow moving while loading
       return;
@@ -694,7 +695,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         return true; // Prevent navigating when closing highlight menu
       } else if (this.selectedHighlight) {
         // Clicking existing highlight
-        this.trackingService.event("openSelection");
+        this.trackingService.event('openSelection');
         this.openHighlightMenu(mouseX, mouseY);
         return true; // Prevent navigating when opening existing highlight
       } else {
@@ -733,7 +734,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     this.openHighlightMenu(mouseX, mouseY);
 
-    this.trackingService.event("newSelection");
+    this.trackingService.event('newSelection');
 
     selection.removeAllRanges();
 
@@ -772,7 +773,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     if (this.isHighlightMenuOpen) {
       this.isHighlightMenuOpen = false;
-      this.trackingService.event("closeSelection");
+      this.trackingService.event('closeSelection');
     }
 
     this.setInativeTimeout();

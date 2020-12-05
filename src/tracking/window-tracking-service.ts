@@ -1,3 +1,4 @@
+import { EventType } from './event-type';
 import { ApplicationState } from './../state/application-state';
 import { autoinject, TaskQueue } from 'aurelia-framework';
 import { TrackingService } from './tracking-service';
@@ -49,7 +50,7 @@ export class WindowTrackingService {
     });
   }
 
-  private triggerEvent(type: string) {
+  private triggerEvent(type: EventType) {
     this.trackingService.event(type);
   }
 

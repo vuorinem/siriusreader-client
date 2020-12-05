@@ -7,6 +7,7 @@ import { ReadingState } from './../reading/reading-state';
 import { ITrackingEvent } from './i-tracking-event';
 import * as signalR from "@microsoft/signalr";
 import * as environment from '../../config/environment.json';
+import { EventType } from './event-type';
 
 const apiUrl = process.env.apiUrl || environment.apiUrl;
 
@@ -48,19 +49,19 @@ export class TrackingService {
 
     this.connection.keepAliveIntervalInMilliseconds = ConnectionCheckIntervalInSeconds * 1000;
 
-    this.connection.onreconnected(() => this.eventInternal('Reconnected', true));
-    this.connection.onreconnecting(() => this.eventInternal('Reconnecting', false));
+    this.connection.onreconnected(() => this.eventInternal('reconnected', true));
+    this.connection.onreconnecting(() => this.eventInternal('reconnecting', false));
 
     window.setInterval(() => {
       this.scheduleSend(SendDelayInMilliseconds, false);
     }, StateCheckIntervalInSeconds * 1000);
   }
 
-  public async event(type: string) {
+  public async event(type: EventType) {
     await this.eventInternal(type, true);
   }
 
-  public eventImmediate(type: string) {
+  public eventImmediate(type: EventType) {
     this.eventInternal(type, false);
     this.sendCached();
   }
@@ -71,7 +72,7 @@ export class TrackingService {
     this.hasConnectionProblem = false;
   }
 
-  private async eventInternal(type: string, send: boolean) {
+  private async eventInternal(type: EventType, send: boolean) {
     if (!this.authService.isAuthenticated) {
       return;
     }
@@ -82,7 +83,7 @@ export class TrackingService {
 
     const time = new Date();
 
-    const event = {
+    const event: ITrackingEvent = {
       bookId: this.bookService.book.bookId,
       time: time,
       timezoneOffset: time.getTimezoneOffset(),
@@ -100,7 +101,7 @@ export class TrackingService {
       isHidden: this.applicationState.isHidden,
       isInactive: !this.applicationState.isActive,
       isReading: this.applicationState.isReading,
-    } as ITrackingEvent;
+    };
 
     this.addEventToCache(event);
 

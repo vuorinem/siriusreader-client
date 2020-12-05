@@ -1,8 +1,10 @@
+import { EventType } from './event-type';
+
 export interface ITrackingEvent {
   bookId: number;
   time: Date;
   timezoneOffset: number;
-  type: string;
+  type: EventType;
   startLocation: number;
   visibleCharacterCount: number;
   visibleWordCount: number;

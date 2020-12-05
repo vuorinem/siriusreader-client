@@ -12,9 +12,9 @@ export class Logout {
   }
 
   public async activate() {
-    await this.trackingService.event("logout");
+    await this.trackingService.event('logout');
     await this.trackingService.stop();
     this.authService.logout();
-    this.router.navigateToRoute("login");
+    this.router.navigateToRoute('login');
   }
 }
