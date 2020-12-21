@@ -7,7 +7,6 @@ import { IVerificationResponse } from 'user/i-verification-response';
 export class Register {
   private emailAddress: string = "";
   private verificationToken: string = "";
-  private participantCode: string = "";
   private password: string = "";
   private passwordConfirm: string = "";
 
@@ -39,7 +38,6 @@ export class Register {
     this.isEmailRegistered = false;
 
     this.verificationToken = "";
-    this.participantCode = "";
     this.password = "";
     this.passwordConfirm = "";
   }
@@ -114,7 +112,6 @@ export class Register {
         body: json({
           emailAddress: this.emailAddress,
           emailVerificationToken: this.verificationToken,
-          participantCode: this.participantCode,
           password: this.password,
         }),
       });
