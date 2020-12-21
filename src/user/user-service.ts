@@ -16,16 +16,6 @@ export class UserService {
       !!this.userDetails.readingSpeedWordsPerMinute;
   }
 
-  public get isDeadlinePassed(): boolean {
-    if (!this.userDetails) {
-      return false;
-    }
-
-    const deadline = new Date(this.userDetails.deadline);
-
-    return new Date() > deadline;
-  }
-
   @computedFrom('userDetails')
   public get user(): Readonly<IUserDetails> | undefined {
     return this.userDetails;

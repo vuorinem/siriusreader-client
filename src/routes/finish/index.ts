@@ -11,7 +11,7 @@ export class Index {
   }
 
   public activate() {
-    if (!this.userService.isDeadlinePassed && !this.userService.user?.isBookFinished) {
+    if (!this.userService.user?.isBookFinished) {
       this.router.navigate('main');
     }
   }

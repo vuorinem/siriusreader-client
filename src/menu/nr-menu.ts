@@ -1,4 +1,3 @@
-import { UserService } from './../user/user-service';
 import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
@@ -11,8 +10,6 @@ import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
 @autoinject
 export class NrMenu {
 
-  private isDeadlinePassed: boolean = false;
-
   @computedFrom('applicationState.isMenuOpen')
   private get isOpen() {
     return this.applicationState.isMenuOpen;
@@ -23,50 +20,11 @@ export class NrMenu {
     return this.trackingService.hasConnectionProblem;
   }
 
-  private get timeUntilDeadline() {
-    if (!this.deadline) {
-      return;
-    }
-
-    const differenceInMilliseconds = this.deadline.getTime() - new Date().getTime();
-
-    if (differenceInMilliseconds < 0) {
-      this.isDeadlinePassed = true;
-      return '';
-    }
-
-    const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-    if (differenceInDays > 0) {
-      return differenceInDays + ' day' + (differenceInDays > 1 ? 's' : '');
-    }
-
-    const differenceInHours = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60));
-
-    if (differenceInHours > 0) {
-      return differenceInHours + ' hour' + (differenceInHours > 1 ? 's' : '');
-    }
-
-    const differenceInMinutes = Math.ceil(differenceInMilliseconds / (1000 * 60));
-
-    return differenceInMinutes + ' minutes' + (differenceInMinutes > 1 ? 's' : '');
-  }
-
-  @computedFrom('userService.user')
-  private get deadline(): Date | undefined {
-    if (!this.userService.user) {
-      return undefined;
-    }
-
-    return new Date(this.userService.user.deadline);
-  }
-
   constructor(
     private router: Router,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
-    private userService: UserService,
     private trackingService: TrackingService) {
   }
 
