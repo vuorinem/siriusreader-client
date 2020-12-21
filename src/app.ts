@@ -34,6 +34,11 @@ export class App implements ConfiguresRouter {
         moduleId: PLATFORM.moduleName("./routes/login/index"),
       },
       {
+        name: "info",
+        route: "info",
+        moduleId: PLATFORM.moduleName("./routes/info"),
+      },
+      {
         name: "unsubscribe",
         route: "unsubscribe/*id",
         moduleId: PLATFORM.moduleName("./routes/unsubscribe"),
