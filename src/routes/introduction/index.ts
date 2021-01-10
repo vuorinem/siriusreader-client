@@ -30,11 +30,6 @@ export class Index {
         route: 'questionnaire12',
         moduleId: PLATFORM.moduleName("./questionnaire12"),
       },
-      {
-        name: 'books',
-        route: 'books',
-        moduleId: PLATFORM.moduleName("./books"),
-      },
     ]);
   }
 }

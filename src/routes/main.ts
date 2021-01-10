@@ -29,7 +29,7 @@ export class Main {
     } else if (!this.userService.isQuestionnaireAnswered('questionnaire12')) {
       this.router.navigate("/introduction/questionnaire12");
     } else if (!this.userService.user.isBookSelected) {
-      this.router.navigate("/introduction/books");
+      this.router.navigate("/introduction/library");
     } else if (this.userService.user.isBookFinished) {
       if (!this.userService.isQuestionnaireAnswered('questionnaire21')) {
         this.router.navigate("/finish/questionnaire21");

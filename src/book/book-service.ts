@@ -1,5 +1,4 @@
-import { IBookRating } from './../routes/introduction/i-book-rating';
-import { HttpClient, json } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-fetch-client';
 import { IBookDetails } from './i-book-details';
 import { autoinject, computedFrom } from "aurelia-framework";
 
@@ -19,21 +18,6 @@ export class BookService {
   private domParser: DOMParser = new DOMParser();
 
   constructor(private http: HttpClient) {
-  }
-
-  public async getAllBooks(): Promise<IBookDetails[]> {
-    const response = await this.http.fetch(`/book`);
-    return response.json();
-  }
-
-  public async selectBook(ratings: IBookRating[]): Promise<void> {
-    const response = await this.http
-      .fetch(`/book/select`, {
-        method: 'post',
-        body: json(ratings),
-      });
-
-    this.bookDetails = await response.json();
   }
 
   public async loadSelectedBook() {
