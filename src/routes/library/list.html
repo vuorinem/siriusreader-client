@@ -1,3 +1,25 @@
 <template>
-  <!-- TODO: show library -->
+  <require from="./nr-title-cover"></require>
+  
+  <div class="row justify-content-center p-5 align-items-center">
+    <div class="col-1">
+      <a class="btn btn-secondary" role="button">
+        <span class="oi oi-chevron-left"></span>
+      </a>
+    </div>
+    <div class="col">
+      <div class="library-window">
+        <div class="library-item text-center" repeat.for="title of titles">
+          <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+          <h2>${title.title}</h2>
+          <p>${title.author}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-1">
+      <a class="btn btn-secondary" role="button">
+        <span class="oi oi-chevron-right"></span>
+      </a>
+    </div>
+  </div>
 </template>

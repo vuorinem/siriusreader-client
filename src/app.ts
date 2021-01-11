@@ -62,7 +62,7 @@ export class App implements ConfiguresRouter {
       {
         name: "library",
         route: "library",
-        moduleId: PLATFORM.moduleName("./routes/library"),
+        moduleId: PLATFORM.moduleName("./routes/library/index"),
         settings: {
           auth: true,
         },
