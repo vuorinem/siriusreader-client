@@ -1,23 +1,23 @@
 <template>
   <require from="./nr-title-cover"></require>
-  
-  <div class="row justify-content-center p-5 align-items-center">
-    <div class="col-1">
-      <a class="btn btn-secondary" role="button">
+
+  <div class="library">
+    <div class="library-nav">
+      <a class="btn btn-secondary" role="button" click.delegate="previous()">
         <span class="oi oi-chevron-left"></span>
       </a>
     </div>
-    <div class="col">
-      <div class="library-window">
-        <div class="library-item text-center" repeat.for="title of titles">
-          <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
-          <h2>${title.title}</h2>
-          <p>${title.author}</p>
-        </div>
+    <div class="library-window" ref="libraryWindowElement">
+      <div class="library-content">
+          <div repeat.for="title of visibleTitles" class="au-animate library-item text-center ${$first ? 'first' : ''} ${$last ? 'last' : ''}">
+            <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+            <p class="title">${title.title}</p>
+            <p class="author">${title.author}</p>
+          </div>
       </div>
     </div>
-    <div class="col-1">
-      <a class="btn btn-secondary" role="button">
+    <div class="library-nav">
+      <a class="btn btn-secondary" role="button" click.delegate="next()">
         <span class="oi oi-chevron-right"></span>
       </a>
     </div>

@@ -1,9 +1,83 @@
-.library-window {
+.library {
+    margin-top: 30px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 15px;
-    justify-items: stretch;
+    grid-template-columns: 40px auto 40px;
+    column-gap: 10px;
+    justify-content: stretch;
 
-    .library-item {
+    .library-nav {
+        align-self: center;
+    }
+
+    .library-window {
+        justify-self: stretch;
+
+        .library-content {
+            display: grid;
+            grid-auto-flow: column;
+            align-items: stretch;
+            justify-items: center;
+            column-gap: 20px;
+
+            .library-item {
+                img {
+                    max-height: calc(100vh - #{$title-height} - 100px);
+                    margin-bottom: 10px;
+                }
+
+                .title {
+                    font-weight: bold;
+                    font-size: 1.5rem;
+                }
+
+                .author {
+                    font-style: italic;
+                }
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                animation-duration: 1s;
+                animation-name: fade-in;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: 40px auto 40px;
+        column-gap: 30px;
+
+        .library-window {
+            .library-content {
+                column-gap: 50px;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 50px;
+        column-gap: 50px;
+
+        .library-window {
+            .library-content {
+                img {
+                    max-height: auto;
+                }
+
+                column-gap: 50px;
+            }
+        }
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
     }
 }
