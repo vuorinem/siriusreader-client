@@ -1,16 +1,50 @@
 <template>
-  <ux-dialog class="col-md-8">
-    <ux-dialog-header>
-      <h3>{ book.title }</h3>
-    </ux-dialog-header>
+  <require from="./nr-title-cover"></require>
 
+  <ux-dialog class="title-dialog col-md-8">
     <ux-dialog-body>
-      <!-- TODO: Title details -->
+      <div class="row">
+        <div class="col-3">
+          <div class="library-item">
+            <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+            <p class="title">${title.title}</p>
+            <p class="author">${title.author}</p>
+          </div>
+        </div>
+        <div class="col">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link ${selectedTabName === 'description' ? 'active' : ''}" href="#"
+                click.delegate="selectTab('description')">Description</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link ${selectedTabName === 'reviews' ? 'active' : ''}" href="#"
+                click.delegate="selectTab('reviews')">Reviews</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link ${selectedTabName === 'firstPage' ? 'active' : ''}" href="#"
+                click.delegate="selectTab('firstPage')">First page</a>
+            </li>
+          </ul>
+
+          <div class="title-dialog-tab" show.bind="selectedTabName === 'description'">
+            <p>${title.description}</p>
+          </div>
+
+          <div class="title-dialog-tab" show.bind="selectedTabName === 'reviews'">
+            <p>TODO</p>
+          </div>
+
+          <div class="title-dialog-tab" show.bind="selectedTabName === 'firstPage'">
+            <p>TODO</p>
+          </div>
+        </div>
+      </div>
     </ux-dialog-body>
 
-    <ux-dialog-footer>
-      <button class="btn btn-default" click.trigger="dialogController.ok()">Close</button>
-      <button class="btn btn-primary" click.trigger="dialogController.ok()">Close</button>
+    <ux-dialog-footer class="d-flex justify-content-between">
+      <button class="btn btn-secondary" click.trigger="dialogController.close()">Close</button>
+      <button class="btn btn-primary" click.trigger="dialogController.ok()">Select This Book</button>
     </ux-dialog-footer>
   </ux-dialog>
 </template>

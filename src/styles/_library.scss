@@ -1,15 +1,20 @@
 .library {
-    margin-top: 30px;
+    margin-top: 10px;
     display: grid;
     grid-template-columns: 40px auto 40px;
+    grid-template-rows: 20px auto 20px;
     column-gap: 10px;
     justify-content: stretch;
+    overflow: hidden;
 
     .library-nav {
+        grid-row: 2;
         align-self: center;
+        z-index: 10;
     }
 
     .library-window {
+        grid-row: 2;
         justify-self: stretch;
 
         .library-content {
@@ -17,9 +22,15 @@
             grid-auto-flow: column;
             align-items: stretch;
             justify-items: center;
+            grid-template-columns: 1fr;
             column-gap: 20px;
 
             .library-item {
+                text-decoration: none;
+                color: $text-book;
+                cursor: pointer;
+                transition: transform 0.5s;
+
                 img {
                     max-height: calc(100vh - #{$title-height} - 100px);
                     margin-bottom: 10px;
@@ -39,8 +50,27 @@
                     padding: 0;
                 }
 
-                animation-duration: 1s;
-                animation-name: fade-in;
+                $animationDuration: 0.3s;
+
+                &.previous {
+                    animation: MoveRight $animationDuration;
+
+                    &.first {
+                        animation: SlideInLeft $animationDuration;
+                    }
+                }
+
+                &.next {
+                    animation: MoveLeft $animationDuration;
+
+                    &.last {
+                        animation: SlideInRight $animationDuration;
+                    }
+                }
+
+                &:hover {
+                    transform: scale(1.05);
+                }
             }
         }
     }
@@ -57,13 +87,13 @@
     }
 
     @include media-breakpoint-up(lg) {
-        margin-top: 50px;
+        margin-top: 20px;
         column-gap: 50px;
 
         .library-window {
             .library-content {
                 img {
-                    max-height: auto;
+                    width: 100%;
                 }
 
                 column-gap: 50px;
@@ -72,12 +102,106 @@
     }
 }
 
-@keyframes fade-in {
-    0% {
-        opacity: 0
+.title-dialog {
+
+    @include media-breakpoint-up(md) {
+        width: 700px;
     }
 
-    100% {
-        opacity: 1
+    @include media-breakpoint-up(lg) {
+        width: 950px;
+    }
+
+    .title-dialog-tab {
+        margin-top: 10px;
+    }
+}
+
+.library-item {
+    img {
+        max-height: calc(100vh - #{$title-height} - 100px);
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .author {
+        font-style: italic;
+    }
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+@keyframes SlideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes SlideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes SlideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes SlideOutLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes MoveLeft {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes MoveRight {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
     }
 }

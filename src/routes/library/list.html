@@ -8,12 +8,14 @@
       </a>
     </div>
     <div class="library-window" ref="libraryWindowElement">
-      <div class="library-content">
-          <div repeat.for="title of visibleTitles" class="au-animate library-item text-center ${$first ? 'first' : ''} ${$last ? 'last' : ''}">
-            <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
-            <p class="title">${title.title}</p>
-            <p class="author">${title.author}</p>
-          </div>
+      <div class="library-content" ref="libraryContentElement">
+        <a animationend.delegate="itemTransitionEnd()" repeat.for="title of visibleTitles"
+          class="library-item text-center ${$first ? 'first' : ''} ${$last ? 'last' : ''} ${direction}"
+          click.delegate="openTitle(title)">
+          <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+          <p class="title">${title.title}</p>
+          <p class="author">${title.author}</p>
+        </a>
       </div>
     </div>
     <div class="library-nav">
