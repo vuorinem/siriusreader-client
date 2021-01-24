@@ -103,8 +103,8 @@
 }
 
 .title-dialog {
-
     @include media-breakpoint-up(md) {
+        height: 90vh;
         width: 700px;
     }
 
@@ -112,8 +112,43 @@
         width: 950px;
     }
 
-    .title-dialog-tab {
+    .close-icon {
+        float: right;
+    }
+
+    .card-header {
+        padding: 10px;
+
+        .btn {
+            font-size: 1.2rem;
+
+            &.focus,
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+
+    .title-dialog-nav {
         margin-top: 10px;
+    }
+
+    .title-dialog-tab {
+        overflow: hidden;
+
+        $accordionAnimationDuration: 1s;
+
+        .card-body {
+            max-height: 0;
+            margin-top: -100%;
+            transition: max-height $accordionAnimationDuration, margin-top $accordionAnimationDuration;
+        }
+
+        &.show .card-body {
+            max-height: 100%;
+            margin-top: 0;
+            transition: max-height $accordionAnimationDuration, margin-top $accordionAnimationDuration;
+        }
     }
 }
 

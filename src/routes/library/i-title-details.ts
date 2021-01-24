@@ -2,6 +2,8 @@ export interface ITitleDetails {
   bookId: number;
   title: string;
   author: string;
-  description: string;
-  coverImageFilename: string;
+  synopsis?: string;
+  reviews?: string;
+  details?: string;
+  firstPage?: string;
 }

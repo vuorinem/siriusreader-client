@@ -1,19 +1,20 @@
-import { autoinject } from 'aurelia-framework';
+import { autoinject, useView, PLATFORM } from 'aurelia-framework';
 import { DialogController, DialogComponentActivate } from 'aurelia-dialog';
 import { LibraryService } from './library-service';
 import { ITitleDetails } from './i-title-details';
 import { ITitle } from './i-title';
 
 type TabName =
-  'description'
+  'synopsis'
   | 'reviews'
+  | 'details'
   | 'firstPage';
 
 @autoinject
 export class TitleDialog implements DialogComponentActivate<ITitle> {
 
   private title?: ITitleDetails;
-  private selectedTabName: TabName = 'description';
+  private selectedTabName?: TabName;
 
   constructor(
     private dialogController: DialogController,
@@ -27,7 +28,11 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
   private selectTab(tabName: TabName) {
     // TODO: Track
 
-    this.selectedTabName = tabName;
+    if (this.selectedTabName === tabName) {
+      this.selectedTabName = undefined;
+    } else {
+      this.selectedTabName = tabName;
+    }
   }
 
 }

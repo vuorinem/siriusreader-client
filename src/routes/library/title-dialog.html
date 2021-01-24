@@ -4,47 +4,72 @@
   <ux-dialog class="title-dialog col-md-8">
     <ux-dialog-body>
       <div class="row">
-        <div class="col-3">
+        <div class="col-sm-3">
           <div class="library-item">
-            <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
             <p class="title">${title.title}</p>
             <p class="author">${title.author}</p>
+            <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+            <button class="btn btn-lg btn-primary btn-block" click.trigger="dialogController.ok()">Select this
+              book</button>
+            <button class="btn btn-secondary btn-block" click.trigger="dialogController.cancel()">Back to library</button>
           </div>
         </div>
-        <div class="col">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link ${selectedTabName === 'description' ? 'active' : ''}" href="#"
-                click.delegate="selectTab('description')">Description</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link ${selectedTabName === 'reviews' ? 'active' : ''}" href="#"
-                click.delegate="selectTab('reviews')">Reviews</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link ${selectedTabName === 'firstPage' ? 'active' : ''}" href="#"
-                click.delegate="selectTab('firstPage')">First page</a>
-            </li>
-          </ul>
+        <div class="col-sm">
+          <div class="accordion title-dialog-nav">
+            <div class="card">
+              <div class="card-header">
+                <button class="btn btn-link btn-block text-left ${selectedTabName === 'synopsis' ? 'active' : ''}"
+                  type="button" click.delegate="selectTab('synopsis')">
+                  Synopsis
+                  <span class="float-right oi oi-caret-${selectedTabName === 'synopsis' ? 'top' : 'bottom'}"></span>
+                </button>
+              </div>
+              <div id="section-synopsis" class="title-dialog-tab ${selectedTabName === 'synopsis' ? 'show' : ''}">
+                <div class="card-body" innerhtml.bind="title.synopsis"></div>
+              </div>
+            </div>
 
-          <div class="title-dialog-tab" show.bind="selectedTabName === 'description'">
-            <p>${title.description}</p>
-          </div>
+            <div class="card">
+              <div class="card-header">
+                <button class="btn btn-link btn-block text-left ${selectedTabName === 'reviews' ? 'active' : ''}"
+                  type="button" click.delegate="selectTab('reviews')">
+                  Reviews
+                  <span class="float-right oi oi-caret-${selectedTabName === 'reviews' ? 'top' : 'bottom'}"></span>
+                </button>
+              </div>
+              <div id="section-reviews" class="title-dialog-tab ${selectedTabName === 'reviews' ? 'show' : ''}">
+                <div class="card-body" innerhtml.bind="title.reviews"></div>
+              </div>
+            </div>
 
-          <div class="title-dialog-tab" show.bind="selectedTabName === 'reviews'">
-            <p>TODO</p>
-          </div>
+            <div class="card">
+              <div class="card-header">
+                <button class="btn btn-link btn-block text-left ${selectedTabName === 'details' ? 'active' : ''}"
+                  type="button" click.delegate="selectTab('details')">
+                  Details
+                  <span class="float-right oi oi-caret-${selectedTabName === 'details' ? 'top' : 'bottom'}"></span>
+                </button>
+              </div>
+              <div id="section-details" class="title-dialog-tab ${selectedTabName === 'details' ? 'show' : ''}">
+                <div class="card-body" innerhtml.bind="title.details"></div>
+              </div>
+            </div>
 
-          <div class="title-dialog-tab" show.bind="selectedTabName === 'firstPage'">
-            <p>TODO</p>
+            <div class="card">
+              <div class="card-header">
+                <button class="btn btn-link btn-block text-left ${selectedTabName === 'firstPage' ? 'active' : ''}"
+                  type="button" click.delegate="selectTab('firstPage')">
+                  First page
+                  <span class="float-right oi oi-caret-${selectedTabName === 'firstPage' ? 'top' : 'bottom'}"></span>
+                </button>
+              </div>
+              <div id="section-first-page" class="title-dialog-tab ${selectedTabName === 'firstPage' ? 'show' : ''}">
+                <div class="card-body" innerhtml.bind="title.firstPage"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </ux-dialog-body>
-
-    <ux-dialog-footer class="d-flex justify-content-between">
-      <button class="btn btn-secondary" click.trigger="dialogController.close()">Close</button>
-      <button class="btn btn-primary" click.trigger="dialogController.ok()">Select This Book</button>
-    </ux-dialog-footer>
   </ux-dialog>
 </template>

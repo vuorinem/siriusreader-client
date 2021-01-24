@@ -63,6 +63,7 @@ export class List implements RoutableComponentActivate {
       overlayDismiss: false,
       lock: true,
       rejectOnCancel: true,
+      centerHorizontalOnly: true,
     });
 
     await dialog;
