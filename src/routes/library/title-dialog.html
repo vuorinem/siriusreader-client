@@ -21,14 +21,17 @@
           <div class="accordion title-dialog-nav">
             <div class="card" repeat.for="tab of tabs">
               <div class="card-header">
-                <button class="btn btn-link btn-block text-left ${tab.isSelected ? 'active' : ''}"
-                  type="button" click.delegate="selectTab(tab)">
+                <button class="btn btn-link btn-block text-left ${tab.isSelected ? 'active' : ''}" type="button"
+                  click.delegate="selectTab(tab)">
                   ${tab.title}
                   <span class="float-right oi oi-caret-${tab.isSelected ? 'top' : 'bottom'}"></span>
                 </button>
               </div>
               <div id="section-${tab.name}" class="title-dialog-tab ${tab.isSelected ? 'show' : ''}">
-                <div class="card-body" innerhtml.bind="title[tab.name]"></div>
+                <div class="card-body">
+                  <div innerhtml.bind="title[tab.name]"></div>
+                  <a href="#" click.delegate="selectTab(tab)">Hide</a>
+                </div>
               </div>
             </div>
           </div>
