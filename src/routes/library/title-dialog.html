@@ -19,55 +19,16 @@
         </div>
         <div class="col-sm">
           <div class="accordion title-dialog-nav">
-            <div class="card">
+            <div class="card" repeat.for="tab of tabs">
               <div class="card-header">
-                <button class="btn btn-link btn-block text-left ${selectedTabName === 'synopsis' ? 'active' : ''}"
-                  type="button" click.delegate="selectTab('synopsis')">
-                  Synopsis
-                  <span class="float-right oi oi-caret-${selectedTabName === 'synopsis' ? 'top' : 'bottom'}"></span>
+                <button class="btn btn-link btn-block text-left ${tab.isSelected ? 'active' : ''}"
+                  type="button" click.delegate="selectTab(tab)">
+                  ${tab.title}
+                  <span class="float-right oi oi-caret-${tab.isSelected ? 'top' : 'bottom'}"></span>
                 </button>
               </div>
-              <div id="section-synopsis" class="title-dialog-tab ${selectedTabName === 'synopsis' ? 'show' : ''}">
-                <div class="card-body" innerhtml.bind="title.synopsis"></div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <button class="btn btn-link btn-block text-left ${selectedTabName === 'reviews' ? 'active' : ''}"
-                  type="button" click.delegate="selectTab('reviews')">
-                  Reviews
-                  <span class="float-right oi oi-caret-${selectedTabName === 'reviews' ? 'top' : 'bottom'}"></span>
-                </button>
-              </div>
-              <div id="section-reviews" class="title-dialog-tab ${selectedTabName === 'reviews' ? 'show' : ''}">
-                <div class="card-body" innerhtml.bind="title.reviews"></div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <button class="btn btn-link btn-block text-left ${selectedTabName === 'details' ? 'active' : ''}"
-                  type="button" click.delegate="selectTab('details')">
-                  Details
-                  <span class="float-right oi oi-caret-${selectedTabName === 'details' ? 'top' : 'bottom'}"></span>
-                </button>
-              </div>
-              <div id="section-details" class="title-dialog-tab ${selectedTabName === 'details' ? 'show' : ''}">
-                <div class="card-body" innerhtml.bind="title.details"></div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <button class="btn btn-link btn-block text-left ${selectedTabName === 'firstPage' ? 'active' : ''}"
-                  type="button" click.delegate="selectTab('firstPage')">
-                  First page
-                  <span class="float-right oi oi-caret-${selectedTabName === 'firstPage' ? 'top' : 'bottom'}"></span>
-                </button>
-              </div>
-              <div id="section-first-page" class="title-dialog-tab ${selectedTabName === 'firstPage' ? 'show' : ''}">
-                <div class="card-body" innerhtml.bind="title.firstPage"></div>
+              <div id="section-${tab.name}" class="title-dialog-tab ${tab.isSelected ? 'show' : ''}">
+                <div class="card-body" innerhtml.bind="title[tab.name]"></div>
               </div>
             </div>
           </div>

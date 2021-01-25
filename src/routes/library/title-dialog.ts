@@ -5,17 +5,39 @@ import { LibraryService } from './library-service';
 import { ITitleDetails } from './i-title-details';
 import { ITitle } from './i-title';
 
-type TabName =
-  'synopsis'
-  | 'reviews'
-  | 'details'
-  | 'firstPage';
+type TabDetails = {
+  name: keyof (ITitleDetails),
+  title: string,
+  isSelected: boolean,
+};
 
 @autoinject
 export class TitleDialog implements DialogComponentActivate<ITitle> {
 
   private title?: ITitleDetails;
-  private selectedTabName?: TabName;
+
+  private tabs: TabDetails[] = [
+    {
+      name: 'synopsis',
+      title: 'Synopsis',
+      isSelected: false,
+    },
+    {
+      name: 'reviews',
+      title: 'Reviews',
+      isSelected: false,
+    },
+    {
+      name: 'details',
+      title: 'Details',
+      isSelected: false,
+    },
+    {
+      name: 'firstPage',
+      title: 'First page',
+      isSelected: false,
+    },
+  ]
 
   constructor(
     private dialogController: DialogController,
@@ -27,13 +49,12 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
     this.title = await this.libraryService.getTitle(title.bookId);
   }
 
-  private selectTab(tabName: TabName) {
-    // TODO: Track
-
-    if (this.selectedTabName === tabName) {
-      this.selectedTabName = undefined;
+  private selectTab(tab: TabDetails) {
+    if (tab.isSelected) {
+      tab.isSelected = false;
     } else {
-      this.selectedTabName = tabName;
+      this.tabs.forEach(t => t.isSelected = false);
+      tab.isSelected = true;
     }
   }
 
