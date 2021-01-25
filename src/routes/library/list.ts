@@ -1,7 +1,8 @@
+import { UserService } from './../../user/user-service';
 import { TitleDialog } from './title-dialog';
 import { DialogService } from 'aurelia-dialog';
 import { TimeoutService } from './../../utility/timeout-service';
-import { RoutableComponentActivate } from 'aurelia-router';
+import { RoutableComponentActivate, Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
 import { LibraryService } from './library-service';
 import { ITitle } from './i-title';
@@ -21,7 +22,9 @@ export class List implements RoutableComponentActivate {
   private onWindowResize: () => void = () => this.handleWindowResize();
 
   public constructor(
+    private router: Router,
     private dialogService: DialogService,
+    private userService: UserService,
     private timeoutService: TimeoutService,
     private libraryService: LibraryService) {
   }
@@ -71,15 +74,15 @@ export class List implements RoutableComponentActivate {
     // TODO: Track dialog open
 
     const selectTitle = async () => {
-      // TODO: Track dialog close
-      // TODO: Select the title and open book
+      await this.userService.sendBookSelection(title.bookId);
+      this.router.navigateToRoute('main');
     };
 
     const closeTitle = async () => {
       // TODO: Track dialog close
     };
 
-    dialog.whenClosed(selectTitle, closeTitle);
+    await dialog.whenClosed(selectTitle, closeTitle);
   }
 
   private handleWindowResize() {

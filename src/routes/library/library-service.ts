@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { ITitle } from './i-title';
 import { ITitleDetails } from './i-title-details';
-import { HttpClient, json } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-fetch-client';
 
 @autoinject
 export class LibraryService {

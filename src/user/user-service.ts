@@ -80,6 +80,20 @@ export class UserService {
     this.userDetails = await response.json();
   }
 
+  public async sendBookSelection(bookId: number) {
+    const response = await this.http
+      .fetch('/user/current/confirm-consent', {
+        method: 'post',
+        body: json({ bookId }),
+      });
+
+    if (!response.ok) {
+      throw Error('Error selecting the book');
+    }
+
+    this.userDetails = await response.json();
+  }
+
   public async sendConfirmBookOpened() {
     const response = await this.http
       .fetch('/user/current/confirm-book-opened', { method: 'post' });

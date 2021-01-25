@@ -112,10 +112,6 @@
         width: 950px;
     }
 
-    .close-icon {
-        float: right;
-    }
-
     .card-header {
         padding: 10px;
 
@@ -136,7 +132,7 @@
     .title-dialog-tab {
         overflow: hidden;
 
-        $accordionAnimationDuration: 1s;
+        $accordionAnimationDuration: 0.5s;
 
         .card-body {
             max-height: 0;
