@@ -152,6 +152,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         overlayDismiss: true,
         lock: true,
         rejectOnCancel: true,
+        centerHorizontalOnly: true,
       });
 
       await dialog;
