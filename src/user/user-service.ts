@@ -82,7 +82,7 @@ export class UserService {
 
   public async sendBookSelection(bookId: number) {
     const response = await this.http
-      .fetch('/user/current/confirm-consent', {
+      .fetch('/user/select-book', {
         method: 'post',
         body: json({ bookId }),
       });
