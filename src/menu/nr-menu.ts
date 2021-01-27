@@ -6,6 +6,7 @@ import { TrackingService } from './../tracking/tracking-service';
 import { autoinject, computedFrom } from 'aurelia-framework';
 import { AuthService } from '../auth/auth-service';
 import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
+import { TrackingConnectionService } from 'tracking/tracking-connection-service';
 
 @autoinject
 export class NrMenu {
@@ -15,9 +16,9 @@ export class NrMenu {
     return this.applicationState.isMenuOpen;
   }
 
-  @computedFrom('trackingService.hasConnectionProblem')
+  @computedFrom('trackingConnectionService.hasConnectionProblem')
   private get hasConnectionProblem() {
-    return this.trackingService.hasConnectionProblem;
+    return this.trackingConnectionService.hasConnectionProblem;
   }
 
   constructor(
@@ -25,7 +26,8 @@ export class NrMenu {
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
-    private trackingService: TrackingService) {
+    private trackingService: TrackingService,
+    private trackingConnectionService: TrackingConnectionService) {
   }
 
   private async openInformationSheet() {
