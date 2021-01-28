@@ -1,3 +1,4 @@
+import { TrackingService } from './../../tracking/tracking-service';
 import { UserService } from './../../user/user-service';
 import { TitleDialog } from './title-dialog';
 import { DialogService } from 'aurelia-dialog';
@@ -26,7 +27,8 @@ export class List implements RoutableComponentActivate {
     private dialogService: DialogService,
     private userService: UserService,
     private timeoutService: TimeoutService,
-    private libraryService: LibraryService) {
+    private libraryService: LibraryService,
+    private trackingService: TrackingService) {
   }
 
   public async activate() {
@@ -36,17 +38,24 @@ export class List implements RoutableComponentActivate {
   }
 
   public attached() {
+    this.trackingService.libraryEvent('openLibrary');
+
     window.addEventListener('resize', this.onWindowResize, false);
 
     this.refreshList();
   }
 
   public detached() {
+    this.trackingService.libraryEvent('closeLibrary');
+
     window.removeEventListener('resize', this.onWindowResize);
   }
 
   private next() {
     this.finishTransitions();
+
+    this.trackingService.libraryEvent('clickNext');
+
     this.direction = 'next';
     this.shelvedTitles.push(...this.visibleTitles.splice(0, 1));
     this.visibleTitles.push(...this.shelvedTitles.splice(0, 1));
@@ -54,6 +63,9 @@ export class List implements RoutableComponentActivate {
 
   private previous() {
     this.finishTransitions();
+
+    this.trackingService.libraryEvent('clickPrevious');
+
     this.direction = 'previous';
     this.shelvedTitles.unshift(...this.visibleTitles.splice(-1, 1));
     this.visibleTitles.unshift(...this.shelvedTitles.splice(-1, 1));
@@ -71,15 +83,17 @@ export class List implements RoutableComponentActivate {
 
     await dialog;
 
-    // TODO: Track dialog open
+    this.trackingService.libraryEvent('openDialog');
 
     const selectTitle = async () => {
+      this.trackingService.libraryEvent('closeDialog');
+      
       await this.userService.sendBookSelection(title.bookId);
       this.router.navigateToRoute('main');
     };
 
     const closeTitle = async () => {
-      // TODO: Track dialog close
+      this.trackingService.libraryEvent('closeDialog');
     };
 
     await dialog.whenClosed(selectTitle, closeTitle);
@@ -87,6 +101,7 @@ export class List implements RoutableComponentActivate {
 
   private handleWindowResize() {
     this.timeoutService.debounce('resize', 500, async () => {
+      this.trackingService.libraryEvent('resize');
       this.refreshList();
     });
   }

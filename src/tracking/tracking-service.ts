@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ReconnectedEvent, TrackingConnectionService, ReconnectingEvent } from './tracking-connection-service';
-import { TrackingCacheService } from './tracking-cache-service';
+import { ReconnectedEvent, TrackingConnectionService, ReconnectingEvent, MethodName } from './tracking-connection-service';
+import { TrackingCacheService, EventCacheKey } from './tracking-cache-service';
 import { DialogService } from 'aurelia-dialog';
 import { ApplicationState } from './../state/application-state';
 import { BookService } from './../book/book-service';
@@ -8,12 +8,12 @@ import { AuthService } from '../auth/auth-service';
 import { autoinject } from 'aurelia-framework';
 import { ReadingState } from './../reading/reading-state';
 import { ITrackingEvent } from './i-tracking-event';
+import { ILibraryEvent } from './i-library-event';
 import { EventType } from './event-type';
+import { LibraryEventType } from './library-event-type';
 
 const SendDelayInMilliseconds = 500;
 const StateCheckIntervalInSeconds = 5;
-const HubMethodName = 'TrackEvents';
-const EventCacheStorageKey = 'event-cache';
 
 @autoinject
 export class TrackingService {
@@ -31,7 +31,8 @@ export class TrackingService {
     this.eventAggregator.subscribe(ReconnectingEvent, () => this.eventInternal('reconnecting', false));
 
     window.setInterval(() => {
-      this.scheduleSend(SendDelayInMilliseconds, false);
+      this.scheduleSend('TrackEvents', 'event-cache', SendDelayInMilliseconds, false);
+      this.scheduleSend('TrackLibraryEvents', 'library-event-cache', SendDelayInMilliseconds, false);
     }, StateCheckIntervalInSeconds * 1000);
   }
 
@@ -39,13 +40,18 @@ export class TrackingService {
     await this.eventInternal(type, true);
   }
 
+  public async libraryEvent(type: LibraryEventType) {
+    await this.libraryEventInternal(type, true);
+  }
+
   public eventImmediate(type: EventType) {
     this.eventInternal(type, false);
-    this.send();
+    this.send('TrackEvents', 'event-cache');
   }
 
   public async stop() {
-    await this.scheduleSend(0);
+    await this.scheduleSend('TrackEvents', 'event-cache', 0);
+    await this.scheduleSend('TrackLibraryEvents', 'library-event-cache', 0);
     await this.trackingConnectionService.stop();
   }
 
@@ -80,19 +86,46 @@ export class TrackingService {
       isReading: this.applicationState.isReading,
     };
 
-    this.trackingCacheService.addEventToCache(EventCacheStorageKey, event);
+    this.trackingCacheService.addEventToCache('event-cache', event);
 
     if (send) {
-      await this.scheduleSend();
+      await this.scheduleSend('TrackEvents', 'event-cache');
     }
   }
 
-  private async send() {
-    await this.trackingConnectionService.send(HubMethodName, EventCacheStorageKey);
+  private async libraryEventInternal(type: LibraryEventType, send: boolean) {
+    if (!this.authService.isAuthenticated) {
+      return;
+    }
+
+    const time = new Date();
+
+    const event: ILibraryEvent = {
+      time: time,
+      timezoneOffset: time.getTimezoneOffset(),
+      type: type,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      isMenuOpen: this.applicationState.isMenuOpen,
+      isDialogOpen: this.dialogService.hasOpenDialog,
+      isBlurred: !this.applicationState.isFocused,
+      isHidden: this.applicationState.isHidden,
+      isInactive: !this.applicationState.isActive,
+    };
+
+    this.trackingCacheService.addEventToCache('library-event-cache', event);
+
+    if (send) {
+      await this.scheduleSend('TrackLibraryEvents', 'library-event-cache');
+    }
   }
 
-  private async scheduleSend(delay: number = SendDelayInMilliseconds, resetIfAlreadyScheduled = true) {
-    await this.trackingConnectionService.scheduleSend(delay, resetIfAlreadyScheduled, HubMethodName, EventCacheStorageKey);
+  private async send(methodName: MethodName, cacheKey: EventCacheKey) {
+    await this.trackingConnectionService.send(methodName, cacheKey);
+  }
+
+  private async scheduleSend(methodName: MethodName, cacheKey: EventCacheKey, delay: number = SendDelayInMilliseconds, resetIfAlreadyScheduled = true) {
+    await this.trackingConnectionService.scheduleSend(delay, resetIfAlreadyScheduled, methodName, cacheKey);
   }
 
 }

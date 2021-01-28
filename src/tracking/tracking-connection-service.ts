@@ -1,23 +1,20 @@
-import { ITrackingEvent } from './i-tracking-event';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { AuthService } from '../auth/auth-service';
 import { autoinject } from 'aurelia-framework';
 import * as signalR from "@microsoft/signalr";
 import * as environment from '../../config/environment.json';
-import { TrackingCacheService } from './tracking-cache-service';
-import { throws } from 'assert';
+import { TrackingCacheService, EventCacheKey } from './tracking-cache-service';
 
 const apiUrl = process.env.apiUrl || environment.apiUrl;
 
 const ConnectionCheckIntervalInSeconds = 5;
-const InitialRetryTimeoutInSeconds = 1;
 const ConnectionRetryInSeconds = 5;
 const MaxRetryTimeout = 20;
 
+export type MethodName = 'TrackEvents' | 'TrackLibraryEvents';
+
 export const ReconnectedEvent = 'tracking-connection-service-reconnected';
 export const ReconnectingEvent = 'tracking-connection-service-reconnecting';
-
-type AnyEvent = ITrackingEvent;
 
 @autoinject
 export class TrackingConnectionService {
@@ -25,8 +22,8 @@ export class TrackingConnectionService {
 
   private connection: signalR.HubConnection;
 
-  private retryTimeout?: number;
-  private retryTimeoutSeconds: number = InitialRetryTimeoutInSeconds;
+  private retryTimeouts: { [key: string]: number | undefined } = {};
+  private retryTimeoutsSeconds: { [key: string]: number | undefined } = {};
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -60,7 +57,7 @@ export class TrackingConnectionService {
     this.hasConnectionProblem = false;
   }
 
-  public async send(methodName: string, cacheKey: string): Promise<boolean> {
+  public async send(methodName: MethodName, cacheKey: EventCacheKey): Promise<boolean> {
     if (!this.authService.isAuthenticated) {
       return false;
     }
@@ -75,14 +72,15 @@ export class TrackingConnectionService {
       await this.connect();
       await this.connection.send(methodName, eventsToSend);
       this.trackingCacheService.clearCache(cacheKey);
-      this.retryTimeoutSeconds = InitialRetryTimeoutInSeconds;
+      this.retryTimeoutsSeconds[cacheKey] = undefined;
       return true;
     } catch {
       // Schedule a retry unless we already tried too many times
       this.hasConnectionProblem = true;
-      this.retryTimeoutSeconds = this.retryTimeoutSeconds + 2;
-      if (this.retryTimeoutSeconds < MaxRetryTimeout) {
-        return await this.scheduleSend(this.retryTimeoutSeconds * 1000, true, methodName, cacheKey);
+      const timeout = (this.retryTimeoutsSeconds[cacheKey] ?? 0) + 3;
+      this.retryTimeoutsSeconds[cacheKey] = timeout;
+      if (timeout < MaxRetryTimeout) {
+        return await this.scheduleSend(timeout * 1000, true, methodName, cacheKey);
       } else {
         // Disconnect and try to reconnect
         await this.connection.stop();
@@ -91,19 +89,19 @@ export class TrackingConnectionService {
     }
   }
 
-  public async scheduleSend(timeout: number, resetIfAlreadyScheduled: boolean, methodName: string, cacheKey: string): Promise<boolean> {
-    if (this.retryTimeout) {
+  public async scheduleSend(timeout: number, resetIfAlreadyScheduled: boolean, methodName: MethodName, cacheKey: EventCacheKey): Promise<boolean> {
+    if (this.retryTimeouts[cacheKey]) {
       if (!resetIfAlreadyScheduled) {
         return false;
       }
 
-      window.clearTimeout(this.retryTimeout);
-      this.retryTimeout = undefined;
+      window.clearTimeout(this.retryTimeouts[cacheKey]);
+      this.retryTimeouts[cacheKey] = undefined;
     }
 
     return new Promise<boolean>(async resolve => {
-      this.retryTimeout = window.setTimeout(async () => {
-        this.retryTimeout = undefined;
+      this.retryTimeouts[cacheKey] = window.setTimeout(async () => {
+        this.retryTimeouts[cacheKey] = undefined;
         resolve(await this.send(methodName, cacheKey));
       }, timeout);
     });

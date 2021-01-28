@@ -1,15 +1,22 @@
 import { ITrackingEvent } from './i-tracking-event';
+import { ILibraryEvent } from './i-library-event';
 
-type AnyEvent = ITrackingEvent;
+type AnyEvent = ITrackingEvent | ILibraryEvent;
+
+export type EventCacheKey = 'event-cache' | 'library-event-cache';
 
 export class TrackingCacheService {
-  private eventCache: { [key: string]: AnyEvent[] } = {};
+  private eventCache: { [key in EventCacheKey]: AnyEvent[] } = {
+    "event-cache": [],
+    "library-event-cache": [],
+  };
+
   private useInMemoryCache = false;
 
   constructor() {
   }
 
-  public addEventToCache(key: string, event: AnyEvent) {
+  public addEventToCache(key: EventCacheKey, event: AnyEvent) {
     const cache = this.getCache(key);
 
     cache.push(event);
@@ -26,7 +33,7 @@ export class TrackingCacheService {
     }
   }
 
-  public clearCache(key: string) {
+  public clearCache(key: EventCacheKey) {
     if (this.useInMemoryCache) {
       this.eventCache[key] = [];
     } else {
@@ -39,7 +46,7 @@ export class TrackingCacheService {
     }
   }
 
-  public getCache(key: string): AnyEvent[] {
+  public getCache(key: EventCacheKey): AnyEvent[] {
     if (this.useInMemoryCache) {
       return this.eventCache[key];
     }
