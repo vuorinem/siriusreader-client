@@ -14,10 +14,7 @@ export function configure(aurelia: Aurelia) {
       config.useDefaults();
       config.settings.keyboard = true;
       config.settings.overlayDismiss = true;
-    })
-    .globalResources([
-      PLATFORM.moduleName('utility/disable-on-request-custom-attribute'),
-    ]);
+    });
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
 
