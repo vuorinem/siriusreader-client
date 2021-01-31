@@ -10,7 +10,7 @@ import { TrackingService } from './../tracking/tracking-service';
 import { ReadingState } from './../reading/reading-state';
 import { bookConfig } from './book-config';
 import { SectionModel } from './section-model';
-import { BindingEngine, Disposable, computedFrom } from 'aurelia-binding';
+import { Disposable, computedFrom } from 'aurelia-binding';
 import { autoinject, ComponentAttached, ComponentDetached, TaskQueue } from 'aurelia-framework';
 import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
@@ -107,7 +107,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   constructor(
-    private bindingEngine: BindingEngine,
     private taskQueue: TaskQueue,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
