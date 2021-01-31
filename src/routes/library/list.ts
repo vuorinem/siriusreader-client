@@ -87,7 +87,7 @@ export class List implements RoutableComponentActivate {
 
     const selectTitle = async () => {
       this.trackingService.libraryEvent('closeDialog');
-      
+
       await this.userService.sendBookSelection(title.bookId);
       this.router.navigateToRoute('main');
     };
@@ -109,7 +109,9 @@ export class List implements RoutableComponentActivate {
   private finishTransitions() {
     if (this.libraryContentElement) {
       this.libraryContentElement.querySelectorAll('.library-item').forEach(item => {
-        item.getAnimations().forEach(animation => animation.finish());
+        if ('getAnimations' in item) {
+          item.getAnimations().forEach(animation => animation.finish());
+        }
       });
     }
   }

@@ -1,9 +1,11 @@
 ﻿<template>
   <require from="menu/nr-menu"></require>
+  <require from="overlay/nr-overlay"></require>
 
   <div class="app-container ${ applicationState.isReading ? 'is-reading' : '' }">
     <div class="app-content">
       <nr-menu></nr-menu>
+      <nr-overlay></nr-overlay>
       <router-view></router-view>
     </div>
   </div>

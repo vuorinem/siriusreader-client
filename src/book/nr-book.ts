@@ -25,7 +25,6 @@ const HorizontalScrollThreshold = 20;
 const HighlightMenuWidth = 310;
 const HighlightMenuHeight = 80;
 const LongTouchThreshold = 1000;
-const InactiveTimeoutInMinutes = 5;
 
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
@@ -129,8 +128,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     window.removeEventListener('wheel', this.onWheel);
     window.removeEventListener('resize', this.onWindowResize);
 
-    this.clearInactiveTimeout();
-
     let observer: Disposable | undefined;
     while (observer = this.observers.pop()) {
       observer.dispose();
@@ -200,8 +197,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     const startLocation = await this.readingService.getLocation() ?? this.book.contentStartLocation;
     await this.jumpToLocation(startLocation);
 
-    this.setInativeTimeout();
-
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
     window.addEventListener('resize', this.onWindowResize, false);
@@ -254,11 +249,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private mouseDown(event: MouseEvent) {
     this.canTriggerPageTurn =
+      !this.isContentHidden &&
       event.button === 0 &&
       !this.isLink(event.target) &&
       this.isSelectionEmpty();
-
-    this.setInativeTimeout();
 
     return true;
   }
@@ -280,8 +274,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private mouseUp(event: MouseEvent) {
-    this.setInativeTimeout();
-
     if (this.handleHighlight(event.clientX, event.clientY)) {
       return;
     }
@@ -304,8 +296,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return true;
     }
 
-    this.setInativeTimeout();
-
     if (event.deltaY > 0) {
       this.moveForward('wheel');
     } else {
@@ -326,8 +316,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private touchMove(event: TouchEvent) {
-    this.setInativeTimeout();
-
     if (!this.touchStartX) {
       return true;
     }
@@ -357,8 +345,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private touchEnd(event: TouchEvent) {
-    this.setInativeTimeout();
-
     if (this.touchStartX === null) {
       return true;
     }
@@ -426,8 +412,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private progressBarClick(event: MouseEvent) {
-    this.setInativeTimeout();
-
     const progressBar = event.currentTarget as HTMLDivElement;
     const targetPercentage = event.offsetX / progressBar.clientWidth;
     const targetLocation = Math.round(this.totalCharacters * targetPercentage);
@@ -439,20 +423,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     });
   }
 
-  private overlayClick() {
-    this.setInativeTimeout();
-    this.applicationState.isMenuOpen = false;
-    this.trackingService.event('closeMenu');
-  }
-
   private handleKeyDown(event: KeyboardEvent) {
     if (this.isContentHidden || this.isTransitioning) {
-      this.setInativeTimeout();
-
       return true;
     }
-
-    this.setInativeTimeout();
 
     if (event.key == "ArrowRight" || event.key == "Right") {
       this.moveForward('keyboard');
@@ -582,8 +556,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.updateReadingStateAndProgress();
 
       this.trackingService.event('openPage');
-
-      this.setInativeTimeout();
     });
   }
 
@@ -627,24 +599,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     return false;
   }
 
-  private setInativeTimeout() {
-    this.applicationState.isActive = true;
-
-    this.timeoutService.debounce('inactive', InactiveTimeoutInMinutes * 60 * 1000, async () => {
-      if (this.isContentHidden) {
-        return;
-      }
-
-      await this.trackingService.event('inactiveTimeout');
-
-      this.applicationState.isActive = false;
-    });
-  }
-
-  private clearInactiveTimeout() {
-    this.timeoutService.cancel('inactive');
-  }
-
   private handleWindowResize() {
     this.taskQueue.queueTask(() => {
       this.timeoutService.debounce('resize', 500, async () => {
@@ -655,8 +609,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private async refreshIfWindowIsResized() {
     await this.trackingService.event('resize');
-
-    this.setInativeTimeout();
 
     if (!this.readingState.view || !this.bookContentElement) {
       return;
@@ -781,8 +733,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.isHighlightMenuOpen = false;
       this.trackingService.event('closeSelection');
     }
-
-    this.setInativeTimeout();
   }
 
   private async updateHighlight() {

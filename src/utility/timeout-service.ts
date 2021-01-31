@@ -2,7 +2,7 @@ export class TimeoutService {
 
   private debounceTimers: Map<string, number> = new Map<string, number>();
 
-  public debounce(key: string, timeout: number, callback: () => Promise<void>) {
+  public debounce(key: string, timeout: number, callback: () => void | Promise<void>) {
     const timer = this.debounceTimers.get(key);
 
     if (timer !== undefined) {

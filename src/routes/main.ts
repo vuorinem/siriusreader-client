@@ -15,6 +15,7 @@ export class Main {
 
   public async activate() {
     this.applicationState.isReading = false;
+    this.applicationState.isLibrary = false;
 
     if (!this.userService.user) {
       this.router.navigate("/login");

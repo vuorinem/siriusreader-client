@@ -14,7 +14,6 @@ export class WindowTrackingService {
     private taskQueue: TaskQueue,
     private applicationState: ApplicationState,
     private trackingService: TrackingService) {
-    this.attach();
   }
 
   public attach() {
@@ -45,6 +44,10 @@ export class WindowTrackingService {
 
   private handleVisibilityChange() {
     this.taskQueue.queueTask(() => {
+      if (this.applicationState.isHidden === window.document.hidden) {
+        return;
+      }
+      
       this.applicationState.isHidden = window.document.hidden;
       this.triggerEvent(this.applicationState.isHidden ? 'hide' : 'show');
     });

@@ -4,18 +4,26 @@ import { ApplicationState } from './state/application-state';
 import { UserService } from './user/user-service';
 import { PLATFORM } from 'aurelia-pal';
 import { WindowTrackingService } from './tracking/window-tracking-service';
-import { autoinject } from 'aurelia-framework';
+import { autoinject, ComponentAttached, ComponentDetached } from 'aurelia-framework';
 import { AuthService } from './auth/auth-service';
 import { ConfiguresRouter, RouterConfiguration, Router, PipelineStep, Redirect } from "aurelia-router";
 
 @autoinject
-export class App implements ConfiguresRouter {
+export class App implements ConfiguresRouter, ComponentAttached, ComponentDetached {
   constructor(
     private applicationState: ApplicationState,
     private authService: AuthService,
     private userService: UserService,
     private trackingService: TrackingService,
     private windowTrackingService: WindowTrackingService) {
+  }
+
+  public attached(): void {
+    this.windowTrackingService.attach();
+  }
+  
+  public detached(): void {
+    this.windowTrackingService.attach();
   }
 
   public configureRouter(config: RouterConfiguration, router: Router) {

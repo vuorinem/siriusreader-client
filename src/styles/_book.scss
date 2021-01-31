@@ -20,22 +20,6 @@ nr-book {
             padding-right: 0;
         }
     }
-
-    .book-overlay {
-        position: fixed;
-        z-index: 100;
-        left: 0;
-        width: 100%;
-        height: calc(100% - #{$title-height});
-        background-color: rgba($bg-book, 0.9);
-
-        .inactive-message {
-            font-size: 1.3rem;
-            font-weight: 500;
-            background-color: rgba($bg-book, 0.95);
-            padding: 10px;
-        }
-    }
     
     .book-content {
         height: calc(100% - #{$book-progress-height});

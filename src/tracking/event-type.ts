@@ -30,7 +30,6 @@ export type EventType =
   | 'openPage'
   | 'bookDialogOpen'
   | 'bookDialogClose'
-  | 'inactiveTimeout'
   | NavigationEventType
   | 'progressBarJump'
   | 'swipeUp'
@@ -55,4 +54,6 @@ export type EventType =
   | 'hide'
   | 'show'
   | 'close'
+  | 'inactiveTimeout'
+  | 'clickActivate'
   ;

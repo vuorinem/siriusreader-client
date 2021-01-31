@@ -36,4 +36,6 @@ export type LibraryEventType =
   | 'hide'
   | 'show'
   | 'close'
+  | 'inactiveTimeout'
+  | 'clickActivate'
   ;
