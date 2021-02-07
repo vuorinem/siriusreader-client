@@ -5,7 +5,7 @@ import { ApplicationState } from './../state/application-state';
 import { autoinject } from "aurelia-framework";
 import { TimeoutService } from 'utility/timeout-service';
 
-const InactiveTimeoutInMinutes = 0.1;
+const InactiveTimeoutInMinutes = 5;
 
 @autoinject
 export class InactiveTimeout {
