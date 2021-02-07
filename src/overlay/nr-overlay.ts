@@ -26,6 +26,22 @@ export class NrOverlay {
       || this.dialogService.hasOpenDialog;
   }
 
+  @computedFrom(
+    'applicationState.isReading',
+    'applicationState.isLibrary',
+    'applicationState.isActive',
+    'applicationState.isFocused',
+    'applicationState.isHidden')
+  private get isApplicationHidden(): boolean {
+    if (!this.applicationState.isReading && !this.applicationState.isLibrary) {
+      return false;
+    }
+
+    return !this.applicationState.isActive
+      || !this.applicationState.isFocused
+      || this.applicationState.isHidden
+  }
+
   constructor(
     private dialogService: DialogService,
     private applicationState: ApplicationState,
