@@ -47,6 +47,11 @@ export class InactiveTimeout {
   }
 
   private handleTimeout() {
+    if (!this.applicationState.isReading && !this.applicationState.isLibrary) {
+      this.setInactiveTimeout();
+      return;
+    }
+
     if (!this.applicationState.isActive) {
       return;
     }
