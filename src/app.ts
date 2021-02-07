@@ -23,7 +23,7 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
   }
   
   public detached(): void {
-    this.windowTrackingService.attach();
+    this.windowTrackingService.detach();
   }
 
   public configureRouter(config: RouterConfiguration, router: Router) {
