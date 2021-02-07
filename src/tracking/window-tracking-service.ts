@@ -56,7 +56,7 @@ export class WindowTrackingService {
 
   private triggerEvent(type: EventType & LibraryEventType) {
     this.trackingService.event(type);
-    this.trackingService.libraryEvent(type, [], []);
+    this.trackingService.libraryEvent(type);
   }
 
 }

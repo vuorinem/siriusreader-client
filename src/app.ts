@@ -164,7 +164,7 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
     return {
       run: async (instruction, next) => {
         trackingService.event(eventType);
-        trackingService.libraryEvent(eventType, [], []);
+        trackingService.libraryEvent(eventType);
 
         return next();
       }

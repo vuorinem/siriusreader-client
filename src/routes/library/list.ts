@@ -1,3 +1,4 @@
+import { ApplicationState } from './../../state/application-state';
 import { TrackingService } from './../../tracking/tracking-service';
 import { UserService } from './../../user/user-service';
 import { TitleDialog } from './title-dialog';
@@ -7,7 +8,6 @@ import { RoutableComponentActivate, Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
 import { LibraryService } from './library-service';
 import { ITitle } from './i-title';
-import { LibraryEventType } from '../../tracking/library-event-type';
 
 const MinTitleWidth = 200;
 const MaxVisibleTitles = 3;
@@ -27,6 +27,7 @@ export class List implements RoutableComponentActivate {
     private router: Router,
     private dialogService: DialogService,
     private userService: UserService,
+    private applicationState: ApplicationState,
     private timeoutService: TimeoutService,
     private libraryService: LibraryService,
     private trackingService: TrackingService) {
@@ -39,7 +40,7 @@ export class List implements RoutableComponentActivate {
   }
 
   public attached() {
-    this.trackEvent('openLibrary');
+    this.trackingService.libraryEvent('openLibrary');
 
     window.addEventListener('resize', this.onWindowResize, false);
 
@@ -47,7 +48,10 @@ export class List implements RoutableComponentActivate {
   }
 
   public detached() {
-    this.trackEvent('closeLibrary');
+    this.trackingService.libraryEvent('closeLibrary');
+
+    this.applicationState.libraryVisibleBooks = [];
+    this.applicationState.libraryVisibleSections = [];
 
     window.removeEventListener('resize', this.onWindowResize);
   }
@@ -55,21 +59,25 @@ export class List implements RoutableComponentActivate {
   private next() {
     this.finishTransitions();
 
-    this.trackEvent('clickNext');
+    this.trackingService.libraryEvent('clickNext');
 
     this.direction = 'next';
     this.shelvedTitles.push(...this.visibleTitles.splice(0, 1));
     this.visibleTitles.push(...this.shelvedTitles.splice(0, 1));
+
+    this.updateApplicationState();
   }
 
   private previous() {
     this.finishTransitions();
 
-    this.trackEvent('clickPrevious');
+    this.trackingService.libraryEvent('clickPrevious');
 
     this.direction = 'previous';
     this.shelvedTitles.unshift(...this.visibleTitles.splice(-1, 1));
     this.visibleTitles.unshift(...this.shelvedTitles.splice(-1, 1));
+
+    this.updateApplicationState();
   }
 
   private async openTitle(title: ITitle) {
@@ -85,14 +93,16 @@ export class List implements RoutableComponentActivate {
     await dialog;
 
     const selectTitle = async () => {
-      this.trackEvent('closeDialog');
+      this.updateApplicationState();
+      this.trackingService.libraryEvent('closeDialog');
 
       await this.userService.sendBookSelection(title.bookId);
       this.router.navigateToRoute('main');
     };
 
     const closeTitle = async () => {
-      this.trackEvent('closeDialog');
+      this.updateApplicationState();
+      this.trackingService.libraryEvent('closeDialog');
     };
 
     await dialog.whenClosed(selectTitle, closeTitle);
@@ -100,7 +110,7 @@ export class List implements RoutableComponentActivate {
 
   private handleWindowResize() {
     this.timeoutService.debounce('resize', 500, async () => {
-      this.trackEvent('resize');
+      this.trackingService.libraryEvent('resize');
       this.refreshList();
     });
   }
@@ -132,6 +142,8 @@ export class List implements RoutableComponentActivate {
     } else if (numberOfTitlesToShow < 0) {
       this.shelvedTitles.unshift(...this.visibleTitles.splice(numberOfTitlesToShow));
     }
+
+    this.updateApplicationState();
   }
 
   private getNumberOfVisibleTitles(): number {
@@ -145,9 +157,8 @@ export class List implements RoutableComponentActivate {
     return Math.min(numberOfVisibleTitless, MaxVisibleTitles);
   }
 
-  private trackEvent(type: LibraryEventType) {
-    const visibleBookIds = this.visibleTitles.map(t => t.bookId);
-
-    this.trackingService.libraryEvent(type, visibleBookIds, []);
+  private updateApplicationState() {
+    this.applicationState.libraryVisibleBooks = this.visibleTitles.map(t => t.bookId);
+    this.applicationState.libraryVisibleSections = [];
   }
 }

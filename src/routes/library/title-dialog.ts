@@ -1,11 +1,12 @@
-import { TrackingService } from 'tracking/tracking-service';
+import { ApplicationState } from './../../state/application-state';
+import { TrackingService } from '../../tracking/tracking-service';
 import { ConfirmSelectionDialog } from './confirm-selection-dialog';
 import { autoinject } from 'aurelia-framework';
 import { DialogController, DialogComponentActivate, DialogService } from 'aurelia-dialog';
 import { LibraryService } from './library-service';
 import { ITitleDetails } from './i-title-details';
 import { ITitle } from './i-title';
-import { LibraryEventType, TitleDialogSectionActions } from 'tracking/library-event-type';
+import { TitleDialogSectionActions } from '../../tracking/library-event-type';
 
 type TabDetails = {
   name: keyof (ITitleDetails),
@@ -44,6 +45,7 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
   constructor(
     private dialogController: DialogController,
     private dialogService: DialogService,
+    private applicationState: ApplicationState,
     private libraryService: LibraryService,
     private trackingService: TrackingService) {
   }
@@ -51,13 +53,16 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
   public async activate(title: ITitle) {
     this.title = await this.libraryService.getTitle(title.bookId);
 
-    this.trackEvent('openDialog');
+    this.updateApplicationState();
+    this.trackingService.libraryEvent('openDialog');
   }
 
   private selectTab(tab: TabDetails) {
     if (tab.isSelected) {
       tab.isSelected = false;
-      this.trackEvent(tab.name + 'Hide' as TitleDialogSectionActions);
+
+      this.updateApplicationState();
+      this.trackingService.libraryEvent(tab.name + 'Hide' as TitleDialogSectionActions);
     } else {
       this.tabs.forEach(t => {
         if (t.isSelected) {
@@ -66,7 +71,9 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
       });
 
       tab.isSelected = true;
-      this.trackEvent(tab.name + 'Show' as TitleDialogSectionActions);
+
+      this.updateApplicationState();
+      this.trackingService.libraryEvent(tab.name + 'Show' as TitleDialogSectionActions);
     }
   }
 
@@ -81,28 +88,25 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
 
     await confirmDialog;
 
-    this.trackEvent('clickSelectBook');
+    this.trackingService.libraryEvent('clickSelectBook');
 
     const confirmed = async () => {
-      this.trackEvent('confirmSelectBook');
+      this.trackingService.libraryEvent('confirmSelectBook');
       this.dialogController.ok();
     };
 
     const cancelled = async () => {
-      this.trackEvent('cancelSelectBook');
+      this.trackingService.libraryEvent('cancelSelectBook');
     };
 
     await confirmDialog.whenClosed(confirmed, cancelled);
   }
 
-  private trackEvent(type: LibraryEventType) {
-    const visibleBookIds = this.title === undefined ? [] : [this.title.bookId];
-
-    const visibleSections = this.tabs
+  private updateApplicationState() {
+    this.applicationState.libraryVisibleBooks = this.title === undefined ? [] : [this.title.bookId];
+    this.applicationState.libraryVisibleSections = this.tabs
       .filter(t => t.isSelected)
-      .map(t => t.name);
-
-    this.trackingService.libraryEvent(type, visibleBookIds, visibleSections);
+      .map(t => t.name);;
   }
 
 }

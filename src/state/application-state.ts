@@ -5,4 +5,7 @@ export class ApplicationState {
   public isReading: boolean = false;
   public isLibrary: boolean = false;
   public isHidden: boolean = false;
+
+  public libraryVisibleBooks: number[] = [];
+  public libraryVisibleSections: string[] = [];
 }

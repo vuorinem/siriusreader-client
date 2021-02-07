@@ -40,8 +40,8 @@ export class TrackingService {
     await this.eventInternal(type, true);
   }
 
-  public async libraryEvent(type: LibraryEventType, visibleBooks: number[], visibleSections: string[]) {
-    await this.libraryEventInternal(type, visibleBooks, visibleSections, true);
+  public async libraryEvent(type: LibraryEventType) {
+    await this.libraryEventInternal(type, true);
   }
 
   public eventImmediate(type: EventType) {
@@ -93,7 +93,7 @@ export class TrackingService {
     }
   }
 
-  private async libraryEventInternal(type: LibraryEventType, visibleBooks: number[], visibleSections: string[], send: boolean) {
+  private async libraryEventInternal(type: LibraryEventType, send: boolean) {
     if (!this.authService.isAuthenticated) {
       return;
     }
@@ -108,8 +108,8 @@ export class TrackingService {
       time: time,
       timezoneOffset: time.getTimezoneOffset(),
       type: type,
-      visibleBooks: visibleBooks,
-      visibleSections: visibleSections,
+      visibleBooks: this.applicationState.libraryVisibleBooks,
+      visibleSections: this.applicationState.libraryVisibleSections,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       isMenuOpen: this.applicationState.isMenuOpen,
