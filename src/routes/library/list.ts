@@ -7,6 +7,7 @@ import { RoutableComponentActivate, Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
 import { LibraryService } from './library-service';
 import { ITitle } from './i-title';
+import { LibraryEventType } from '../../tracking/library-event-type';
 
 const MinTitleWidth = 200;
 const MaxVisibleTitles = 3;
@@ -38,7 +39,7 @@ export class List implements RoutableComponentActivate {
   }
 
   public attached() {
-    this.trackingService.libraryEvent('openLibrary');
+    this.trackEvent('openLibrary');
 
     window.addEventListener('resize', this.onWindowResize, false);
 
@@ -46,7 +47,7 @@ export class List implements RoutableComponentActivate {
   }
 
   public detached() {
-    this.trackingService.libraryEvent('closeLibrary');
+    this.trackEvent('closeLibrary');
 
     window.removeEventListener('resize', this.onWindowResize);
   }
@@ -54,7 +55,7 @@ export class List implements RoutableComponentActivate {
   private next() {
     this.finishTransitions();
 
-    this.trackingService.libraryEvent('clickNext');
+    this.trackEvent('clickNext');
 
     this.direction = 'next';
     this.shelvedTitles.push(...this.visibleTitles.splice(0, 1));
@@ -64,7 +65,7 @@ export class List implements RoutableComponentActivate {
   private previous() {
     this.finishTransitions();
 
-    this.trackingService.libraryEvent('clickPrevious');
+    this.trackEvent('clickPrevious');
 
     this.direction = 'previous';
     this.shelvedTitles.unshift(...this.visibleTitles.splice(-1, 1));
@@ -83,17 +84,15 @@ export class List implements RoutableComponentActivate {
 
     await dialog;
 
-    this.trackingService.libraryEvent('openDialog');
-
     const selectTitle = async () => {
-      this.trackingService.libraryEvent('closeDialog');
+      this.trackEvent('closeDialog');
 
       await this.userService.sendBookSelection(title.bookId);
       this.router.navigateToRoute('main');
     };
 
     const closeTitle = async () => {
-      this.trackingService.libraryEvent('closeDialog');
+      this.trackEvent('closeDialog');
     };
 
     await dialog.whenClosed(selectTitle, closeTitle);
@@ -101,7 +100,7 @@ export class List implements RoutableComponentActivate {
 
   private handleWindowResize() {
     this.timeoutService.debounce('resize', 500, async () => {
-      this.trackingService.libraryEvent('resize');
+      this.trackEvent('resize');
       this.refreshList();
     });
   }
@@ -144,5 +143,11 @@ export class List implements RoutableComponentActivate {
     const numberOfVisibleTitless = Math.floor(rect.width / MinTitleWidth);
 
     return Math.min(numberOfVisibleTitless, MaxVisibleTitles);
+  }
+
+  private trackEvent(type: LibraryEventType) {
+    const visibleBookIds = this.visibleTitles.map(t => t.bookId);
+
+    this.trackingService.libraryEvent(type, visibleBookIds, []);
   }
 }

@@ -5,7 +5,7 @@ import { DialogController, DialogComponentActivate, DialogService } from 'aureli
 import { LibraryService } from './library-service';
 import { ITitleDetails } from './i-title-details';
 import { ITitle } from './i-title';
-import { TitleDialogSectionActions } from 'tracking/library-event-type';
+import { LibraryEventType, TitleDialogSectionActions } from 'tracking/library-event-type';
 
 type TabDetails = {
   name: keyof (ITitleDetails),
@@ -50,22 +50,23 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
 
   public async activate(title: ITitle) {
     this.title = await this.libraryService.getTitle(title.bookId);
+
+    this.trackEvent('openDialog');
   }
 
   private selectTab(tab: TabDetails) {
     if (tab.isSelected) {
-      this.trackingService.libraryEvent(tab.name + 'Hide' as TitleDialogSectionActions);
       tab.isSelected = false;
+      this.trackEvent(tab.name + 'Hide' as TitleDialogSectionActions);
     } else {
       this.tabs.forEach(t => {
         if (t.isSelected) {
-          this.trackingService.libraryEvent(t.name + 'Hide' as TitleDialogSectionActions);
           t.isSelected = false;
         }
       });
 
-      this.trackingService.libraryEvent(tab.name + 'Show' as TitleDialogSectionActions);
       tab.isSelected = true;
+      this.trackEvent(tab.name + 'Show' as TitleDialogSectionActions);
     }
   }
 
@@ -80,18 +81,28 @@ export class TitleDialog implements DialogComponentActivate<ITitle> {
 
     await confirmDialog;
 
-    this.trackingService.libraryEvent('clickSelectBook');
+    this.trackEvent('clickSelectBook');
 
     const confirmed = async () => {
-      this.trackingService.libraryEvent('confirmSelectBook');
+      this.trackEvent('confirmSelectBook');
       this.dialogController.ok();
     };
 
     const cancelled = async () => {
-      this.trackingService.libraryEvent('cancelSelectBook');
+      this.trackEvent('cancelSelectBook');
     };
 
     await confirmDialog.whenClosed(confirmed, cancelled);
+  }
+
+  private trackEvent(type: LibraryEventType) {
+    const visibleBookIds = this.title === undefined ? [] : [this.title.bookId];
+
+    const visibleSections = this.tabs
+      .filter(t => t.isSelected)
+      .map(t => t.name);
+
+    this.trackingService.libraryEvent(type, visibleBookIds, visibleSections);
   }
 
 }
