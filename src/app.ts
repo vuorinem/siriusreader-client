@@ -7,6 +7,7 @@ import { WindowTrackingService } from './tracking/window-tracking-service';
 import { autoinject, ComponentAttached, ComponentDetached } from 'aurelia-framework';
 import { AuthService } from './auth/auth-service';
 import { ConfiguresRouter, RouterConfiguration, Router, PipelineStep, Redirect } from "aurelia-router";
+import { LibraryEventType } from './tracking/library-event-type';
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached, ComponentDetached {
@@ -157,12 +158,13 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
     }
   }
 
-  private getTrackEventStep(eventType: EventType): PipelineStep {
+  private getTrackEventStep(eventType: EventType & LibraryEventType): PipelineStep {
     const trackingService = this.trackingService;
 
     return {
       run: async (instruction, next) => {
         trackingService.event(eventType);
+        trackingService.libraryEvent(eventType);
 
         return next();
       }

@@ -98,6 +98,10 @@ export class TrackingService {
       return;
     }
 
+    if (this.bookService.book) {
+      return;
+    }
+
     const time = new Date();
 
     const event: ILibraryEvent = {

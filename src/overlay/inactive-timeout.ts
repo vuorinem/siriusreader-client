@@ -57,12 +57,7 @@ export class InactiveTimeout {
   }
 
   private triggerEvent(type: EventType & LibraryEventType) {
-    if (this.applicationState.isReading) {
-      this.trackingService.event(type);
-    }
-
-    if (this.applicationState.isLibrary) {
-      this.trackingService.libraryEvent(type);
-    }
+    this.trackingService.event(type);
+    this.trackingService.libraryEvent(type);
   }
 }
