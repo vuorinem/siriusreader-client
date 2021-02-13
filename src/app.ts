@@ -38,14 +38,38 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
 
     config.map([
       {
-        name: "login",
-        route: "login",
-        moduleId: PLATFORM.moduleName("./routes/login/index"),
+        title: "Information",
+        name: "information",
+        route: "information",
+        moduleId: PLATFORM.moduleName("./routes/public/info"),
+        nav: true,
       },
       {
-        name: "info",
-        route: "info",
-        moduleId: PLATFORM.moduleName("./routes/info"),
+        title: "Details",
+        name: "details",
+        route: "details",
+        moduleId: PLATFORM.moduleName("./routes/public/info"),
+        nav: true,
+      },
+      {
+        title: "Contact",
+        name: "contact",
+        route: "contact",
+        moduleId: PLATFORM.moduleName("./routes/public/info"),
+        nav: true,
+      },
+      {
+        title: "Take Part",
+        name: "register",
+        route: "register",
+        moduleId: PLATFORM.moduleName("./routes/public/register"),
+        nav: true,
+      },
+      {
+        title: "Login",
+        name: "login",
+        route: "login",
+        moduleId: PLATFORM.moduleName("./routes/public/login"),
       },
       {
         name: "unsubscribe",

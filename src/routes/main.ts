@@ -18,7 +18,7 @@ export class Main {
     this.applicationState.isLibrary = false;
 
     if (!this.userService.user) {
-      this.router.navigate("/login");
+      this.router.navigate("/public/login");
     } else if (!this.userService.user.isInformationSheetConfirmed) {
       this.router.navigate("/introduction/information");
     } else if (!this.userService.user.isConsentConfirmed) {

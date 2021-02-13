@@ -1,3 +1,4 @@
+import { AuthService } from './../../auth/auth-service';
 import { Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
 import { HttpClient, json } from 'aurelia-fetch-client';
@@ -19,10 +20,15 @@ export class Register {
 
   constructor(
     private router: Router,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private authService: AuthService) {
   }
 
   public activate(params: any) {
+    if (this.authService.isAuthenticated) {
+      this.router!.navigateToRoute("main");
+    }
+
     this.emailAddress = params.email;
   }
 

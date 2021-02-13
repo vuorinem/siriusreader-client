@@ -1,0 +1,22 @@
+.university-logos img {
+    height: 80px;
+}
+
+.nav.header-nav {
+    margin-top: 20px;
+
+    a.nav-link {
+        padding-left: 1.3rem;
+        padding-right: 1.3rem;
+
+        font-size: 1.3rem;
+        color: #000;
+
+        &.nav-item-register {
+            @extend .btn;
+            @extend .btn-primary;
+
+            font-size: 1.3rem;
+        }
+    }
+}

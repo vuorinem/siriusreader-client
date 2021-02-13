@@ -1,0 +1,24 @@
+<template>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-6 d-flex align-items-center">
+        <a href="/">
+          <img src="/siriusreader-logo.png" alt="Sirius Reader" class="img-fluid" />
+        </a>
+      </div>
+      <div class="col-md-8 col-6">
+        <div class="row university-logos d-flex justify-content-end">
+          <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" class="img-fluid" />
+          <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" class="img-fluid" />
+        </div>
+        <div class="header-nav nav justify-content-end">
+          <li class="nav-item" repeat.for="nav of router.navigation">
+            <a class="nav-link ${ nav.isActive ? 'active' : '' } nav-item-${nav.config.name}" href="${ nav.href }">
+              ${ nav.title }
+            </a>
+          </li>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
