@@ -127,3 +127,29 @@
         }
     }
 }
+
+.faq {
+    .faq-questions {
+        overflow: hidden;
+
+        $accordionAnimationDuration: 0.5s;
+
+        .card-header {
+            padding: 5px;
+
+            .btn {
+
+                &.focus,
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        .faq-answer {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height $accordionAnimationDuration;
+        }
+    }
+}

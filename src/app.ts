@@ -55,7 +55,7 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         title: "F.A.Q.",
         name: "faq",
         route: "faq",
-        moduleId: PLATFORM.moduleName("./routes/public/home"),
+        moduleId: PLATFORM.moduleName("./routes/public/faq"),
         nav: true,
       },
       {

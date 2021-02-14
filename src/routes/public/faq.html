@@ -1,0 +1,35 @@
+<template>
+  <require from="./nr-header"></require>
+  <require from="./nr-footer"></require>
+
+  <nr-header></nr-header>
+
+  <div class="container public-container faq">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-8 col-xl-6">
+        <h1>F.A.Q.</h1>
+        <p>Frequently asked questions</p>
+
+        <div class="accordion faq-questions">
+          <div class="card" repeat.for="question of questions">
+            <div class="card-header faq-question">
+              <button class="btn btn-link btn-block text-left ${question.isSelected ? 'active' : ''}" type="button"
+                click.delegate="selectQuestion(question)">
+                ${question.title}
+                <span class="float-right oi oi-caret-${question.isSelected ? 'top' : 'bottom'}"></span>
+              </button>
+            </div>
+            <div class="faq-answer ${question.isSelected ? 'show' : 'hide'}" ref="question.answerElement">
+              <div class="card-body">
+                <div innerhtml.bind="question.content"></div>
+                <a href="#" click.delegate="selectQuestion(question)">Hide</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nr-footer></nr-footer>
+</template>
