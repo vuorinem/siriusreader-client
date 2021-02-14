@@ -35,14 +35,14 @@
             .buttons {
                 grid-column: 3;
                 grid-row: 4;
-                
+
                 .btn {
                     font-size: 1.2rem;
                     margin-left: 1.2rem;
                 }
             }
         }
-        
+
         @include media-breakpoint-up(lg) {
             grid-template-rows: 1fr 2fr 2fr 2fr 1fr;
 
@@ -55,6 +55,70 @@
                     font-size: 1.4rem;
                     margin-left: 1.4rem;
                 }
+            }
+        }
+    }
+
+    .purpose {
+        margin-top: 1rem;
+
+        .infoboxes {
+            margin-top: 1rem;
+
+            .infobox {
+                margin-bottom: 1rem;
+                display: grid;
+                grid-template-columns: auto 1fr;
+                column-gap: 20px;
+                align-items: center;
+
+                .infoicon {
+                    grid-column: 1;
+                    background-color: $primary;
+                    width: 4rem;
+                    height: 4rem;
+                    padding: 0.5rem;
+                    border-radius: 50%;
+                    display: flex;
+                    align-content: center;
+
+                    img {
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+
+                    p {
+                        font-size: 1.6rem;
+                        font-weight: bold;
+                        margin: auto 0;
+                        padding: auto;
+                    }
+                }
+
+                .infotext {
+                    grid-column: 2;
+                    font-size: 1.2rem;
+                    text-align: left;
+                }
+            }
+        }
+
+        @include media-breakpoint-up(md) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            h4 {
+                grid-column: 1;
+                align-self: center;
+                padding-top: 3rem;
+                padding-bottom: 8rem;
+                padding-right: 2rem;
+                border-right: 2px solid $secondary;
+            }
+
+            .infoboxes {
+                margin-left: 3rem;
+                grid-column: 2;
             }
         }
     }
