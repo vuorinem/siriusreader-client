@@ -79,9 +79,9 @@
                 .infoicon {
                     grid-column: 1;
                     background-color: $primary;
-                    width: 4rem;
-                    height: 4rem;
-                    padding: 0.5rem;
+                    width: 7.5rem;
+                    height: 7.5rem;
+                    padding: 1.5rem;
                     border-radius: 50%;
                     display: flex;
                     align-content: center;
@@ -92,7 +92,7 @@
                     }
 
                     p {
-                        font-size: 1.6rem;
+                        font-size: 2.5rem;
                         font-weight: bold;
                         margin: auto 0;
                         padding: auto;
@@ -101,8 +101,12 @@
 
                 .infotext {
                     grid-column: 2;
-                    font-size: 1.2rem;
                     text-align: left;
+
+                    p {
+                        color: $text-light-color;
+                        font-size: 1rem;
+                    }
                 }
             }
         }
@@ -111,10 +115,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
 
-            h4 {
+            .infotitle {
                 grid-column: 1;
                 align-self: center;
-                padding-top: 3rem;
+                padding-top: 8rem;
                 padding-bottom: 8rem;
                 padding-right: 2rem;
                 border-right: 2px solid $secondary;
