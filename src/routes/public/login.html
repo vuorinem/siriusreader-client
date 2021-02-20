@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
-        <h1>Sign In</h1>
+
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <h1>Log In</h1>
+        <p>Enter your email address and password to log in to Sirius Reader.</p>
         <form submit.trigger="signIn()">
           <div class="form-group">
             <label for="email-address">Email Address</label>
@@ -18,7 +20,7 @@
           <div class="form-group row">
             <div class="col">
               <button type="submit" class="btn btn-primary" disabled.bind="!emailAddress || !password || isLoading">
-                <span class="oi oi-account-login"></span> Sign In
+                <span class="oi oi-account-login"></span> Log In
               </button>
             </div>
             <div class="col-auto text-right">
@@ -38,17 +40,34 @@
             Error connecting to the reader, please try again later
           </div>
 
-          <div class="alert alert-info" show.bind="!isEmailAddressSet">
-            If you forgot your password, you can
-            <a route-href="forgot-password">reset your password</a>
-            with a verification code.
-          </div>
-
           <div class="alert alert-info" show.bind="isEmailAddressSet">
             You can now sign in using your password.
           </div>
         </form>
       </div>
+
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h5>How to sign up?</h5>
+            <p>
+              If you don't have an account yet, you can <a route-href="register">sign up</a> to create a new account.
+            </p>
+
+            <h5>Forgot your password?</h5>
+            <p>
+              If you don't remember your password, you can <a route-href="forgot-password">reset your password</a> with
+              a registered email address.
+            </p>
+
+            <h5>Want to know more?</h5>
+            <p>
+              Check out the <a route-href="information">information sheet</a> and the <a route-href="faq">F.A.Q.</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      
     </div>
   </div>
 </template>

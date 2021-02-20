@@ -95,6 +95,16 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         },
       },
       {
+        title: "Login",
+        name: "login",
+        route: "login",
+        moduleId: PLATFORM.moduleName("./routes/public/login"),
+        nav: true,
+        settings: {
+          public: true,
+        },
+      },
+      {
         title: "Take Part",
         name: "register",
         route: "register",
@@ -109,15 +119,6 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         name: "forgot-password",
         route: "forgot-password",
         moduleId: PLATFORM.moduleName("./routes/public/forgot-password"),
-        settings: {
-          public: true,
-        },
-      },
-      {
-        title: "Login",
-        name: "login",
-        route: "login",
-        moduleId: PLATFORM.moduleName("./routes/public/login"),
         settings: {
           public: true,
         },

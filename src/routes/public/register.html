@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
+      <div class="col-md-6 col-lg-5 col-xl-4">
         <h1>Sign up to take part</h1>
-        <p>Enter your email address below to create an account for Sirius Reader</p>
+        <p>Enter your email address below to create an account for Sirius Reader.</p>
 
         <form submit.trigger="register()">
           <div class="form-group row">
@@ -26,7 +26,7 @@
             <div class="col">
               <button type="button" class="btn btn-primary" disabled.bind="!emailAddress || isLoading"
                 click.delegate="requestVerification()">
-                <span class="oi oi-envelope-closed"></span> Send Verification Code
+                Continue <span class="oi oi-chevron-right"></span>
               </button>
             </div>
             <div class="col-auto text-right">
@@ -83,6 +83,34 @@
             ${ error }
           </div>
         </form>
+      </div>
+
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card bg-light">
+          <div class="card-body">
+            <p>
+              When you click <i>Continue</i>, we will send a one-time verification code to your email address. If you
+              don't receive an email, please check that you have entered your email address correctly, and check your
+              spam or junk mail folder.
+            </p>
+
+            <h5>Already signed up?</h5>
+            <p>
+              If you already have an account, you can <a route-href="login">log in</a> using your email address.
+            </p>
+
+            <h5>Forgot your password?</h5>
+            <p>
+              If you don't remember your password, you can <a route-href="forgot-password">reset your password</a> with
+              a registered email address.
+            </p>
+
+            <h5>Want to know more?</h5>
+            <p>
+              Check out the <a route-href="information">information sheet</a> and the <a route-href="faq">F.A.Q.</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
