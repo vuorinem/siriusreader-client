@@ -1,12 +1,16 @@
 ﻿<template>
   <require from="menu/nr-menu"></require>
   <require from="overlay/nr-overlay"></require>
+  <require from="routes/public/nr-header"></require>
+  <require from="routes/public/nr-footer"></require>
 
-  <div class="app-container ${ applicationState.isReading ? 'is-reading' : '' }">
+  <div class="app-container ${ applicationState.isReading ? 'is-reading' : '' } ${ isPublicRoute ? 'public-container' : ''}">
     <div class="app-content">
-      <nr-menu></nr-menu>
-      <nr-overlay></nr-overlay>
+      <nr-menu if.bind="!isPublicRoute"></nr-menu>
+      <nr-overlay if.bind="!isPublicRoute"></nr-overlay>
+      <nr-header if.bind="isPublicRoute" router.bind="router"></nr-header>
       <router-view></router-view>
+      <nr-footer if.bind="isPublicRoute" router.bind="router"></nr-footer>
     </div>
   </div>
 </template>

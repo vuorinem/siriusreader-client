@@ -1,15 +1,30 @@
 .public-container {
-    min-height: 100vh;
+    .app-content {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+
+        nr-header {
+            margin-bottom: 2rem;
+        }
+    }
 
     .col-xs-full {
         padding: 0;
     }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
 }
 
 .info {
+    background-color: $body-bg;
 
     h1 {
         text-transform: uppercase;
+        text-align: left;
+        margin-bottom: 0;
     }
 
     h4 {
@@ -30,8 +45,6 @@
     }
 
     .title {
-        margin-top: 2.5rem;
-
         .title-image {
             img {
                 width: 100%

@@ -4,13 +4,28 @@ import { ApplicationState } from './state/application-state';
 import { UserService } from './user/user-service';
 import { PLATFORM } from 'aurelia-pal';
 import { WindowTrackingService } from './tracking/window-tracking-service';
-import { autoinject, ComponentAttached, ComponentDetached } from 'aurelia-framework';
+import { autoinject, ComponentAttached, ComponentDetached, computedFrom } from 'aurelia-framework';
 import { AuthService } from './auth/auth-service';
 import { ConfiguresRouter, RouterConfiguration, Router, PipelineStep, Redirect } from "aurelia-router";
 import { LibraryEventType } from './tracking/library-event-type';
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached, ComponentDetached {
+  private router?: Router;
+
+  @computedFrom('router.currentInstruction')
+  private get isPublicRoute(): boolean {
+    if (!this.router) {
+      return false;
+    }
+
+    if (!this.router.currentInstruction) {
+      return false;
+    }
+
+    return this.router.currentInstruction.config.settings?.public;
+  }
+
   constructor(
     private applicationState: ApplicationState,
     private authService: AuthService,
@@ -22,12 +37,14 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
   public attached(): void {
     this.windowTrackingService.attach();
   }
-  
+
   public detached(): void {
     this.windowTrackingService.detach();
   }
 
   public configureRouter(config: RouterConfiguration, router: Router) {
+    this.router = router;
+
     config.title = "Sirius Reader";
     config.options.pushState = true;
     config.options.root = '/';
@@ -43,6 +60,9 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         route: "home",
         moduleId: PLATFORM.moduleName("./routes/public/home"),
         nav: true,
+        settings: {
+          public: true,
+        },
       },
       {
         title: "Information",
@@ -50,6 +70,9 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         route: "information",
         moduleId: PLATFORM.moduleName("./routes/public/information"),
         nav: true,
+        settings: {
+          public: true,
+        },
       },
       {
         title: "FAQ",
@@ -57,6 +80,9 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         route: "faq",
         moduleId: PLATFORM.moduleName("./routes/public/faq"),
         nav: true,
+        settings: {
+          public: true,
+        },
       },
       {
         title: "Contact",
@@ -64,6 +90,9 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         route: "contact",
         moduleId: PLATFORM.moduleName("./routes/public/home"),
         nav: true,
+        settings: {
+          public: true,
+        },
       },
       {
         title: "Take Part",
@@ -71,17 +100,35 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         route: "register",
         moduleId: PLATFORM.moduleName("./routes/public/register"),
         nav: true,
+        settings: {
+          public: true,
+        },
+      },
+      {
+        title: "Forgot Password",
+        name: "forgot-password",
+        route: "forgot-password",
+        moduleId: PLATFORM.moduleName("./routes/public/forgot-password"),
+        settings: {
+          public: true,
+        },
       },
       {
         title: "Login",
         name: "login",
         route: "login",
         moduleId: PLATFORM.moduleName("./routes/public/login"),
+        settings: {
+          public: true,
+        },
       },
       {
         name: "unsubscribe",
         route: "unsubscribe/*id",
         moduleId: PLATFORM.moduleName("./routes/unsubscribe"),
+        settings: {
+          public: true,
+        },
       },
       {
         name: "logout",

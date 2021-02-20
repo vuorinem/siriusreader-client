@@ -9,7 +9,7 @@ nr-header {
 
         @include media-breakpoint-up(md) {
             display: grid;
-            grid-template-columns: 2fr 1fr 2fr;
+            grid-template-columns: 30% 30% 40%;
 
             .reader-logo {
                 grid-column: 1;
@@ -35,30 +35,18 @@ nr-header {
         }
 
         @include media-breakpoint-up(lg) {
-            display: grid;
-            grid-template-columns: 2fr 1fr 2fr;
-
             .reader-logo {
-                grid-column: 1;
                 grid-row: 1 / span 2;
                 align-self: end;
             }
 
             .university-logos {
-                display: block;
                 grid-column: 3;
-                grid-row: 1;
 
                 img {
                     max-height: 50px;
                     margin-left: 20px;
                 }
-            }
-
-            .header-nav {
-                grid-column: 1 / span 3;
-                grid-row: 2;
-                justify-self: end;
             }
         }
     }
