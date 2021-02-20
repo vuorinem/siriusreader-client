@@ -64,48 +64,50 @@ nr-header {
     }
 }
 
-.nav.header-nav {
+.header-nav {
     margin-top: 20px;
 
-    a.nav-link {
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
-
-        font-size: 1.1rem;
-        color: #000;
-        font-weight: bold;
-
-        &.nav-item-register {
-            @extend .btn;
-            @extend .btn-primary;
+    .nav {
+        a.nav-link {
+            padding-left: 1.1rem;
+            padding-right: 1.1rem;
 
             font-size: 1.1rem;
+            color: #000;
             font-weight: bold;
-        }
-
-        &:hover,
-        &.active {
-            color: $text-light-color;
-        }
-
-        &.active {
-            text-decoration: underline;
-        }
-
-        @include media-breakpoint-up(sm) {
-            font-size: 1.1rem;
 
             &.nav-item-register {
+                @extend .btn;
+                @extend .btn-primary;
+
                 font-size: 1.1rem;
+                font-weight: bold;
             }
-        }
 
-        @include media-breakpoint-up(md) {
-            font-size: 1.3rem;
+            &:hover,
+            &.active {
+                color: $text-light-color;
+            }
 
-            &.nav-item-register {
-                margin-left: 1rem;
+            &.active {
+                text-decoration: underline;
+            }
+
+            @include media-breakpoint-up(sm) {
+                font-size: 1.1rem;
+
+                &.nav-item-register {
+                    font-size: 1.1rem;
+                }
+            }
+
+            @include media-breakpoint-up(md) {
                 font-size: 1.3rem;
+
+                &.nav-item-register {
+                    margin-left: 1rem;
+                    font-size: 1.3rem;
+                }
             }
         }
     }

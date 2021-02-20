@@ -12,12 +12,14 @@
             <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" />
             <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" />
           </div>
-          <div class="header-nav nav">
-            <li class="nav-item" repeat.for="nav of router.navigation">
-              <a class="nav-link ${ nav.isActive ? 'active' : '' } nav-item-${nav.config.name}" href="${ nav.href }">
-                ${ nav.title }
-              </a>
-            </li>
+          <div class="header-nav">
+            <ul class="nav">
+              <li class="nav-item" repeat.for="nav of router.navigation">
+                <a class="nav-link ${ nav.isActive ? 'active' : '' } nav-item-${nav.config.name}" href="${ nav.href }">
+                  ${ nav.title }
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

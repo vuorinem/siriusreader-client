@@ -2,7 +2,27 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-12 col-xl-10">
-        <p>Footer</p>
+        <div class="footer-content">
+          <div class="footer-nav">
+            <ul>
+              <li repeat.for="nav of router.navigation">
+                <a href="${ nav.href }">${ nav.title }</a>
+              </li>
+            </ul>
+          </div>
+          <div class="sirius-logo">
+            <img src="/siriusreader-logo.png" alt="Sirius Reader" />
+          </div>
+          <div class="university-logos">
+            <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" />
+            <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" />
+          </div>
+          <div class="attributions">
+            Image attributions:
+            Vector images from Freepik by Freepik, stories, slidesgo, grmarc, studiogstock, macrovector and pch.vector.
+            Icons from Flaticon by prettycons, itim2101, Freepik and GoodWare. Sirius Reader logo by Pauliina Vuorinen.
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -3,4 +3,112 @@ nr-footer {
     padding-bottom: 4rem;
     display: block;
     background-color: $light-gray;
+
+    a {
+        color: $body-color;
+    }
+
+    .footer-content {
+        .footer-nav {
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+
+                
+                    text-align: center;
+
+                    li {
+                        display: inline;
+
+                        &:before {
+                            content: ' | ';
+                        }
+
+                        &:first-child:before {
+                            content: '';
+                        }
+                    }
+                
+            }
+        }
+
+        .sirius-logo {
+            text-align: center;
+
+            img {
+                max-height: 4rem;
+                max-width: 100%;
+            }
+        }
+
+        .university-logos {
+            margin-top: 1rem;
+            text-align: center;
+            
+            img {
+                max-height: 2rem;
+                margin-left: 1rem;
+            }
+
+            img:first-child {
+                margin-left: 0;
+            }
+        }
+
+        .attributions {
+            font-size: 0.8rem;
+        }
+
+        @include media-breakpoint-down(sm) {
+            .attributions {
+                margin-top: 2rem;
+            }
+        }
+
+        @include media-breakpoint-up(md) {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            grid-template-rows: auto auto auto;
+            column-gap: 2rem;
+            row-gap: 1rem;
+
+            .footer-nav {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .sirius-logo {
+                grid-column: 1;
+                grid-row: 2;
+                justify-self: center;
+            }
+
+            .university-logos {
+                grid-column: 1;
+                grid-row: 3;
+                justify-self: center;
+            }
+
+            .attributions {
+                grid-column: 2;
+                grid-row: 1 / span 3;
+            }
+        }
+
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: 3fr 3fr 3fr;
+            grid-template-rows: auto auto;
+
+            .university-logos {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+            }
+
+            .attributions {
+                grid-column: 3;
+                grid-row: 1 / span 2;
+            }
+        }
+    }
 }
