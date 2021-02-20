@@ -6,6 +6,15 @@
         nr-header {
             margin-bottom: 2rem;
         }
+
+        >router-view .container {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+
+            &.info {
+                margin-bottom: 0;
+            }
+        }
     }
 
     .col-xs-full {
