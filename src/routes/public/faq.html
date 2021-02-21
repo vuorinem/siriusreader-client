@@ -1,26 +1,109 @@
 <template>
+  <require from="./nr-faq-question"></require>
+
   <div class="container faq">
     <div class="row justify-content-center">
       <div class="col-md-12 col-lg-8 col-xl-6">
         <h1>F.A.Q.</h1>
-        <p>Frequently asked questions</p>
 
+        <h3>The research project</h3>
         <div class="accordion faq-questions">
-          <div class="card" repeat.for="question of questions">
-            <div class="card-header faq-question">
-              <button class="btn btn-link btn-block text-left ${question.isSelected ? 'active' : ''}" type="button"
-                click.delegate="selectQuestion(question)">
-                ${question.title}
-                <span class="float-right oi oi-caret-${question.isSelected ? 'top' : 'bottom'}"></span>
-              </button>
-            </div>
-            <div class="faq-answer ${question.isSelected ? 'show' : 'hide'}" ref="question.answerElement">
-              <div class="card-body">
-                <div innerhtml.bind="question.content"></div>
-                <a href="#" click.delegate="selectQuestion(question)">Hide</a>
-              </div>
-            </div>
-          </div>
+          <nr-faq-question question="The research team">
+            <p>This research project is conducted by 3 academic researchers and a software developer.</p>
+
+            <p>
+              <b>Pauliina Vuorinen</b> is a PhD student at the University of Edinburgh, School of Informatics. The
+              research project is part of her interdisciplinary PhD study on adults' recreational reading behaviours.
+              She is passionate about understanding reading habits of adults such as where, when and how individuals
+              reading for fun in the context of their everyday lives. Her previous research projects have addressed
+              similar questions on reading behaviour. Pauliina is the main point of contact in this study and she can be
+              messaged in the contact page.
+            </p>
+            <p>
+              <b>Professor Frank Keller</b> is based in School of Informatics, University of Edinburgh. His research
+              focuses on how people solve complex tasks such as understanding language or processing visual information.
+              He is experienced in using a combination of experimental techniques with computational modelling in order
+              to investigate reading, sentence comprehension, translation and language generation. Prof Frank Keller is
+              the first supervisor of this research project.
+            </p>
+            <p>
+              <b>Professor Ben Tatler</b> is based in School of Psychology, University of Aberdeen. He's Active Vision
+              Lab studies how vision is used to provide the information we need to complete our activities of everyday
+              life. In particular, he is experienced in studying vision in the context of natural behaviour in real
+              environments, rather than exclusively in laboratory settings. Prof Ben Tatler is the second supervisor of
+              this research project.
+            </p>
+            <p>
+              <b>Mikko Vuorinen</b> is a professional software developer working as a developer lead in a company
+              focusing on digital identity. He has extensive experience of building web applications that have high
+              security standards without sacrificing usability. Mikko has created the online ereader and made it
+              possible for us to gather novel data on this bespoke method.
+            </p>
+          </nr-faq-question>
+
+          <nr-faq-question question="Ethics statement">
+            <p>
+              This study has been approved by the School of Informatics, University of Edinburgh ethics committee. The
+              ethics number is ____. If you have any concerns relating to the ethics of this study, you can email
+              Pauliina (see contact page) or the ethics committee directly on ____. State the ethics number if
+              contacting the ethics committee directly.
+            </p>
+          </nr-faq-question>
+        </div>
+
+        <h3>Information on the research project</h3>
+        <div class="accordion faq-questions">
+          <nr-faq-question question="What are reading behaviours?"></nr-faq-question>
+          <nr-faq-question question="What is the purpose of the study?"></nr-faq-question>
+          <nr-faq-question question="Can I get the information sheet and/or faq in an alternative format?">
+          </nr-faq-question>
+          <nr-faq-question question="Where does the funding for this study come from?"></nr-faq-question>
+        </div>
+
+        <h3>Taking part in the study</h3>
+        <div class="accordion faq-questions">
+          <nr-faq-question question="Why have I been asked to take part?"></nr-faq-question>
+          <nr-faq-question question="Do I have to take part?"></nr-faq-question>
+          <nr-faq-question question="What happens if I decide to take part?"></nr-faq-question>
+          <nr-faq-question question="What does the study include?"></nr-faq-question>
+          <nr-faq-question question="Can I take part outside the UK?"></nr-faq-question>
+          <nr-faq-question question="Are the books in English?"></nr-faq-question>
+          <nr-faq-question question="What information does the ereader collect?"></nr-faq-question>
+          <nr-faq-question question="Is the ereader secure to use?"></nr-faq-question>
+          <nr-faq-question question="do I get paid for participating?"></nr-faq-question>
+          <nr-faq-question question="What compensation do I get if I participate in the study?"></nr-faq-question>
+          <nr-faq-question question="how do you get the infographic?"></nr-faq-question>
+          <nr-faq-question question="What does the infographic include?"></nr-faq-question>
+          <nr-faq-question question="In what format do I receive the infographic?"></nr-faq-question>
+          <nr-faq-question question="Which books are included in the study?"></nr-faq-question>
+          <nr-faq-question question="Can I read multiple books?"></nr-faq-question>
+          <nr-faq-question question="Can I download the book on my device/ereader?"></nr-faq-question>
+          <nr-faq-question question="Which devices can I use in the study?"></nr-faq-question>
+          <nr-faq-question question="How much time do I have to read the book?"></nr-faq-question>
+          <nr-faq-question question="What will happen to the results of this study?"></nr-faq-question>
+          <nr-faq-question question="Can I see the research article once it has been published?"></nr-faq-question>
+          <nr-faq-question
+            question="Can I read a print book (paperback or a hardcover) instead of an ebook to take part in the study?">
+          </nr-faq-question>
+          <nr-faq-question question="Who can I contact?"></nr-faq-question>
+        </div>
+
+        <h3>Using the ereader</h3>
+        <div class="accordion faq-questions">
+          <nr-faq-question question="Can I change the background color on the ereader?"></nr-faq-question>
+          <nr-faq-question question="Can I change the font on the ereader?"></nr-faq-question>
+          <nr-faq-question question="Can I change the book I'm reading?"></nr-faq-question>
+          <nr-faq-question question="The ereader does not work on my device"></nr-faq-question>
+          <nr-faq-question question="I have an issue with the ereader"></nr-faq-question>
+          <nr-faq-question question="I have forgotten my log in credentials"></nr-faq-question>
+        </div>
+
+        <h3>Security</h3>
+        <div class="accordion faq-questions">
+          <nr-faq-question question="Who has access to the reading behaviour data?"></nr-faq-question>
+          <nr-faq-question question="Data protection and confidentiality"></nr-faq-question>
+          <nr-faq-question question="Are there any risks associated with taking part?"></nr-faq-question>
+          <nr-faq-question question="What are my data protection rights?"></nr-faq-question>
         </div>
       </div>
     </div>

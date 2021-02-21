@@ -358,6 +358,8 @@
 .faq {
     .faq-questions {
         overflow: hidden;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
 
         $accordionAnimationDuration: 0.5s;
 

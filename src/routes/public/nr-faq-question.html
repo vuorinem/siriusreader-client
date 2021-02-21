@@ -1,0 +1,21 @@
+<template>
+  <div class="card">
+    <div class="card-header faq-question">
+      <button class="btn btn-link btn-block text-left ${isSelected ? 'active' : ''}" type="button"
+        click.delegate="select()">
+        ${question}
+        <span class="float-right oi oi-caret-${isSelected ? 'top' : 'bottom'}"></span>
+      </button>
+    </div>
+    <div class="faq-answer ${isSelected ? 'show' : 'hide'}" ref="answerElement">
+      <div class="card-body">
+        <div class="answer-content">
+          <slot></slot>
+        </div>
+        <div class="hide-link">
+          <a href="#" click.delegate="select()">Hide</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
