@@ -377,6 +377,16 @@
             overflow: hidden;
             max-height: 0;
             transition: max-height $accordionAnimationDuration;
+
+            .hide-link {
+                margin-top: 0.7rem;
+            }
         }
     }
+}
+
+.disabled-info {
+    background-color: lighten($red, 40%);
+    padding: 1rem 0;
+    text-align: center;
 }

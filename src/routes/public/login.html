@@ -1,4 +1,7 @@
 <template>
+  <require from="./nr-disabled-info"></require>
+  <nr-disabled-info is-disabled.from-view="isDisabled"></nr-disabled-info>
+
   <div class="container">
     <div class="row justify-content-center">
 
@@ -9,11 +12,11 @@
           <div class="form-group">
             <label for="email-address">Email Address</label>
             <input id="email-address" type="email" value.bind="emailAddress" class="form-control"
-              disabled.bind="isLoading" autocomplete="email" />
+              disabled.bind="isDisabled || isLoading" autocomplete="email" />
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" type="password" value.bind="password" class="form-control" disabled.bind="isLoading"
+            <input id="password" type="password" value.bind="password" class="form-control" disabled.bind="isDisabled || isLoading"
               autocomplete="current-password" />
           </div>
 
