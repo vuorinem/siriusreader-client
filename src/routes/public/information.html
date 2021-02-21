@@ -1,11 +1,42 @@
 <template>
-  <require from="../../information-sheet/information-sheet-content"></require>
-  
-  <div class="container">
+  <require from="./nr-disabled-info"></require>
+  <nr-disabled-info is-disabled.from-view="isDisabled"></nr-disabled-info>
+
+  <div class="container information">
     <div class="row justify-content-center">
-      <div class="col-md-12 col-lg-8 col-xl-6">
+      <div class="col-lg-12 col-xl-10">
         <h1>Information</h1>
-        <information-sheet-content></information-sheet-content>
+
+        <div class="information-block">
+          <h4>If you decide to take part, you will be asked to:</h4>
+          
+          <div class="tasks">
+            <div class="task">
+              <img src="/login.png" alt="Login page" />
+              <p>Register to use Sirius Reader</p>
+            </div>
+
+            <div class="task">
+              <img src="/exam.png" alt="Exam paper and pencil" />
+              <p>Complete 3 questionnaires at separate occasions. One at the beginning, two at the end of the study.</p>
+            </div>
+
+            <div class="task">
+              <img src="/chronometer.png" alt="Chronometer" />
+              <p>Take a short reading speed test to measure your baseline reading speed</p>
+            </div>
+
+            <div class="task">
+              <img src="/online-library.png" alt="Online library" />
+              <p>Select a book from Sirius Reader's online library</p>
+            </div>
+
+            <div class="task">
+              <img src="/ebook.png" alt="Ebook" />
+              <p>Read the book fully or until you receive a notification on Sirius Reader</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
