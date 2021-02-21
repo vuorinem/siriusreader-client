@@ -88,7 +88,7 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         title: "Contact",
         name: "contact",
         route: "contact",
-        moduleId: PLATFORM.moduleName("./routes/public/home"),
+        moduleId: PLATFORM.moduleName("./routes/public/contact"),
         nav: true,
         settings: {
           public: true,
