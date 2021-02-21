@@ -3,14 +3,11 @@ import { ITokenResponse } from './i-token-response';
 import { autoinject, computedFrom } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from "aurelia-fetch-client";
-import * as environment from '../../config/environment.json';
+import { SiriusConfig } from "../config/sirius-config";
 import 'url-search-params-polyfill';
 
 const TokenStorageKey = "nr-token";
 const RefreshTimeoutKey = "nr-token-refresh";
-
-const apiUrl = process.env.apiUrl || environment.apiUrl;
-const tokenEndpoint = process.env.tokenEndpoint || environment.tokenEndpoint;
 
 export const EventLogin = "login";
 export const EventLogout = "logout";
@@ -39,7 +36,7 @@ export class AuthService {
 
     const authService = this;
 
-    this.http.baseUrl = apiUrl;
+    this.http.baseUrl = SiriusConfig.apiUrl;
 
     this.http.interceptors.push({
       async request(request: Request) {
@@ -85,7 +82,7 @@ export class AuthService {
     request.append("password", password);
 
     const response = await this.http
-      .fetch(tokenEndpoint, {
+      .fetch(SiriusConfig.tokenEndpoint, {
         method: "post",
         body: request.toString(),
         headers: {
@@ -195,7 +192,7 @@ export class AuthService {
     request.append("refresh_token", this.tokenDetails.refresh_token);
 
     const response = await this.http
-      .fetch(tokenEndpoint, {
+      .fetch(SiriusConfig.tokenEndpoint, {
         method: "post",
         body: request.toString(),
         headers: {

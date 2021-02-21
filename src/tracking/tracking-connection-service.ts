@@ -2,10 +2,8 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { AuthService } from '../auth/auth-service';
 import { autoinject } from 'aurelia-framework';
 import * as signalR from "@microsoft/signalr";
-import * as environment from '../../config/environment.json';
 import { TrackingCacheService, EventCacheKey } from './tracking-cache-service';
-
-const apiUrl = process.env.apiUrl || environment.apiUrl;
+import { SiriusConfig } from 'config/sirius-config';
 
 const ConnectionCheckIntervalInSeconds = 5;
 const ConnectionRetryInSeconds = 5;
@@ -31,11 +29,11 @@ export class TrackingConnectionService {
     private trackingCacheService: TrackingCacheService) {
 
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(apiUrl + '/hubs/tracking', {
+      .withUrl(SiriusConfig.apiUrl + '/hubs/tracking', {
         accessTokenFactory: async () => {
           return await this.authService.getToken() ?? '';
         },
-        logger: environment.debug ? signalR.LogLevel.Information : signalR.LogLevel.Error,
+        logger: SiriusConfig.debug ? signalR.LogLevel.Information : signalR.LogLevel.Error,
       })
       .build();
 

@@ -1,3 +1,4 @@
+import { SiriusConfig } from './../config/sirius-config';
 import { NavigationEventSource, NavigationEventType } from './../tracking/event-type';
 import { UserService } from 'user/user-service';
 import { DialogService } from 'aurelia-dialog';
@@ -16,7 +17,6 @@ import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
-import * as environment from '../../config/environment.json';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -636,7 +636,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {
-    if (!environment.isHighlightingEnabled) {
+    if (!SiriusConfig.isHighlightingEnabled) {
       return false;
     }
 
@@ -744,7 +744,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private handleDebugKey(event: KeyboardEvent) {
-    if (!environment.debug) {
+    if (!SiriusConfig.debug) {
       return;
     }
 

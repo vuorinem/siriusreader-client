@@ -1,5 +1,6 @@
 {
   "debug": false,
   "testing": false,
-  "isHighlightingEnabled": false
+  "isHighlightingEnabled": false,
+  "isRegistrationEnabled": true
 }
