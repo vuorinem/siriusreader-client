@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const project = require('./aurelia_project/aurelia.json');
+const package = require('./package.json');
 const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { ProvidePlugin, DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -229,10 +230,6 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
         svg: false, // No svg element bindins, saves 20K
       }
     }),
-    new DefinePlugin({
-      'process.env.apiUrl': JSON.stringify(process.env.apiUrl),
-      'process.env.tokenEndpoint': JSON.stringify(process.env.tokenEndpoint),
-    }),
     new ProvidePlugin({
       'Promise': ['promise-polyfill', 'default']
     }),
@@ -240,7 +237,8 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
       template: 'index.ejs',
       metadata: {
         // available in index.ejs //
-        baseUrl
+        baseUrl,
+        version: process.env.version || package.version,
       }
     }),
     // ref: https://webpack.js.org/plugins/mini-css-extract-plugin/
