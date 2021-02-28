@@ -25,8 +25,10 @@ const baseUrl = '/';
 // build defines for runtime configuration
 const runtimeConfig = {};
 for (const configName in environment) {
-  runtimeConfig['process.env.' + configName] = JSON.stringify(process.env[configName]);
+  runtimeConfig['process.env.' + configName] = process.env[configName];
 }
+
+console.log('Runtime configuration: ', runtimeConfig);
 
 const cssRules = [
   { loader: 'css-loader' },
