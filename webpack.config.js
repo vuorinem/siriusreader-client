@@ -58,7 +58,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
     path: outDir,
     publicPath: baseUrl,
     filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-    sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
+    sourceMapFilename: production ? '[name].[chunkhash].bundle.map[query]' : '[name].[hash].bundle.map[query]',
     chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
   },
   optimization: {
