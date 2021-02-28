@@ -93,6 +93,7 @@ nr-footer {
             .attributions {
                 grid-column: 2;
                 grid-row: 1 / span 3;
+                align-self: end;
             }
         }
 
