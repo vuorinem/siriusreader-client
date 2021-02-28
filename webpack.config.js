@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const project = require('./aurelia_project/aurelia.json');
 const package = require('./package.json');
+const environment = require('./config/environment.json');
 const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { ProvidePlugin, DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -20,6 +21,14 @@ const outDir = path.resolve(__dirname, project.platform.output);
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '/';
+
+// build defines for runtime configuration
+const runtimeConfig = {};
+for (const configName in environment) {
+  runtimeConfig['process.env.' + configName] = process.env[configName];
+}
+
+console.log('Runtime configuration: ', runtimeConfig);
 
 const cssRules = [
   { loader: 'css-loader' },
@@ -230,6 +239,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
         svg: false, // No svg element bindins, saves 20K
       }
     }),
+    new DefinePlugin(runtimeConfig),
     new ProvidePlugin({
       'Promise': ['promise-polyfill', 'default']
     }),
