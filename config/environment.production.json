@@ -2,5 +2,5 @@
   "debug": false,
   "testing": false,
   "isHighlightingEnabled": false,
-  "isRegistrationDisabled": true
+  "isRegistrationDisabled": false
 }
