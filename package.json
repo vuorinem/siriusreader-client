@@ -1,7 +1,7 @@
 {
   "name": "siriusreader",
   "description": "Sirius Reader",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "repository": {
     "url": "https://github.com/vuorinem/siriusreader-client"
   },
@@ -22,7 +22,7 @@
     "bootstrap-icons": "^1.4.0",
     "open-iconic": "^1.1.1",
     "url-search-params-polyfill": "^8.1.0",
-    "whatwg-fetch": "^3.6.1"
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^4.0.3",
@@ -58,7 +58,7 @@
     "tree-kill": "^1.2.1",
     "ts-loader": "^8.0.17",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.5",
+    "typescript": "^4.2.3",
     "url-loader": "^1.1.2",
     "vinyl-fs": "^3.0.3",
     "webpack": "^4.46.0",
