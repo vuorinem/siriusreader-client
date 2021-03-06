@@ -33,6 +33,11 @@ nr-footer {
             }
         }
 
+        .social-links {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
         .sirius-logo {
             text-align: center;
 
@@ -48,11 +53,15 @@ nr-footer {
             
             img {
                 max-height: 2rem;
-                margin-left: 1rem;
+                margin: 0.5rem;
             }
 
             img:first-child {
                 margin-left: 0;
+            }
+
+            img:last-child {
+                margin-right: 0;
             }
         }
 
@@ -82,12 +91,23 @@ nr-footer {
                 grid-column: 1;
                 grid-row: 2;
                 justify-self: center;
+                align-self: end;
             }
 
             .university-logos {
                 grid-column: 1;
                 grid-row: 3;
                 justify-self: center;
+                align-self: end;
+            }
+            
+            .social-links {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: center;
+                align-self: center;
+
+                margin-top: 0;
             }
 
             .attributions {
@@ -98,12 +118,17 @@ nr-footer {
         }
 
         @include media-breakpoint-up(lg) {
-            grid-template-columns: 3fr 3fr 3fr;
+            grid-template-columns: 4fr 3fr 3fr;
             grid-template-rows: auto auto;
 
             .university-logos {
                 grid-column: 2;
-                grid-row: 1 / span 2;
+                grid-row: 2;
+            }
+
+            .social-links {
+                grid-column: 2;
+                grid-row: 1;
             }
 
             .attributions {
