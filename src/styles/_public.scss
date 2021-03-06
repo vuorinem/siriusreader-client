@@ -22,8 +22,21 @@
     }
 
     h1 {
+        text-transform: uppercase;
         text-align: center;
         margin-bottom: 2rem;
+    }
+
+    h2 {
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    h3 {
+        color: $text-light-color;
+        text-align: center;
+        font-weight: normal;
+        font-style: italic;
     }
 }
 
@@ -31,7 +44,6 @@
     background-color: $body-bg;
 
     h1 {
-        text-transform: uppercase;
         text-align: left;
         margin-bottom: 0;
     }
@@ -112,9 +124,6 @@
         margin-bottom: 4rem;
 
         h3 {
-            text-align: center;
-            font-weight: normal;
-            font-style: italic;
             margin-bottom: 2.5rem;
         }
 
@@ -188,10 +197,6 @@
     }
 
     .process {
-        .process-title {
-            text-transform: uppercase;
-            text-align: center;
-        }
 
         .process-step,
         .process-results {
@@ -257,6 +262,7 @@
         }
 
         @include media-breakpoint-up(sm) {
+
             .process-step,
             .process-results {
                 grid-template-columns: 3rem auto 3rem;
@@ -338,12 +344,8 @@
 .information {
     .information-block {
         background-color: $light-blue;
-        padding: 2rem 1rem;
-        margin: 1rem 0;
-
-        h4 {
-            margin-bottom: 2rem;
-        }
+        padding: 2rem;
+        margin: 4rem 0 4rem;
     }
 
     .tasks {
@@ -355,6 +357,7 @@
             background-color: $body-bg;
             border-radius: 0.5rem;
             padding: 1rem;
+            text-align: center;
 
             img {
                 display: block;
@@ -366,6 +369,60 @@
                 margin: 1rem 0 1rem;
                 font-weight: bold;
             }
+        }
+    }
+
+    h4 {
+        margin-bottom: 1rem;
+    }
+
+    .tasks {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        column-gap: 2rem;
+
+        .task {
+            background-color: $body-bg;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+
+            img {
+                display: block;
+                max-width: 50%;
+                margin: auto;
+            }
+
+            p {
+                margin: 1rem 0 1rem;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .notification {
+        padding: 0 6rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: 6rem auto;
+        column-gap: 2rem;
+        align-items: center;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &.notification-sm {
+            grid-template-columns: 4rem auto;
+        }
+
+        img {
+            grid-column: 1;
+            max-width: 100%;
+        }
+
+        p {
+            grid-column: 2;
+            font-weight: bold;
         }
     }
 }
