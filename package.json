@@ -21,6 +21,7 @@
     "aurelia-templating": "^1.10.4",
     "bootstrap-icons": "^1.4.0",
     "open-iconic": "^1.1.1",
+    "tslib": "^2.1.0",
     "url-search-params-polyfill": "^8.1.0",
     "whatwg-fetch": "^3.6.2"
   },
