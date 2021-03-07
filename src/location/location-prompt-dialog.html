@@ -1,0 +1,28 @@
+<template>
+  <ux-dialog class="col-md-12">
+    <ux-dialog-header>
+      <h4>What is your current reading location?</h4>
+    </ux-dialog-header>
+
+    <ux-dialog-body>
+      <div class="list-group">
+        <button repeat.for="location of locations" class="list-group-item list-group-item-action"
+          click.delegate="send(location)">
+          ${ location }
+        </button>
+        <div class="list-group-item">
+          <span class="location-name">Other:</span>
+          <input value.bind="otherLocation" class="form-control" />
+          <button class="btn btn-primary" click.delegate="send(otherLocation)">
+            <i class="bi bi-check"></i>
+            Select
+          </button>
+        </div>
+      </div>
+    </ux-dialog-body>
+
+    <ux-dialog-footer>
+      <button click.trigger="dialogController.ok()">Close</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

@@ -17,6 +17,7 @@ import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
+import { LocationPromptDialog } from '../location/location-prompt-dialog';
 
 type BrowseStyle = 'turn' | 'jump';
 
@@ -159,9 +160,13 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         await this.userService.sendConfirmBookOpened();
 
         this.trackingService.event('bookDialogClose');
+
+        await this.showLocationPrompt();
       };
 
       dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
+    } else {
+      await this.showLocationPrompt();
     }
 
     this.viewWidth = this.getViewWidthInPixels();
@@ -202,6 +207,26 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     window.addEventListener('resize', this.onWindowResize, false);
 
     this.isInitialized = true;
+  }
+
+  private async showLocationPrompt(): Promise<void> {
+    const dialog = this.dialogService.open({
+      viewModel: LocationPromptDialog,
+      overlayDismiss: true,
+      lock: true,
+      rejectOnCancel: true,
+      centerHorizontalOnly: true,
+    });
+
+    await dialog;
+
+    this.trackingService.event('locationPromptOpen');
+
+    const dialogCloseCallback = async () => {
+      this.trackingService.event('locationPromptClose');
+    };
+
+    dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
   }
 
   private async jumpToLocation(location: number): Promise<void> {

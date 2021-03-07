@@ -30,6 +30,8 @@ export type EventType =
   | 'openPage'
   | 'bookDialogOpen'
   | 'bookDialogClose'
+  | 'locationPromptOpen'
+  | 'locationPromptClose'
   | NavigationEventType
   | 'progressBarJump'
   | 'swipeUp'
