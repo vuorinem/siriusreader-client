@@ -5,24 +5,36 @@
     </ux-dialog-header>
 
     <ux-dialog-body>
-      <div class="list-group">
-        <button repeat.for="location of locations" class="list-group-item list-group-item-action"
+      <p>
+        <button repeat.for="location of locations" class="btn btn-primary btn-block text-left"
           click.delegate="send(location)">
           ${ location }
         </button>
-        <div class="list-group-item">
-          <span class="location-name">Other:</span>
-          <input value.bind="otherLocation" class="form-control" />
-          <button class="btn btn-primary" click.delegate="send(otherLocation)">
-            <i class="bi bi-check"></i>
-            Select
-          </button>
-        </div>
+
+        <button class="btn btn-primary btn-block text-left" click.delegate="selectOther()" hide.bind="showOther">
+          Other
+        </button>
+      <div class="btn btn-primary btn-block text-left" click.delegate="selectOther()" if.bind="showOther">
+        <form submit.delegate="send(otherLocation)">
+          <div class="input-group">
+            <input type="text" value.bind="otherLocation" class="form-control" ref="otherInput"
+              placeholder="Please type in the location">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button"><i class="bi-check"></i></button>
+            </div>
+          </div>
+        </form>
       </div>
+      </p>
+      <p>
+        <button click.trigger="skip()" class="btn btn-secondary btn-block text-left"><i class="bi-eye-slash"></i> Skip this time</button>
+        <button click.trigger="skip()" class="btn btn-danger btn-block text-left"><i class="bi-slash-circle"></i> Never report
+          location</button>
+      </p>
     </ux-dialog-body>
 
     <ux-dialog-footer>
-      <button click.trigger="dialogController.ok()">Close</button>
+
     </ux-dialog-footer>
   </ux-dialog>
 </template>
