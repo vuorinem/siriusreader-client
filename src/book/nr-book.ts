@@ -166,12 +166,16 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
         this.trackingService.event('bookDialogClose');
 
-        await this.showLocationPrompt();
+        if (!this.userService.user?.isLocationPromptBlocked) {
+          await this.showLocationPrompt();
+        }
       };
 
       dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
     } else {
-      await this.showLocationPrompt();
+      if (!this.userService.user?.isLocationPromptBlocked) {
+        await this.showLocationPrompt();
+      }
     }
 
     this.viewWidth = this.getViewWidthInPixels();

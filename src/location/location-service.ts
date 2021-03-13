@@ -1,3 +1,4 @@
+import { UserService } from '../user/user-service';
 import { ILocationPrompt } from './i-location-prompt';
 import { autoinject } from "aurelia-framework";
 import { json, HttpClient } from 'aurelia-fetch-client';
@@ -5,7 +6,9 @@ import { json, HttpClient } from 'aurelia-fetch-client';
 @autoinject
 export class LocationService {
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private userService: UserService) {
   }
 
   public async getLocations(): Promise<string[]> {
@@ -47,5 +50,7 @@ export class LocationService {
     if (!response.ok) {
       throw new Error('Error sending location prompt message');
     }
+
+    this.userService.load();
   }
 }

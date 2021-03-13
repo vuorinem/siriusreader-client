@@ -4,6 +4,7 @@ export interface IUserDetails {
   isBookSelected: boolean;
   isBookOpened: boolean;
   isBookFinished: boolean;
+  isLocationPromptBlocked: boolean;
   readingSpeedWordsPerMinute: number;
   answeredQuestionnaires: string[];
   isIntrinsicCondition: boolean | null;
