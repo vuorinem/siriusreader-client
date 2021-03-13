@@ -190,4 +190,20 @@ nr-book {
             margin: 5px;
         }
     }
+
+    .location-saved-message {
+        position: absolute;
+        top: 0;
+        text-align: center;
+        width: auto;
+        padding: 0.5rem;
+        z-index: 0;
+        margin-left: 40%;
+
+        &.hidden {
+            opacity: 0;
+            display: none;
+            transition: all 2s;
+        }
+    }
 }

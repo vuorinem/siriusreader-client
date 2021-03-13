@@ -6,6 +6,10 @@
   <nr-highlight-menu show.bind="isHighlightMenuOpen" book.bind="book" highlight.bind="selectedHighlight"
     css="transform: translateX(${highlightMenuX}px) translateY(${highlightMenuY}px);"></nr-highlight-menu>
 
+  <p show.bind="!!currentReportedLocation" class="location-saved-message ${showLocationSavedMessage ? '' : 'hidden'}">
+    Location <em class="d-none d-sm-inline">${currentReportedLocation}</em> saved <a href="#" click.delegate="showLocationPrompt()">(change)</a>
+  </p>
+
   <div class="container">
     <div class="book-overlay d-flex align-items-center justify-content-center" show.bind="!isInitialized">
       <p class="inactive-message">Loading, please wait...</p>
@@ -14,10 +18,11 @@
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
       touchstart.trigger="touchStart($event)" touchend.trigger="touchEnd($event)"
       touchcancel.trigger="touchCancel($event)" touchmove.trigger="touchMove($event)">
-      <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}" ref="bookSectionsElement"
-        css="transform: translateX(${ -currentViewOffset }px);">
+      <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}"
+        ref="bookSectionsElement" css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount};"></nr-section>
+          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount};">
+        </nr-section>
       </div>
     </div>
     <div class="progress book-progress" click.trigger="progressBarClick($event)">

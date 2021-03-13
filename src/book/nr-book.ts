@@ -27,6 +27,8 @@ const HighlightMenuWidth = 310;
 const HighlightMenuHeight = 80;
 const LongTouchThreshold = 1000;
 
+const LocationSavedMessageDisplaySeconds = 5;
+
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
   private book?: IBookDetails;
@@ -58,6 +60,9 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private touchEndX: number | null = null;
   private touchStartY: number | null = null;
   private touchStartTime: Date | null = null;
+
+  private showLocationSavedMessage = false;
+  private currentReportedLocation?: string | undefined;
 
   @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'applicationState.isFocused',
     'applicationState.isActive', 'dialogService.hasOpenDialog')
@@ -222,11 +227,23 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     this.trackingService.event('locationPromptOpen');
 
-    const dialogCloseCallback = async () => {
+    dialog.whenClosed(result => {
       this.trackingService.event('locationPromptClose');
-    };
+      this.showLocationMessage(result.output);
+    }, () => {
+      this.trackingService.event('locationPromptClose');
+    });
+  }
 
-    dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
+  private async showLocationMessage(location?: string) {
+    this.currentReportedLocation = location;
+
+    if (location !== undefined) {
+      this.showLocationSavedMessage = true;
+      this.timeoutService.debounce('showLocationMessage', LocationSavedMessageDisplaySeconds * 1000, () => {
+        this.showLocationSavedMessage = false;
+      });
+    }
   }
 
   private async jumpToLocation(location: number): Promise<void> {
