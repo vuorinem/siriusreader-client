@@ -39,6 +39,7 @@ export class LocationPromptDialog implements DialogComponentActivate<IBookDetail
   }
 
   public async alwaysSkip() {
+    this.locationService.doNotPrompt();
     this.dialogController.ok();
   }
 

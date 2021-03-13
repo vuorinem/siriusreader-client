@@ -34,7 +34,18 @@ export class LocationService {
       });
 
     if (!response.ok) {
-      throw new Error('Error sending questionnaire answers');
+      throw new Error('Error sending location prompt answers');
+    }
+  }
+
+  public async doNotPrompt(): Promise<void> {
+    const response = await this.http
+      .fetch(`/location/do-not-prompt`, {
+        method: 'post',
+      });
+
+    if (!response.ok) {
+      throw new Error('Error sending location prompt message');
     }
   }
 }
