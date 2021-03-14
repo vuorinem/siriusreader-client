@@ -92,9 +92,9 @@
     </div>
   </div>
   <div if.bind="question.questionType === 'timeSpent'" class="">
-    <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="10"
-      max="150" step="10" required.bind="question.isRequired" />
-    <p><b>${ timeSpentHours }</b> hours <b>${ timeSpentMinutes }</b> minutes.</p>
+    <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="0"
+      max="20" step="1" required.bind="question.isRequired" />
+    <p><b>${ timeSpentDisplay }</b> hours</p>
   </div>
   <div if.bind="question.questionType === 'reasonForReading'" class="custom-control custom-radio">
     <div repeat.for="option of reasonForReadingOptions" class="custom-control custom-radio">

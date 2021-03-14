@@ -211,33 +211,16 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   }
 
   @computedFrom('value')
-  private get timeSpentHours(): number {
+  private get timeSpentDisplay(): string {
     if (!this.value) {
-      return 0;
+      return "0";
     }
 
-    const numberValue = parseInt(this.value);
-
-    if (!numberValue) {
-      return 0;
+    if (this.value === "20") {
+      return "20+";
     }
 
-    return Math.floor(numberValue / 60);
-  }
-
-  @computedFrom('value')
-  private get timeSpentMinutes(): number {
-    if (!this.value) {
-      return 0;
-    }
-
-    const numberValue = parseInt(this.value);
-
-    if (!numberValue) {
-      return 0;
-    }
-
-    return numberValue % 60;
+    return this.value;
   }
 
   constructor(private bindingEngine: BindingEngine) {
