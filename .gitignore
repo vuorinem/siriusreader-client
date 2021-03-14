@@ -33,3 +33,5 @@ node_modules
 /src/environment.js
 /src/environment.ts
 /dist
+
+/.edge

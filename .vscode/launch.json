@@ -7,9 +7,9 @@
       "request": "launch",
       "url": "http://localhost:8080",
       "webRoot": "${workspaceRoot}/src",
-      "userDataDir": "${workspaceRoot}/.chrome",
+      "userDataDir": "${workspaceRoot}/.edge",
       "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*"
+        "webpack:///./src/*": "${workspaceRoot}/src/*"
       }
     }
   ]
