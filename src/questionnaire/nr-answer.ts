@@ -189,7 +189,7 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
       description: 'For example to avoid boredom or to pass time',
     },
     {
-      title: 'Getting the payment for completing the study',
+      title: 'Receiving the infographic on my own reading behaviour',
       description: '',
     },
     {
