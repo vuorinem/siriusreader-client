@@ -7,5 +7,6 @@ export interface IUserDetails {
   isLocationPromptBlocked: boolean;
   readingSpeedWordsPerMinute: number;
   answeredQuestionnaires: string[];
+  hasAnsweredAuthorQuestionnaire: boolean;
   isIntrinsicCondition: boolean | null;
 }

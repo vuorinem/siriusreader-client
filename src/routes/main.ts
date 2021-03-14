@@ -29,6 +29,8 @@ export class Main {
       this.router.navigate("/introduction/questionnaire11");
     } else if (!this.userService.isQuestionnaireAnswered('questionnaire12')) {
       this.router.navigate("/introduction/questionnaire12");
+    } else if (!this.userService.user.hasAnsweredAuthorQuestionnaire) {
+      this.router.navigate("/introduction/questionnaire-art");
     } else if (!this.userService.user.isBookSelected) {
       this.router.navigate("/library");
     } else if (this.userService.user.isBookFinished) {
