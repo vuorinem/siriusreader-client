@@ -221,7 +221,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private async showLocationPrompt(): Promise<void> {
     const dialog = this.dialogService.open({
       viewModel: LocationPromptDialog,
-      overlayDismiss: true,
+      overlayDismiss: false,
       lock: true,
       rejectOnCancel: true,
       centerHorizontalOnly: true,
