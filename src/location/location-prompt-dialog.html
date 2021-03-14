@@ -10,26 +10,30 @@
           click.delegate="send(location)">
           ${ location }
         </button>
-
         <button class="btn btn-primary btn-block text-left" click.delegate="selectOther()" hide.bind="showOther">
           Other
         </button>
-      <div class="btn btn-primary btn-block text-left" click.delegate="selectOther()" if.bind="showOther">
+      </p>
+
+      <div class="btn btn-primary btn-block text-left mb-3" click.delegate="selectOther()" if.bind="showOther">
         <form submit.delegate="send(otherLocation)">
           <div class="input-group">
             <input type="text" value.bind="otherLocation" class="form-control" ref="otherInput"
               placeholder="Please type in the location">
             <div class="input-group-append">
-              <button class="btn btn-primary" type="button"><i class="bi-check"></i></button>
+              <button class="btn btn-primary" type="submit" disabled.bind="!otherLocation"><i class="bi-check"></i>
+                Save</button>
             </div>
           </div>
         </form>
       </div>
-      </p>
+
       <p>
-        <button click.trigger="skip()" class="btn btn-secondary btn-block text-left"><i class="bi-eye-slash"></i> Skip this time</button>
-        <button click.trigger="alwaysSkip()" class="btn btn-danger btn-block text-left"><i class="bi-slash-circle"></i> Never report
-          location</button>
+        <button click.trigger="skip()" class="btn btn-secondary btn-block text-left">
+          <i class="bi-eye-slash"></i> Skip this time</button>
+        <button click.trigger="alwaysSkip()" class="btn btn-danger btn-block text-left">
+          <i class="bi-slash-circle"></i> Never report location
+        </button>
       </p>
     </ux-dialog-body>
 
