@@ -1,3 +1,4 @@
+import { TimeoutService } from './../utility/timeout-service';
 import { EventType } from './event-type';
 import { ApplicationState } from './../state/application-state';
 import { autoinject, TaskQueue } from 'aurelia-framework';
@@ -14,7 +15,8 @@ export class WindowTrackingService {
   constructor(
     private taskQueue: TaskQueue,
     private applicationState: ApplicationState,
-    private trackingService: TrackingService) {
+    private trackingService: TrackingService,
+    private timeoutService: TimeoutService) {
   }
 
   public attach() {
@@ -37,14 +39,14 @@ export class WindowTrackingService {
   private handleFocus(isFocused: boolean) {
     // Set isFocused only after handling task queue so that initial click handlers
     // see the non-focused state
-    this.taskQueue.queueTask(() => {
+    this.timeoutService.debounce('handleFocus', 50, () => {
       this.applicationState.isFocused = isFocused;
       this.triggerEvent(isFocused ? 'focus' : 'blur');
     });
   }
 
   private handleVisibilityChange() {
-    this.taskQueue.queueTask(() => {
+    this.timeoutService.debounce('handleVisibilityChange', 50, () => {
       if (this.applicationState.isHidden === window.document.hidden) {
         return;
       }
