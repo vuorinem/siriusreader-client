@@ -140,20 +140,6 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     'Not sure',
   ];
 
-  private progressOptions = [
-    '0% - None of the story',
-    '10%',
-    '20%',
-    '30%',
-    '40%',
-    '50% - Half of the story',
-    '60%',
-    '70%',
-    '80%',
-    '90%',
-    '100% - The entire story',
-  ];
-
   private deviceOptions = [
     'Dedicated e-reader with an e-ink screen (such as Kindle Paperwhite, Kobo or Nook)',
     'Desktop computer',
