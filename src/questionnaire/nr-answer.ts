@@ -227,7 +227,13 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
     if (this.question.questionType === 'timeSpent') {
       if (!this.value) {
-        this.value = "10";
+        this.value = "0";
+      }
+    }
+
+    if (this.question.questionType === 'progress') {
+      if (!this.value) {
+        this.value = "0";
       }
     }
   }
