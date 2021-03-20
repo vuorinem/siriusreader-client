@@ -66,10 +66,16 @@
       </label>
     </div>
   </div>
-  <div if.bind="question.questionType === 'amount'" class="d-flex btn-group btn-group-sm btn-group-toggle">
-    <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
-      ${ option }
+  <div if.bind="question.questionType === 'amount'">
+    <div class="d-flex btn-group btn-group-sm btn-group-toggle">
+      <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
+        <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
+        ${ option }
+      </label>
+    </div>
+    <label class="form-check my-2">
+      <input class="form-check-input" type="radio" name.bind="name" checked.bind="value" value.bind="'DidNotRead'" required.bind="question.isRequired">
+      I did not read the story
     </label>
   </div>
   <div if.bind="question.questionType === 'previouslyRead'" class="d-flex btn-group btn-group-sm btn-group-toggle">
