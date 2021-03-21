@@ -14,6 +14,16 @@ const getBoolean = (value: boolean | string | undefined): boolean | undefined =>
   }
 }
 
+const getInt = (value: number | string | undefined): number | undefined => {
+  if (value === undefined) {
+    return undefined;
+  } else if (typeof (value) === "number") {
+    return value;
+  } else {
+    return parseInt(value);
+  }
+}
+
 export const SiriusConfig = {
   debug: getBoolean(process.env.debug) ?? environment.debug,
   testing: getBoolean(process.env.testing) ?? environment.testing,
@@ -21,4 +31,5 @@ export const SiriusConfig = {
   tokenEndpoint: process.env.apiUrl ?? environment.tokenEndpoint,
   isHighlightingEnabled: getBoolean(process.env.isHighlightingEnabled) ?? environment.isHighlightingEnabled,
   isRegistrationDisabled: getBoolean(process.env.isRegistrationDisabled) ?? environment.isRegistrationDisabled,
+  infographicRefreshIntervalInSeconds: getInt(process.env.infographicRefreshIntervalInSeconds) ?? environment.infographicRefreshIntervalInSeconds,
 };

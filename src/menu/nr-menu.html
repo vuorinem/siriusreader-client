@@ -5,6 +5,10 @@
         <a class="logo mr-auto" route-href="main">
           <img src="/siriusreader-icon.png" alt="Sirius Reader Logo" class="img-fluid" />
         </a>
+        <button class="btn btn-sm btn-info mx-2" show.bind="isInfographicReady" title="Infographic is available"
+          click.delegate="openInfographicDialog()">
+          <i class="bi bi-file-earmark-bar-graph"></i>
+        </button>
         <div class="status-icon" show.bind="hasConnectionProblem">
           <span class="oi oi-warning" title="Problems with connection"></span>
         </div>
