@@ -22,7 +22,7 @@ export class ReadingService {
   }
 
   public async setLocation(location: number | undefined) {
-    if (location) {
+    if (location !== undefined) {
       this.http.fetch(`/book/selected/bookmark`, {
         body: json(<IBookmark>{
           location: location,
