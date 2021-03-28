@@ -34,7 +34,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private book?: IBookDetails;
   private sections: SectionModel[] = [];
 
-  private isHighlightMenuOpen: boolean = false;
   private selectedHighlight: HighlightedText | null = null;
   private highlightMenuX: number = 0;
   private highlightMenuY: number = 0;
@@ -694,7 +693,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     const range = !!selection && !selection.isCollapsed ? selection.getRangeAt(0) : null;
 
     if (!selection || !range || range.collapsed) {
-      if (this.isHighlightMenuOpen) {
+      if (this.applicationState.isHighlightMenuOpen) {
         this.closeHighlightMenu();
         return true; // Prevent navigating when closing highlight menu
       } else if (this.selectedHighlight) {
@@ -764,7 +763,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.highlightMenuY -= HighlightMenuHeight;
     }
 
-    this.isHighlightMenuOpen = true;
+    this.applicationState.isHighlightMenuOpen = true;
   }
 
   private closeHighlightMenu() {
@@ -775,8 +774,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.selectedHighlight = null;
     }
 
-    if (this.isHighlightMenuOpen) {
-      this.isHighlightMenuOpen = false;
+    if (this.applicationState.isHighlightMenuOpen) {
+      this.applicationState.isHighlightMenuOpen = false;
       this.trackingService.event('closeSelection');
     }
   }

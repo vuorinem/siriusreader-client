@@ -3,7 +3,7 @@
   <require from="./nr-highlight-menu"></require>
   <require from="../utility/number-value-converter"></require>
 
-  <nr-highlight-menu show.bind="isHighlightMenuOpen" book.bind="book" highlight.bind="selectedHighlight"
+  <nr-highlight-menu show.bind="applicationState.isHighlightMenuOpen" book.bind="book" highlight.bind="selectedHighlight"
     css="transform: translateX(${highlightMenuX}px) translateY(${highlightMenuY}px);"></nr-highlight-menu>
 
   <p show.bind="!!currentReportedLocation" class="location-saved-message ${showLocationSavedMessage ? '' : 'hidden'}">
