@@ -3,5 +3,6 @@
   "testing": false,
   "isHighlightingEnabled": false,
   "isRegistrationDisabled": false,
+  "isReadingTimeDisplayed": false,
   "infographicRefreshIntervalInSeconds": 300
 }

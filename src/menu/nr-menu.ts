@@ -1,3 +1,4 @@
+import { SiriusConfig } from './../config/sirius-config';
 import { InfographicDialog } from './../infographics/infographic-dialog';
 import { InfographicService } from './../infographics/infographic-service';
 import { ApplicationState } from './../state/application-state';
@@ -28,6 +29,18 @@ export class NrMenu {
     return this.infographicService.isInfographicReady;
   }
 
+  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  private get readSeconds() {
+    return Math.floor(this.infographicService.totalEngagedReadingMinutes * 60 % 60)
+  }
+
+  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  private get readMinutes() {
+    return Math.floor(this.infographicService.totalEngagedReadingMinutes);
+  }
+
+  private showReadingTime = false;
+
   constructor(
     private router: Router,
     private dialogService: DialogService,
@@ -36,6 +49,8 @@ export class NrMenu {
     private trackingService: TrackingService,
     private trackingConnectionService: TrackingConnectionService,
     private infographicService: InfographicService) {
+
+    this.showReadingTime = SiriusConfig.isReadingTimeDisplayed;
   }
 
   private async openInformationSheet() {

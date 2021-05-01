@@ -35,9 +35,14 @@ export class InfographicService {
       method: 'post',
     });
 
-    const userData: IUserData = await response.json();
+    const userData: IUserData | null = await response.json();
 
-    this.isInfographicReady = userData.isInfographicReady;
-    this.totalEngagedReadingMinutes = userData.totalEngagedReadingMinutes;
+    if (userData) {
+      this.isInfographicReady = userData.isInfographicReady;
+      this.totalEngagedReadingMinutes = userData.totalEngagedReadingMinutes;
+    } else {
+      this.isInfographicReady = false;
+      this.totalEngagedReadingMinutes = 0;
+    }
   }
 }

@@ -31,5 +31,6 @@ export const SiriusConfig = {
   tokenEndpoint: process.env.apiUrl ?? environment.tokenEndpoint,
   isHighlightingEnabled: getBoolean(process.env.isHighlightingEnabled) ?? environment.isHighlightingEnabled,
   isRegistrationDisabled: getBoolean(process.env.isRegistrationDisabled) ?? environment.isRegistrationDisabled,
+  isReadingTimeDisplayed: getBoolean(process.env.isReadingTimeDisplayed) ?? environment.isReadingTimeDisplayed,
   infographicRefreshIntervalInSeconds: getInt(process.env.infographicRefreshIntervalInSeconds) ?? environment.infographicRefreshIntervalInSeconds,
 };
