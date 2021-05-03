@@ -62,7 +62,8 @@ nr-book {
                 }
             }
 
-            &.animate-jump {
+            &.animate-jump,
+            &.animate-open {
                 transition: transform 0.001s linear;
             }
 

@@ -19,7 +19,7 @@ import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
 import { LocationPromptDialog } from '../location/location-prompt-dialog';
 
-type BrowseStyle = 'turn' | 'jump';
+type BrowseStyle = 'turn' | 'jump' | 'open';
 
 const SwipeThreshold = 20;
 const HorizontalScrollThreshold = 20;
@@ -208,7 +208,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.refreshSectionWidths();
 
     const startLocation = await this.readingService.getLocation() ?? this.book.contentStartLocation;
-    await this.jumpToLocation(startLocation);
+    await this.jumpToLocation(startLocation, 'open');
 
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
@@ -249,7 +249,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
   }
 
-  private async jumpToLocation(location: number): Promise<void> {
+  private async jumpToLocation(location: number, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     if (this.sections.length == 0) {
       return;
     }
@@ -259,7 +259,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     if (!section) {
       const bookEndLocation = this.sections[this.sections.length - 1].endLocation;
       if (location >= bookEndLocation) {
-        return this.jumpToLocation(bookEndLocation - 1);
+        return this.jumpToLocation(bookEndLocation - 1, browseStyle);
       } else {
         throw Error("Invalid location");
       }
@@ -267,16 +267,16 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     await section.load();
 
-    await this.jumpToLocationInSection(section, location - section.startLocation);
+    await this.jumpToLocationInSection(section, location - section.startLocation, browseStyle);
   }
 
-  private async jumpToLocationInSection(section: SectionModel, sectionLocation: number): Promise<void> {
+  private async jumpToLocationInSection(section: SectionModel, sectionLocation: number, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     const offsetFromCurrentPage = this.domUtility.findOffsetForLocation(section.element, sectionLocation);
     const viewRect = this.bookContentElement.getBoundingClientRect();
     const offsetFromCurrentView = offsetFromCurrentPage - viewRect.left;
     const offsetFromStart = offsetFromCurrentView + this.currentViewOffset;
 
-    await this.jumpToOffset(offsetFromStart);
+    await this.jumpToOffset(offsetFromStart, browseStyle);
     await this.updateSectionVisibility(section);
   }
 
@@ -538,11 +538,11 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     });
   }
 
-  private async jumpToOffset(offset: number): Promise<void> {
+  private async jumpToOffset(offset: number, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     const jumpToPage = Math.floor(offset / this.viewWidth);
     const jumpToPixels = jumpToPage * this.viewWidth;
 
-    await this.transitionTo(jumpToPixels, 'jump');
+    await this.transitionTo(jumpToPixels, browseStyle);
   }
 
   private async updateSectionVisibility(currentSection: SectionModel | undefined): Promise<void> {
@@ -575,6 +575,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private async transitionTo(offset: number, browseStyle: BrowseStyle): Promise<void> {
     if (this.currentViewOffset === offset) {
+      if (browseStyle === 'open') {
+        this.triggerOpenPage();
+      }
+
       return;
     }
 
