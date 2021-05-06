@@ -207,4 +207,15 @@ nr-book {
             transition: all 2s;
         }
     }
+
+    .book-debug-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #000c;
+        color: #ccc;
+        padding: 0.5rem;
+        font-size: 0.7rem;
+        z-index: 100;
+    }
 }

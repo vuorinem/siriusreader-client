@@ -31,6 +31,8 @@ const LocationSavedMessageDisplaySeconds = 5;
 
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
+  private isDebug = SiriusConfig.debug;
+
   private book?: IBookDetails;
   private sections: SectionModel[] = [];
 
@@ -829,12 +831,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     alert(`
 Selection start: ${start}
 Selection end: ${end}
-Selection characters: ${end - start}
-
-View words: ${this.readingState.wordCount}
-View characters: ${this.readingState.characterCount}
-
-Section characters: ${this.readingState.sectionCharacterCount}`
+Selection characters: ${end - start}`
     );
   }
 

@@ -50,7 +50,7 @@ export class ReadingState {
     return this.currentStartSection.startLocation + sectionLocation;
   }
 
-  @computedFrom('currentSection')
+  @computedFrom('currentStartSection')
   public get sectionCharacterCount(): number {
     if (!this.currentStartSection) {
       return 0;

@@ -10,6 +10,17 @@
     Location <em class="d-none d-sm-inline">${currentReportedLocation}</em> saved <a href="#" click.delegate="showLocationPrompt()">(change)</a>
   </p>
 
+  <div if.bind="isDebug" class="book-debug-info">
+    <p>
+      <b>View words:</b> ${ readingState.wordCount }<br />
+      <b>View characters:</b> ${ readingState.characterCount }<br />
+    </p>
+    <p>
+      <b>Section: </b> ${ readingState.section.url }<br />
+      <b>Section characters:</b> ${ readingState.sectionCharacterCount }
+    </p>
+  </div>
+
   <div class="container">
     <div class="book-overlay d-flex align-items-center justify-content-center" show.bind="!isInitialized">
       <p class="inactive-message">Loading, please wait...</p>
