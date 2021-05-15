@@ -66,10 +66,16 @@
       </label>
     </div>
   </div>
-  <div if.bind="question.questionType === 'amount'" class="d-flex btn-group btn-group-sm btn-group-toggle">
-    <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
-      ${ option }
+  <div if.bind="question.questionType === 'amount'">
+    <div class="d-flex btn-group btn-group-sm btn-group-toggle">
+      <label repeat.for="option of amountOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
+        <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
+        ${ option }
+      </label>
+    </div>
+    <label class="form-check my-2">
+      <input class="form-check-input" type="radio" name.bind="name" checked.bind="value" value.bind="'DidNotRead'" required.bind="question.isRequired">
+      I did not read the story
     </label>
   </div>
   <div if.bind="question.questionType === 'previouslyRead'" class="d-flex btn-group btn-group-sm btn-group-toggle">
@@ -78,11 +84,14 @@
       ${ option }
     </label>
   </div>
-  <div if.bind="question.questionType === 'progress'" class="d-flex btn-group btn-group-sm btn-group-toggle">
-    <label repeat.for="option of progressOptions" class="col btn btn-light ${ value === option ? 'active' : '' }">
-      <input type="radio" name.bind="name" value.bind="option" checked.bind="value" required.bind="question.isRequired">
-      ${ option }
-    </label>
+  <div if.bind="question.questionType === 'progress'" class="">
+    <input type="range" class="custom-range" id="${ name }-progress" name.bind="name" value.bind="value" min="0"
+      max="100" step="10" required.bind="question.isRequired" />
+    <div class="d-flex justify-content-between">
+      <p>0%<br />None of the story</p>
+      <p><b>${ value }</b>%</p>
+      <p class="text-right">100%<br />The entire story</p>
+    </div>
   </div>
   <div if.bind="question.questionType === 'devices'" class="">
     <div repeat.for="option of deviceOptions" class="custom-control custom-checkbox">
@@ -92,9 +101,13 @@
     </div>
   </div>
   <div if.bind="question.questionType === 'timeSpent'" class="">
-    <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="10"
-      max="150" step="10" required.bind="question.isRequired" />
-    <p><b>${ timeSpentHours }</b> hours <b>${ timeSpentMinutes }</b> minutes.</p>
+    <input type="range" class="custom-range" id="${ name }-timespent" name.bind="name" value.bind="value" min="0"
+      max="20" step="1" required.bind="question.isRequired" />
+    <div class="d-flex justify-content-between">
+      <p>0</p>
+      <p><b>${ timeSpentDisplay }</b> hours</p>
+      <p>20+</p>
+    </div>
   </div>
   <div if.bind="question.questionType === 'reasonForReading'" class="custom-control custom-radio">
     <div repeat.for="option of reasonForReadingOptions" class="custom-control custom-radio">

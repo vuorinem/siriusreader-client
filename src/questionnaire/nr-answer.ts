@@ -140,20 +140,6 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
     'Not sure',
   ];
 
-  private progressOptions = [
-    '0% - None of the story',
-    '10%',
-    '20%',
-    '30%',
-    '40%',
-    '50% - Half of the story',
-    '60%',
-    '70%',
-    '80%',
-    '90%',
-    '100% - The entire story',
-  ];
-
   private deviceOptions = [
     'Dedicated e-reader with an e-ink screen (such as Kindle Paperwhite, Kobo or Nook)',
     'Desktop computer',
@@ -189,7 +175,7 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
       description: 'For example to avoid boredom or to pass time',
     },
     {
-      title: 'Getting the payment for completing the study',
+      title: 'Receiving the infographic on my own reading behaviour',
       description: '',
     },
     {
@@ -211,33 +197,16 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
   }
 
   @computedFrom('value')
-  private get timeSpentHours(): number {
+  private get timeSpentDisplay(): string {
     if (!this.value) {
-      return 0;
+      return "0";
     }
 
-    const numberValue = parseInt(this.value);
-
-    if (!numberValue) {
-      return 0;
+    if (this.value === "20") {
+      return "20+";
     }
 
-    return Math.floor(numberValue / 60);
-  }
-
-  @computedFrom('value')
-  private get timeSpentMinutes(): number {
-    if (!this.value) {
-      return 0;
-    }
-
-    const numberValue = parseInt(this.value);
-
-    if (!numberValue) {
-      return 0;
-    }
-
-    return numberValue % 60;
+    return this.value;
   }
 
   constructor(private bindingEngine: BindingEngine) {
@@ -258,7 +227,13 @@ export class NrAnswer implements ComponentBind, ComponentUnbind {
 
     if (this.question.questionType === 'timeSpent') {
       if (!this.value) {
-        this.value = "10";
+        this.value = "0";
+      }
+    }
+
+    if (this.question.questionType === 'progress') {
+      if (!this.value) {
+        this.value = "0";
       }
     }
   }

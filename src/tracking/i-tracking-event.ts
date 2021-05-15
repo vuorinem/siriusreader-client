@@ -14,6 +14,7 @@ export interface ITrackingEvent {
   totalPagesInSection: number;
   isMenuOpen: boolean;
   isDialogOpen: boolean;
+  isHighlightMenuOpen: boolean;
   isBlurred: boolean;
   isHidden: boolean;
   isInactive: boolean;

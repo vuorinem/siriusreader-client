@@ -80,6 +80,7 @@ export class TrackingService {
       totalPagesInSection: this.readingState.sectionPageCount,
       isMenuOpen: this.applicationState.isMenuOpen,
       isDialogOpen: this.dialogService.hasOpenDialog,
+      isHighlightMenuOpen: this.applicationState.isHighlightMenuOpen,
       isBlurred: !this.applicationState.isFocused,
       isHidden: this.applicationState.isHidden,
       isInactive: !this.applicationState.isActive,

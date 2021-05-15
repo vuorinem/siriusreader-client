@@ -4,5 +4,7 @@
   "apiUrl": "http://localhost:62593",
   "tokenEndpoint": "http://localhost:62593/connect/token",
   "isHighlightingEnabled": false,
-  "isRegistrationDisabled": false
+  "isRegistrationDisabled": false,
+  "isReadingTimeDisplayed": true,
+  "infographicRefreshIntervalInSeconds": 10
 }

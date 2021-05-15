@@ -24,12 +24,17 @@ export type EventType =
   | 'closeInformation'
   | 'openWithdrawal'
   | 'closeWithdrawal'
+  | 'openInfographDialog'
+  | 'closeInfographDialog'
+  | 'openInfograph'
 
   // Reading events
   | 'openBook'
   | 'openPage'
   | 'bookDialogOpen'
   | 'bookDialogClose'
+  | 'locationPromptOpen'
+  | 'locationPromptClose'
   | NavigationEventType
   | 'progressBarJump'
   | 'swipeUp'

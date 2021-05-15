@@ -3,6 +3,7 @@ import { TextUtility } from '../../reading/text-utility';
 import { autoinject, computedFrom } from "aurelia-framework";
 import { UserService } from '../../user/user-service';
 
+const MinWordsPerMinute = 100;
 const MaxWordsPerMinute = 900;
 
 @autoinject
@@ -16,7 +17,9 @@ export class ReadingSpeed {
 
   @computedFrom('wordsPerMinuteRead')
   private get isRealisticReadingSpeed(): boolean {
-    return !!this.wordsPerMinuteRead && this.wordsPerMinuteRead <= MaxWordsPerMinute;
+    return !!this.wordsPerMinuteRead
+      && this.wordsPerMinuteRead <= MaxWordsPerMinute
+      && this.wordsPerMinuteRead >= MinWordsPerMinute;
   }
 
   constructor(

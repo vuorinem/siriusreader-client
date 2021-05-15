@@ -17,8 +17,9 @@ import { BookService } from './book-service';
 import { IBookDetails } from '../book/i-book-details';
 import { ReadingService } from '../reading/reading-service';
 import { BookInformationDialog } from './book-information-dialog';
+import { LocationPromptDialog } from '../location/location-prompt-dialog';
 
-type BrowseStyle = 'turn' | 'jump';
+type BrowseStyle = 'turn' | 'jump' | 'open';
 
 const SwipeThreshold = 20;
 const HorizontalScrollThreshold = 20;
@@ -26,12 +27,15 @@ const HighlightMenuWidth = 310;
 const HighlightMenuHeight = 80;
 const LongTouchThreshold = 1000;
 
+const LocationSavedMessageDisplaySeconds = 5;
+
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
+  private isDebug = SiriusConfig.debug;
+
   private book?: IBookDetails;
   private sections: SectionModel[] = [];
 
-  private isHighlightMenuOpen: boolean = false;
   private selectedHighlight: HighlightedText | null = null;
   private highlightMenuX: number = 0;
   private highlightMenuY: number = 0;
@@ -57,6 +61,9 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private touchEndX: number | null = null;
   private touchStartY: number | null = null;
   private touchStartTime: Date | null = null;
+
+  private showLocationSavedMessage = false;
+  private currentReportedLocation?: string | undefined;
 
   @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'applicationState.isFocused',
     'applicationState.isActive', 'dialogService.hasOpenDialog')
@@ -159,9 +166,17 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         await this.userService.sendConfirmBookOpened();
 
         this.trackingService.event('bookDialogClose');
+
+        if (!this.userService.user?.isLocationPromptBlocked) {
+          await this.showLocationPrompt();
+        }
       };
 
       dialog.whenClosed(dialogCloseCallback, dialogCloseCallback);
+    } else {
+      if (!this.userService.user?.isLocationPromptBlocked) {
+        await this.showLocationPrompt();
+      }
     }
 
     this.viewWidth = this.getViewWidthInPixels();
@@ -195,7 +210,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.refreshSectionWidths();
 
     const startLocation = await this.readingService.getLocation() ?? this.book.contentStartLocation;
-    await this.jumpToLocation(startLocation);
+    await this.jumpToLocation(startLocation, 'open');
 
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
@@ -204,7 +219,39 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.isInitialized = true;
   }
 
-  private async jumpToLocation(location: number): Promise<void> {
+  private async showLocationPrompt(): Promise<void> {
+    const dialog = this.dialogService.open({
+      viewModel: LocationPromptDialog,
+      overlayDismiss: false,
+      lock: true,
+      rejectOnCancel: true,
+      centerHorizontalOnly: true,
+    });
+
+    await dialog;
+
+    this.trackingService.event('locationPromptOpen');
+
+    dialog.whenClosed(result => {
+      this.trackingService.event('locationPromptClose');
+      this.showLocationMessage(result.output);
+    }, () => {
+      this.trackingService.event('locationPromptClose');
+    });
+  }
+
+  private async showLocationMessage(location?: string) {
+    this.currentReportedLocation = location;
+
+    if (location !== undefined) {
+      this.showLocationSavedMessage = true;
+      this.timeoutService.debounce('showLocationMessage', LocationSavedMessageDisplaySeconds * 1000, () => {
+        this.showLocationSavedMessage = false;
+      });
+    }
+  }
+
+  private async jumpToLocation(location: number, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     if (this.sections.length == 0) {
       return;
     }
@@ -214,7 +261,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     if (!section) {
       const bookEndLocation = this.sections[this.sections.length - 1].endLocation;
       if (location >= bookEndLocation) {
-        return this.jumpToLocation(bookEndLocation - 1);
+        return this.jumpToLocation(bookEndLocation - 1, browseStyle);
       } else {
         throw Error("Invalid location");
       }
@@ -222,17 +269,16 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     await section.load();
 
-    await this.jumpToLocationInSection(section, location - section.startLocation);
+    await this.jumpToLocationInSection(section, location - section.startLocation, browseStyle);
   }
 
-  private async jumpToLocationInSection(section: SectionModel, sectionLocation: number): Promise<void> {
+  private async jumpToLocationInSection(section: SectionModel, sectionLocation: number, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     const offsetFromCurrentPage = this.domUtility.findOffsetForLocation(section.element, sectionLocation);
     const viewRect = this.bookContentElement.getBoundingClientRect();
     const offsetFromCurrentView = offsetFromCurrentPage - viewRect.left;
     const offsetFromStart = offsetFromCurrentView + this.currentViewOffset;
 
-    await this.jumpToOffset(offsetFromStart);
-    await this.updateSectionVisibility(section);
+    await this.jumpToOffset(offsetFromStart, section, browseStyle);
   }
 
   private isLink(target: EventTarget | null): boolean {
@@ -463,7 +509,9 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    if (!this.readingState.section) {
+    const section = this.readingState.section;
+
+    if (!section) {
       // Cannot turn page if we are not within a section
       return;
     }
@@ -475,12 +523,12 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     const newViewOffset = this.currentViewOffset + moveByPixels;
 
-    if (!this.readingState.section.previousSection && this.readingState.section.left > newViewOffset) {
+    if (!section.previousSection && section.left > newViewOffset) {
       // Trying to turn page before the start of the book
       return;
     }
 
-    if (!this.readingState.section.nextSection && this.readingState.section.right - 1 < newViewOffset) {
+    if (!section.nextSection && section.right - 1 < newViewOffset) {
       // Trying to turn page after the end of the book
       return;
     }
@@ -488,16 +536,15 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.trackingService.event(source);
 
     this.taskQueue.queueTask(async () => {
-      await this.transitionTo(newViewOffset, 'turn');
-      await this.updateSectionVisibility(this.readingState.section);
+      await this.transitionTo(newViewOffset, section, 'turn');
     });
   }
 
-  private async jumpToOffset(offset: number): Promise<void> {
+  private async jumpToOffset(offset: number, section: SectionModel, browseStyle: BrowseStyle = 'jump'): Promise<void> {
     const jumpToPage = Math.floor(offset / this.viewWidth);
     const jumpToPixels = jumpToPage * this.viewWidth;
 
-    await this.transitionTo(jumpToPixels, 'jump');
+    await this.transitionTo(jumpToPixels, section, browseStyle);
   }
 
   private async updateSectionVisibility(currentSection: SectionModel | undefined): Promise<void> {
@@ -505,12 +552,12 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       const originalSectionLeft = currentSection?.left;
 
       if (section.right < this.currentViewOffset - this.viewWidth) {
-        // Page is past the view
+        // Page is past the view +- 1 page
         if (section.isLoaded) {
           section.unload();
         }
-      } else if (section.left > this.currentViewOffset + this.viewWidth) {
-        // Page is not yet in the view
+      } else if (section.left > this.currentViewOffset + this.viewWidth * 2) {
+        // Page is not yet in the view +- 1 page
         if (section.isLoaded) {
           section.unload();
         }
@@ -523,13 +570,17 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       if (currentSection !== undefined && originalSectionLeft !== undefined && currentSection.left !== originalSectionLeft) {
         const sectionMovedBy = currentSection.left - originalSectionLeft;
         const newOffset = this.currentViewOffset + sectionMovedBy;
-        await this.transitionTo(newOffset, 'jump');
+        await this.transitionTo(newOffset, currentSection, 'jump');
       }
     }
   }
 
-  private async transitionTo(offset: number, browseStyle: BrowseStyle): Promise<void> {
+  private async transitionTo(offset: number, section: SectionModel, browseStyle: BrowseStyle): Promise<void> {
     if (this.currentViewOffset === offset) {
+      if (browseStyle === 'open') {
+        this.triggerOpenPage(section);
+      }
+
       return;
     }
 
@@ -540,7 +591,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       const onTransitioned = () => {
         this.bookSectionsElement!.removeEventListener('transitionend', onTransitioned);
         this.isTransitioning = false;
-        this.triggerOpenPage();
+        this.triggerOpenPage(section);
 
         resolve();
       }
@@ -551,8 +602,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     });
   }
 
-  private triggerOpenPage() {
-    this.taskQueue.queueTask(() => {
+  private triggerOpenPage(section: SectionModel) {
+    this.taskQueue.queueTask(async () => {
+      await this.updateSectionVisibility(section);
+
       this.updateReadingStateAndProgress();
 
       this.trackingService.event('openPage');
@@ -584,7 +637,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       if (currentSectionLeft !== undefined && this.readingState.section === section && section.left !== currentSectionLeft) {
         const sectionMovedBy = section.left - currentSectionLeft;
         const newOffset = this.currentViewOffset + sectionMovedBy;
-        await this.jumpToOffset(newOffset);
+        await this.jumpToOffset(newOffset, this.readingState.section);
       }
     }
   }
@@ -648,7 +701,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     const range = !!selection && !selection.isCollapsed ? selection.getRangeAt(0) : null;
 
     if (!selection || !range || range.collapsed) {
-      if (this.isHighlightMenuOpen) {
+      if (this.applicationState.isHighlightMenuOpen) {
         this.closeHighlightMenu();
         return true; // Prevent navigating when closing highlight menu
       } else if (this.selectedHighlight) {
@@ -718,7 +771,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.highlightMenuY -= HighlightMenuHeight;
     }
 
-    this.isHighlightMenuOpen = true;
+    this.applicationState.isHighlightMenuOpen = true;
   }
 
   private closeHighlightMenu() {
@@ -729,8 +782,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       this.selectedHighlight = null;
     }
 
-    if (this.isHighlightMenuOpen) {
-      this.isHighlightMenuOpen = false;
+    if (this.applicationState.isHighlightMenuOpen) {
+      this.applicationState.isHighlightMenuOpen = false;
       this.trackingService.event('closeSelection');
     }
   }
@@ -780,12 +833,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     alert(`
 Selection start: ${start}
 Selection end: ${end}
-Selection characters: ${end - start}
-
-View words: ${this.readingState.wordCount}
-View characters: ${this.readingState.characterCount}
-
-Section characters: ${this.readingState.sectionCharacterCount}`
+Selection characters: ${end - start}`
     );
   }
 

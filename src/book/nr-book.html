@@ -3,21 +3,56 @@
   <require from="./nr-highlight-menu"></require>
   <require from="../utility/number-value-converter"></require>
 
-  <nr-highlight-menu show.bind="isHighlightMenuOpen" book.bind="book" highlight.bind="selectedHighlight"
+  <nr-highlight-menu show.bind="applicationState.isHighlightMenuOpen" book.bind="book" highlight.bind="selectedHighlight"
     css="transform: translateX(${highlightMenuX}px) translateY(${highlightMenuY}px);"></nr-highlight-menu>
 
-  <div class="container">
-    <div class="book-overlay d-flex align-items-center justify-content-center" show.bind="!isInitialized">
-      <p class="inactive-message">Loading, please wait...</p>
+  <p show.bind="!!currentReportedLocation" class="location-saved-message ${showLocationSavedMessage ? '' : 'hidden'}">
+    Location <em class="d-none d-sm-inline">${currentReportedLocation}</em> saved <a href="#" click.delegate="showLocationPrompt()">(change)</a>
+  </p>
+
+  <div if.bind="isDebug" class="book-debug ${ isDebugInfoVisible ? 'is-open' : '' }">
+    <div if.bind="isDebugInfoVisible" class="book-debug-details">
+      <a click.delegate="isDebugInfoVisible = false" href="#">Hide debug</a>
+      <p>
+        <b>Location:</b> ${ readingState.startLocation }<br />
+        <b>View words:</b> ${ readingState.wordCount }<br />
+        <b>View characters:</b> ${ readingState.characterCount }<br />
+      </p>
+      <p>
+        <b>Section:</b> ${ readingState.section.url }<br />
+        <b>Section page:</b> ${ readingState.currentPage } / ${ readingState.sectionPageCount }<br />
+        <b>Section characters:</b> ${ readingState.sectionCharacterCount }
+      </p>
     </div>
+    <div if.bind="isDebugInfoVisible" class="book-debug-sections">
+      <ul>
+        <li repeat.for="section of sections">
+          <spin if.bind="readingState.section === section">${ section.url }</spin>
+          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.url }</a>
+        </li>
+      </ul>
+    </div>
+    <div if.bind="!isDebugInfoVisible">
+      <a click.delegate="isDebugInfoVisible = true" href="#">Show debug</a>
+    </div>
+  </div>
+
+  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="!isInitialized">
+    <p class="inactive-message">
+      - Loading, please wait... -
+    </p>
+  </div>
+
+  <div class="container">
     <div class="book-content" ref="bookContentElement" mousedown.delegate="mouseDown($event)"
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
       touchstart.trigger="touchStart($event)" touchend.trigger="touchEnd($event)"
       touchcancel.trigger="touchCancel($event)" touchmove.trigger="touchMove($event)">
-      <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}" ref="bookSectionsElement"
-        css="transform: translateX(${ -currentViewOffset }px);">
+      <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}"
+        ref="bookSectionsElement" css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount};"></nr-section>
+          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount};">
+        </nr-section>
       </div>
     </div>
     <div class="progress book-progress" click.trigger="progressBarClick($event)">

@@ -1,0 +1,19 @@
+<template>
+  <ux-dialog class="col-md-8">
+    <ux-dialog-body>
+      <h2><i class="bi bi-graph-up"></i> Your reading infographic is ready!</h2>
+      <p>The infographic from your reading on Sirius Reader is now ready.</p>
+      <p>You can finnish reading now to see your infographic. You can also continue reading and see the infographic
+        later at any time when you finnish reading.</p>
+
+      <p>
+        <button class="btn btn-block btn-success" click.trigger="dialogController.ok()">
+          Stop reading and see the infographic now
+        </button>
+        <button class="btn btn-block btn-primary" click.trigger="dialogController.cancel()">
+          Continue reading and see the infographic later
+        </button>
+      </p>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

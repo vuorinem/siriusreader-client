@@ -1,13 +1,6 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-12 col-lg-8 col-xl-6 p-4">
-        <p class="text-center">
-          <img src="/siriusreader-logo.png" alt="Sirius Reader" class="img-fluid" />
-        </p>
-      </div>
-    </div>
-    <div class="row justify-content-center">
       <div class="col-md-8 col-lg-5">
         <h1>Unsubscribe</h1>
         <div show.bind="!!emailAddress && !isConfirmed">
@@ -15,7 +8,7 @@
           <p>Email address to unsubscribe: <b>${ emailAddress }</b></p>
           <p>
             <button click.delegate="confirm()" class="btn btn-danger" disabled.bind="http.isRequesting">Yes, unsubscribe</button>
-            <a route-href="login" class="btn btn-default" disabled.bind="http.isRequesting">No</a>
+            <a route-href="login" class="btn btn-secondary" disabled.bind="http.isRequesting">No, keep receiving reminder emails</a>
           </p>
         </div>
         <div show.bind="!!emailAddress && isConfirmed">

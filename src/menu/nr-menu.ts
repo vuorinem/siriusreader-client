@@ -1,3 +1,6 @@
+import { SiriusConfig } from './../config/sirius-config';
+import { InfographicDialog } from './../infographics/infographic-dialog';
+import { InfographicService } from './../infographics/infographic-service';
 import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
@@ -21,13 +24,33 @@ export class NrMenu {
     return this.trackingConnectionService.hasConnectionProblem;
   }
 
+  @computedFrom('infographicService.isInfographicReady')
+  private get isInfographicReady() {
+    return this.infographicService.isInfographicReady;
+  }
+
+  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  private get readSeconds() {
+    return Math.floor(this.infographicService.totalEngagedReadingMinutes * 60 % 60)
+  }
+
+  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  private get readMinutes() {
+    return Math.floor(this.infographicService.totalEngagedReadingMinutes);
+  }
+
+  private showReadingTime = false;
+
   constructor(
     private router: Router,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
     private trackingService: TrackingService,
-    private trackingConnectionService: TrackingConnectionService) {
+    private trackingConnectionService: TrackingConnectionService,
+    private infographicService: InfographicService) {
+
+    this.showReadingTime = SiriusConfig.isReadingTimeDisplayed;
   }
 
   private async openInformationSheet() {
@@ -46,6 +69,31 @@ export class NrMenu {
     await dialog.whenClosed();
 
     this.trackingService.event('closeInformation');
+  }
+
+  private async openInfographicDialog() {
+    const dialog = this.dialogService.open({
+      viewModel: InfographicDialog,
+      overlayDismiss: true,
+      lock: true,
+    });
+
+    await dialog;
+
+    this.applicationState.isMenuOpen = false;
+
+    this.trackingService.event('openInfographDialog');
+
+    const dialogResult = await dialog.whenClosed();
+
+    if (dialogResult.wasCancelled) {
+      this.trackingService.event('closeInfographDialog');
+      return;
+    }
+
+    this.trackingService.event('openInfograph');
+
+    // TODO: Show infographic
   }
 
   private async withdraw() {

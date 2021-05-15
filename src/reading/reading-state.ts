@@ -50,7 +50,7 @@ export class ReadingState {
     return this.currentStartSection.startLocation + sectionLocation;
   }
 
-  @computedFrom('currentSection')
+  @computedFrom('currentStartSection')
   public get sectionCharacterCount(): number {
     if (!this.currentStartSection) {
       return 0;
@@ -68,7 +68,9 @@ export class ReadingState {
       return 0;
     }
 
-    return Math.ceil(this.currentViewOffset / this.section.pageWidth) + 1;
+    const sectionOffset = this.currentViewOffset - this.section.left;
+
+    return Math.ceil(sectionOffset / this.section.pageWidth) + 1;
   }
 
   @computedFrom('section.pageCount')
@@ -117,7 +119,7 @@ export class ReadingState {
       }
 
       if (!hasEnd && startNode) {
-        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element);
+        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element.parentElement!);
       }
     }
 
