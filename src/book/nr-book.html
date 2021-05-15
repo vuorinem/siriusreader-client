@@ -10,15 +10,30 @@
     Location <em class="d-none d-sm-inline">${currentReportedLocation}</em> saved <a href="#" click.delegate="showLocationPrompt()">(change)</a>
   </p>
 
-  <div if.bind="isDebug" class="book-debug-info">
-    <p>
-      <b>View words:</b> ${ readingState.wordCount }<br />
-      <b>View characters:</b> ${ readingState.characterCount }<br />
-    </p>
-    <p>
-      <b>Section: </b> ${ readingState.section.url }<br />
-      <b>Section characters:</b> ${ readingState.sectionCharacterCount }
-    </p>
+  <div if.bind="isDebug" class="book-debug ${ isDebugInfoVisible ? 'is-open' : '' }">
+    <div if.bind="isDebugInfoVisible" class="book-debug-details">
+      <a click.delegate="isDebugInfoVisible = false" href="#">Hide debug</a>
+      <p>
+        <b>Location:</b> ${ readingState.startLocation }<br />
+        <b>View words:</b> ${ readingState.wordCount }<br />
+        <b>View characters:</b> ${ readingState.characterCount }<br />
+      </p>
+      <p>
+        <b>Section:</b> ${ readingState.section.url }<br />
+        <b>Section characters:</b> ${ readingState.sectionCharacterCount }
+      </p>
+    </div>
+    <div if.bind="isDebugInfoVisible" class="book-debug-sections">
+      <ul>
+        <li repeat.for="section of sections">
+          <spin if.bind="readingState.section === section">${ section.url }</spin>
+          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.url }</a>
+        </li>
+      </ul>
+    </div>
+    <div if.bind="!isDebugInfoVisible">
+      <a click.delegate="isDebugInfoVisible = true" href="#">Show debug</a>
+    </div>
   </div>
 
   <div class="container">

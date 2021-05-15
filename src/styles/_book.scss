@@ -209,7 +209,7 @@ nr-book {
         }
     }
 
-    .book-debug-info {
+    .book-debug {
         position: absolute;
         top: 0;
         left: 0;
@@ -217,6 +217,28 @@ nr-book {
         color: #ccc;
         padding: 0.5rem;
         font-size: 0.7rem;
-        z-index: 100;
+        z-index: 10000;
+
+        &.is-open {
+            height: 100vh;
+            white-space: nowrap;
+
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+
+            .book.debug-details {
+                grid-row: 1;
+            }
+
+            .book-debug-sections {
+                grid-row: 2;
+                overflow-y: auto;
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+        }
     }
 }
