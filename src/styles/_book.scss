@@ -92,6 +92,7 @@ nr-book {
 
                 img.cover {
                     max-width: calc(100% - 2 * #{$book-padding});
+                    max-height: 100%;
                     padding: 0;
                     display: block;
                     margin: auto;
