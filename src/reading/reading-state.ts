@@ -119,7 +119,7 @@ export class ReadingState {
       }
 
       if (!hasEnd && startNode) {
-        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element);
+        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element.parentElement!);
       }
     }
 
