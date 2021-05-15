@@ -68,7 +68,9 @@ export class ReadingState {
       return 0;
     }
 
-    return Math.ceil(this.currentViewOffset / this.section.pageWidth) + 1;
+    const sectionOffset = this.currentViewOffset - this.section.left;
+
+    return Math.ceil(sectionOffset / this.section.pageWidth) + 1;
   }
 
   @computedFrom('section.pageCount')
