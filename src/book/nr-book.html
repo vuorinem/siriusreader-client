@@ -36,10 +36,13 @@
     </div>
   </div>
 
+  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="!isInitialized">
+    <p class="inactive-message">
+      - Loading, please wait... -
+    </p>
+  </div>
+
   <div class="container">
-    <div class="book-overlay d-flex align-items-center justify-content-center" show.bind="!isInitialized">
-      <p class="inactive-message">Loading, please wait...</p>
-    </div>
     <div class="book-content" ref="bookContentElement" mousedown.delegate="mouseDown($event)"
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
       touchstart.trigger="touchStart($event)" touchend.trigger="touchEnd($event)"
