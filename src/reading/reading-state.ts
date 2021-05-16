@@ -7,6 +7,7 @@ import { DomUtility } from './dom-utility';
 @autoinject
 export class ReadingState {
   private currentStartSection?: SectionModel;
+  private currentStartSectionIndex?: number;
   private currentView?: ClientRect | DOMRect;
   private currentViewOffset: number = 0;
   private currentRange: Range;
@@ -37,6 +38,15 @@ export class ReadingState {
   @computedFrom('currentStartSection')
   public get section(): SectionModel | undefined {
     return this.currentStartSection;
+  }
+
+  @computedFrom('currentStartSectionIndex')
+  public get sectionNumber(): number {
+    if (this.currentStartSectionIndex === undefined) {
+      return 0;
+    }
+
+    return this.currentStartSectionIndex + 1;
   }
 
   @computedFrom('currentStartSection', 'textFromStart')
@@ -131,6 +141,7 @@ export class ReadingState {
       this.startRange.setStart(this.currentStartSection.element, 0);
       this.startRange.setEnd(startRange.startContainer, startRange.startOffset);
       this.textFromStart = this.startRange.toString();
+      this.currentStartSectionIndex = sections.indexOf(this.currentStartSection);
     }
   }
 

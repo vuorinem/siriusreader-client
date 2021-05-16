@@ -78,6 +78,8 @@ export class TrackingService {
       windowHeight: window.innerHeight,
       pageInSection: this.readingState.currentPage,
       totalPagesInSection: this.readingState.sectionPageCount,
+      sectionNumber: this.readingState.sectionNumber,
+      totalSectionsInBook: this.bookService.book.sections.length,
       isMenuOpen: this.applicationState.isMenuOpen,
       isDialogOpen: this.dialogService.hasOpenDialog,
       isHighlightMenuOpen: this.applicationState.isHighlightMenuOpen,
