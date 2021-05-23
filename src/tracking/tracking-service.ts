@@ -31,8 +31,8 @@ export class TrackingService {
     this.eventAggregator.subscribe(ReconnectingEvent, () => this.eventInternal('reconnecting', false));
 
     window.setInterval(() => {
-      this.scheduleSend('TrackEvents', 'event-cache', SendDelayInMilliseconds, false);
-      this.scheduleSend('TrackLibraryEvents', 'library-event-cache', SendDelayInMilliseconds, false);
+      this.scheduleSend('TrackEvents', 'event-cache', 0);
+      this.scheduleSend('TrackLibraryEvents', 'library-event-cache', 0);
     }, StateCheckIntervalInSeconds * 1000);
   }
 
