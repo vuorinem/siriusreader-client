@@ -1,3 +1,4 @@
+import { HttpClient } from 'aurelia-fetch-client';
 import { SiriusConfig } from './../config/sirius-config';
 import { InfographicDialog } from './../infographics/infographic-dialog';
 import { InfographicService } from './../infographics/infographic-service';
@@ -43,6 +44,7 @@ export class NrMenu {
 
   constructor(
     private router: Router,
+    private http: HttpClient,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
