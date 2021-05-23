@@ -34,9 +34,9 @@ export class NrSection {
     this.section.isLoaded = false;
   }
 
-  public async load() {
-    if (!this.section.url || this.section.isLoaded) {
-      return;
+  public async load(): Promise<boolean> {
+    if (!this.section.url || this.section.isLoaded || this.section.isLoading) {
+      return false;
     }
 
     this.section.isLoading = true;
@@ -58,7 +58,7 @@ export class NrSection {
     if (!this.element.lastElementChild || !this.element.firstElementChild) {
       this.section.isLoading = false;
 
-      return;
+      return false;
     }
 
     this.section.refreshWidth();
@@ -67,6 +67,8 @@ export class NrSection {
     this.section.isLoaded = true;
 
     this.highlighter.showSectionHighlights(this.section);
+
+    return true;
   }
 
   private replaceContent(node: Node): Promise<void>[] {

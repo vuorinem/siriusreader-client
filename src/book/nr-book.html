@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="!isInitialized">
+  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="!isInitialized || isLoading">
     <p class="inactive-message">
       - Loading, please wait... -
     </p>
@@ -51,7 +51,7 @@
       <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}"
         ref="bookSectionsElement" css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount};">
+          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount}; visibility: ${ section.isHidden ? 'hidden' : 'visible' }">
         </nr-section>
       </div>
     </div>
