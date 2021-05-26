@@ -35,5 +35,5 @@ jobs:
         app-name: draconisloadtest-client
         slot-name: Production
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B503D67C3B7249EE8C22FA1416E055BD }}
-        package: .
+        package: ./dist
 
