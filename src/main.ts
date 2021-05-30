@@ -4,7 +4,6 @@ import { PLATFORM } from 'aurelia-pal';
 import 'utility/custom-event-polyfill';
 
 import 'styles/app.scss';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import { DialogConfiguration } from 'aurelia-dialog';
 
 export function configure(aurelia: Aurelia) {
