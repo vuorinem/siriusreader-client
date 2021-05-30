@@ -8,6 +8,10 @@ on:
     branches:
       - develop
 
+env:
+  apiUrl: https://draconisloadtest-api.azurewebsites.net
+  tokenEndpoint: https://draconisloadtest-api.azurewebsites.net/connect/token
+
 jobs:
 
   build-and-deploy:
@@ -22,20 +26,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.13.0'
-
-    - name: 'Set environment: Production'
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: 'echo Setting environment variables for Production'
-      env:
-        apiUrl: TODO
-        tokenEndpoint: TODO
-
-    - name: 'Set environment: Development'
-      if: ${{ github.ref == 'refs/heads/develop' }}
-      run: 'echo Setting environment variables for Development'
-      env:
-        apiUrl: https://draconisloadtest-api.azurewebsites.net
-        tokenEndpoint: https://draconisloadtest-api.azurewebsites.net/connect/token
 
     - name: 'npm install, build, and test'
       run: |
