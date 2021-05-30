@@ -9,8 +9,8 @@ on:
       - develop
 
 env:
-  apiUrl: https://draconisloadtest-api.azurewebsites.net
-  tokenEndpoint: https://draconisloadtest-api.azurewebsites.net/connect/token
+  apiUrl: "'https://draconisloadtest-api.azurewebsites.net'"
+  tokenEndpoint: "'https://draconisloadtest-api.azurewebsites.net/connect/token'"
 
 jobs:
 
