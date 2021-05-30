@@ -9,6 +9,7 @@ on:
       - develop
 
 jobs:
+
   build-and-deploy:
     runs-on: windows-latest
 
@@ -17,19 +18,32 @@ jobs:
     - name: 'Checkout Github Action'
       uses: actions/checkout@master
 
-
-    - name: Set up Node.js version
+    - name: 'Set up Node.js version'
       uses: actions/setup-node@v1
       with:
         node-version: '12.13.0'
 
-    - name: npm install, build, and test
+    - name: 'Set environment: Production'
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: 'echo Setting environment variables for Production'
+      env:
+        apiUrl: TODO
+        tokenEndpoint: TODO
+
+    - name: 'Set environment: Development'
+      if: ${{ github.ref == 'refs/heads/develop' }}
+      run: 'echo Setting environment variables for Development'
+      env:
+        apiUrl: https://draconisloadtest-api.azurewebsites.net
+        tokenEndpoint: https://draconisloadtest-api.azurewebsites.net/connect/token
+
+    - name: 'npm install, build, and test'
       run: |
         npm install
         npm run build --if-present
         npm run test --if-present
 
-    - name: Run Azure webapp deploy action using publish profile credentials
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v2
       with:
         app-name: draconisloadtest-client
