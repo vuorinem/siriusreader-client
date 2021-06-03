@@ -12,8 +12,13 @@ export class Logout {
   }
 
   public async activate() {
-    await this.trackingService.event('logout');
-    await this.trackingService.stop();
+    try {
+      await this.trackingService.event('logout');
+      await this.trackingService.stop();
+    } catch {
+      // Ignore errors and logout anyway
+    }
+    
     this.authService.logout();
     this.router.navigateToRoute('login');
   }

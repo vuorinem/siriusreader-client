@@ -8,6 +8,7 @@ export class SectionModel {
   public characters: number;
   public isLoading: boolean = false;
   public isLoaded: boolean = false;
+  public isHidden: boolean = false;
   public startLocation: number = 0;
   public endLocation: number = 0;
 
@@ -80,11 +81,10 @@ export class SectionModel {
 
     let newWidth = this.getWidth(this.element);
 
-    // Make sure the width is a multiple column width
-    const columnWidth = this.pageWidth / this.columnCount;
-    const widthOverflow = newWidth % columnWidth;
+    // Make sure the width is a multiple of page width
+    const widthOverflow = newWidth % this.pageWidth;
     if (widthOverflow > 0.1) {
-      newWidth += columnWidth - widthOverflow;
+      newWidth += this.pageWidth - widthOverflow;
     }
 
     if (oldWidth !== newWidth) {

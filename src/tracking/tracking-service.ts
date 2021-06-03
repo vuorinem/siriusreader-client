@@ -31,8 +31,8 @@ export class TrackingService {
     this.eventAggregator.subscribe(ReconnectingEvent, () => this.eventInternal('reconnecting', false));
 
     window.setInterval(() => {
-      this.scheduleSend('TrackEvents', 'event-cache', SendDelayInMilliseconds, false);
-      this.scheduleSend('TrackLibraryEvents', 'library-event-cache', SendDelayInMilliseconds, false);
+      this.scheduleSend('TrackEvents', 'event-cache', 0);
+      this.scheduleSend('TrackLibraryEvents', 'library-event-cache', 0);
     }, StateCheckIntervalInSeconds * 1000);
   }
 
@@ -78,6 +78,8 @@ export class TrackingService {
       windowHeight: window.innerHeight,
       pageInSection: this.readingState.currentPage,
       totalPagesInSection: this.readingState.sectionPageCount,
+      sectionNumber: this.readingState.sectionNumber,
+      totalSectionsInBook: this.bookService.book.sections.length,
       isMenuOpen: this.applicationState.isMenuOpen,
       isDialogOpen: this.dialogService.hasOpenDialog,
       isHighlightMenuOpen: this.applicationState.isHighlightMenuOpen,

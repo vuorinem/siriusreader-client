@@ -12,6 +12,8 @@ export interface ITrackingEvent {
   windowHeight: number;
   pageInSection: number;
   totalPagesInSection: number;
+  sectionNumber: number;
+  totalSectionsInBook: number;
   isMenuOpen: boolean;
   isDialogOpen: boolean;
   isHighlightMenuOpen: boolean;

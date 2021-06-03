@@ -6,7 +6,8 @@ import { DomUtility } from './dom-utility';
 
 @autoinject
 export class ReadingState {
-  private currentStartSection?: SectionModel;
+  private currentSection?: SectionModel;
+  private currentSectionIndex?: number;
   private currentView?: ClientRect | DOMRect;
   private currentViewOffset: number = 0;
   private currentRange: Range;
@@ -34,30 +35,39 @@ export class ReadingState {
     return this.currentText;
   }
 
-  @computedFrom('currentStartSection')
+  @computedFrom('currentSection')
   public get section(): SectionModel | undefined {
-    return this.currentStartSection;
+    return this.currentSection;
   }
 
-  @computedFrom('currentStartSection', 'textFromStart')
+  @computedFrom('currentSectionIndex')
+  public get sectionNumber(): number {
+    if (this.currentSectionIndex === undefined) {
+      return 0;
+    }
+
+    return this.currentSectionIndex + 1;
+  }
+
+  @computedFrom('currentSection', 'textFromStart')
   public get startLocation(): number {
-    if (!this.currentStartSection) {
+    if (!this.currentSection) {
       return 0;
     }
 
     const sectionLocation = this.textUtility.calculateVisibleCharacters(this.textFromStart);
 
-    return this.currentStartSection.startLocation + sectionLocation;
+    return this.currentSection.startLocation + sectionLocation;
   }
 
-  @computedFrom('currentStartSection')
+  @computedFrom('currentSection')
   public get sectionCharacterCount(): number {
-    if (!this.currentStartSection) {
+    if (!this.currentSection) {
       return 0;
     }
 
     const range = document.createRange();
-    range.selectNode(this.currentStartSection.element);
+    range.selectNode(this.currentSection.element);
 
     return this.textUtility.calculateVisibleCharacters(range.toString());
   }
@@ -114,12 +124,12 @@ export class ReadingState {
       }
 
       if (!startNode) {
-        this.currentStartSection = section;
+        this.currentSection = section;
         startNode = this.findStartNodeAndOffset(startRange, view, section.element.firstChild!);
       }
 
       if (!hasEnd && startNode) {
-        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element.parentElement!);
+        hasEnd = this.findEndNodeAndOffset(endRange, view, startNode, section.element);
       }
     }
 
@@ -127,26 +137,27 @@ export class ReadingState {
     this.currentRange.setEnd(endRange.endContainer, endRange.endOffset);
     this.currentText = this.currentRange.toString();
 
-    if (this.currentStartSection && this.currentStartSection.element) {
-      this.startRange.setStart(this.currentStartSection.element, 0);
+    if (this.currentSection && this.currentSection.element) {
+      this.startRange.setStart(this.currentSection.element, 0);
       this.startRange.setEnd(startRange.startContainer, startRange.startOffset);
       this.textFromStart = this.startRange.toString();
+      this.currentSectionIndex = sections.indexOf(this.currentSection);
     }
   }
 
   public getLocation(node: Node, offset: number): number | null {
-    if (!this.currentStartSection) {
+    if (!this.currentSection) {
       return null;
     }
 
     const range = document.createRange();
-    range.setStart(this.currentStartSection.element, 0);
+    range.setStart(this.currentSection.element, 0);
     range.setEnd(node, offset);
 
     const textFromStart = range.toString();
 
     return this.textUtility.calculateVisibleCharacters(textFromStart)
-      + this.currentStartSection.startLocation;
+      + this.currentSection.startLocation;
   }
 
   private findStartNodeAndOffset(range: Range, view: ClientRect, node: Node): Node | null {

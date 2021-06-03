@@ -56,6 +56,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private canTriggerPageTurn: boolean = false;
   private browseStyle: BrowseStyle = 'turn';
   private isInitialized: boolean = false;
+  private isLoading: boolean = false;
 
   private touchStartX: number | null = null;
   private touchEndX: number | null = null;
@@ -267,7 +268,9 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       }
     }
 
+    this.isLoading = true;
     await section.load();
+    this.isLoading = false;
 
     await this.jumpToLocationInSection(section, location - section.startLocation, browseStyle);
   }
@@ -458,6 +461,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private progressBarClick(event: MouseEvent) {
+    if (this.isLoading) {
+      return;
+    }
+
     const progressBar = event.currentTarget as HTMLDivElement;
     const targetPercentage = event.offsetX / progressBar.clientWidth;
     const targetLocation = Math.round(this.totalCharacters * targetPercentage);
@@ -504,11 +511,6 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   private move(moveByPixels: number, source: NavigationEventType) {
-    if (this.sections.some(section => section.isLoading)) {
-      // Do not allow moving while loading
-      return;
-    }
-
     const section = this.readingState.section;
 
     if (!section) {
@@ -516,21 +518,38 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return;
     }
 
-    if (this.isTransitioning) {
-      // Only allow one transition at the time
+    if (this.isTransitioning || this.isLoading) {
       return;
     }
 
     const newViewOffset = this.currentViewOffset + moveByPixels;
 
-    if (!section.previousSection && section.left > newViewOffset) {
-      // Trying to turn page before the start of the book
-      return;
+    if (section.left > newViewOffset) {
+      // Moving to the previous section
+      if (!section.previousSection) {
+        return;
+      } else if (section.previousSection.isLoading) {
+        return;
+      } else if (!section.previousSection.isLoaded) {
+        section.previousSection.load();
+        return;
+      } else if (section.previousSection.isHidden) {
+        section.previousSection.isHidden = false;
+      }
     }
 
-    if (!section.nextSection && section.right - 1 < newViewOffset) {
-      // Trying to turn page after the end of the book
-      return;
+    if (section.right - 1 < newViewOffset) {
+      // Moving to the previous section
+      if (!section.nextSection) {
+        return;
+      } else if (section.nextSection.isLoading) {
+        return;
+      } else if (!section.nextSection.isLoaded) {
+        section.nextSection.load();
+        return;
+      } else if (section.nextSection.isHidden) {
+        section.nextSection.isHidden = false;
+      }
     }
 
     this.trackingService.event(source);
@@ -547,11 +566,15 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.transitionTo(jumpToPixels, section, browseStyle);
   }
 
-  private async updateSectionVisibility(currentSection: SectionModel | undefined): Promise<void> {
-    for (const section of this.sections) {
-      const originalSectionLeft = currentSection?.left;
+  private async updateSectionVisibility(currentSection: SectionModel) {
+    const originalSectionLeft = currentSection.left;
 
-      if (section.right < this.currentViewOffset - this.viewWidth) {
+    const sectionLoadins = [];
+
+    for (const section of this.sections) {
+      if (section === currentSection) {
+        section.isHidden = false;
+      } else if (section.right < this.currentViewOffset - this.viewWidth) {
         // Page is past the view +- 1 page
         if (section.isLoaded) {
           section.unload();
@@ -561,17 +584,23 @@ export class NrBook implements ComponentAttached, ComponentDetached {
         if (section.isLoaded) {
           section.unload();
         }
-      } else {
-        if (!section.isLoaded) {
-          await section.load();
-        }
+      } else if (section.isLoading) {
+        continue;
+      } else if (!section.isLoaded) {
+        // Hide section until current view has been updated to avoid flickering text
+        section.isHidden = true;
+        sectionLoadins.push(section.load());
       }
+    }
 
-      if (currentSection !== undefined && originalSectionLeft !== undefined && currentSection.left !== originalSectionLeft) {
-        const sectionMovedBy = currentSection.left - originalSectionLeft;
-        const newOffset = this.currentViewOffset + sectionMovedBy;
-        await this.transitionTo(newOffset, currentSection, 'jump');
-      }
+    if (sectionLoadins.length > 0) {
+      await Promise.all(sectionLoadins);
+    }
+
+    if (originalSectionLeft !== undefined && currentSection.left !== originalSectionLeft) {
+      const currentSectionMovedBy = currentSection.left - originalSectionLeft;
+      const newOffset = this.currentViewOffset + currentSectionMovedBy;
+      await this.transitionTo(newOffset, currentSection, 'jump');
     }
   }
 
@@ -604,11 +633,11 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private triggerOpenPage(section: SectionModel) {
     this.taskQueue.queueTask(async () => {
-      await this.updateSectionVisibility(section);
-
       this.updateReadingStateAndProgress();
 
       this.trackingService.event('openPage');
+
+      await this.updateSectionVisibility(section);
     });
   }
 
