@@ -28,7 +28,7 @@ export const SiriusConfig = {
   debug: getBoolean(process.env.debug) ?? environment.debug,
   testing: getBoolean(process.env.testing) ?? environment.testing,
   apiUrl: process.env.apiUrl ?? environment.apiUrl,
-  tokenEndpoint: process.env.apiUrl ?? environment.tokenEndpoint,
+  tokenEndpoint: process.env.tokenEndpoint ?? environment.tokenEndpoint,
   isHighlightingEnabled: getBoolean(process.env.isHighlightingEnabled) ?? environment.isHighlightingEnabled,
   isRegistrationDisabled: getBoolean(process.env.isRegistrationDisabled) ?? environment.isRegistrationDisabled,
   isReadingTimeDisplayed: getBoolean(process.env.isReadingTimeDisplayed) ?? environment.isReadingTimeDisplayed,
