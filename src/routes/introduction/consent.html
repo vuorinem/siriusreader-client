@@ -2,15 +2,17 @@
   <div class="row d-flex justify-content-center">
     <div class="col-md-12 col-lg-8">
       <form submit.trigger="confirm()">
-        <h1>Recreational Reading Behaviour</h1>
-        <h2>Consent Form</h2>
+        <h1>Recreational e-Reading Behaviour</h1>
+        <h2>Participant Consent Form</h2>
+
+        <p>Please confirm that you agree with the following statements</p>
 
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="consent-1" value="1"
               checked.bind="consentsConfirmed">
             <label class="custom-control-label text-justify" for="consent-1">
-              I confirm that I have read and understood the Participant Information Sheet for the above study, that I
+              I confirm that I have read and understood the participant information sheet for the above study, that I
               have had the opportunity to ask questions, and that any questions I had were answered to my satisfaction.
             </label>
           </div>
@@ -22,7 +24,7 @@
               checked.bind="consentsConfirmed">
             <label class="custom-control-label text-justify" for="consent-2">
               I understand that my participation is voluntary, and that I can withdraw at any time without giving a
-              reason. Withdrawing will not affect any of my rights, and I am eligible for at least partial compensation.
+              reason. Withdrawing will not affect any of my rights.
             </label>
           </div>
         </div>
@@ -32,9 +34,9 @@
             <input type="checkbox" class="custom-control-input" id="consent-3" value="3"
               checked.bind="consentsConfirmed">
             <label class="custom-control-label text-justify" for="consent-3">
-              I agree to being recorded by the Sirius Reader to track my reading process (the Sirius Reader tracks, for
-              example, the frequency of your page turns, frequency of disengagements, devices being used and the timing
-              of reading sessions)
+              I agree to being recorded by Sirius Reader to track my reading process (Sirius Reader tracks, for example,
+              the frequency of your page turns, frequency of disengagements, devices being used, and the timing of
+              reading sessions)
             </label>
           </div>
         </div>
@@ -44,8 +46,9 @@
             <input type="checkbox" class="custom-control-input" id="consent-4" value="4"
               checked.bind="consentsConfirmed">
             <label class="custom-control-label text-justify" for="consent-4">
-              I understand that the study includes reading a short story that may be of any genre and may include
-              swearing, mild references to violence or sex. Parts of the story may be thrilling or suspenseful.
+              I understand that the study includes answering to questionnaires, selecting a book from Sirius Reader
+              library, and reading it. The books may be of any genre and may include swearing, references to violence or
+              sex. Parts of the text may be thrilling or suspenseful depending on the text selected.
             </label>
           </div>
         </div>
