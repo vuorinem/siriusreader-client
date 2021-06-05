@@ -38,6 +38,11 @@ export class Index {
         route: 'debrief',
         moduleId: PLATFORM.moduleName("./debrief"),
       },
+      {
+        name: 'infographic',
+        route: 'infographic',
+        moduleId: PLATFORM.moduleName("./infographic"),
+      },
     ]);
   }
 }

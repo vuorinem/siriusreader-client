@@ -1,7 +1,8 @@
+import { UserService } from './../user/user-service';
 import { HttpClient } from 'aurelia-fetch-client';
 import { SiriusConfig } from './../config/sirius-config';
-import { InfographicDialog } from './../infographics/infographic-dialog';
-import { InfographicService } from './../infographics/infographic-service';
+import { InfographicDialog } from '../infographic/infographic-dialog';
+import { InfographicService } from '../infographic/infographic-service';
 import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
@@ -11,6 +12,7 @@ import { autoinject, computedFrom } from 'aurelia-framework';
 import { AuthService } from '../auth/auth-service';
 import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
 import { TrackingConnectionService } from 'tracking/tracking-connection-service';
+import { ConfirmFinishDialog } from './../routes/finish/confirm-finish-dialog';
 
 @autoinject
 export class NrMenu {
@@ -28,6 +30,11 @@ export class NrMenu {
   @computedFrom('infographicService.isInfographicReady')
   private get isInfographicReady() {
     return this.infographicService.isInfographicReady;
+  }
+
+  @computedFrom('applicationState.isReading')
+  private get isReading() {
+    return this.applicationState.isReading;
   }
 
   @computedFrom('infographicService.totalEngagedReadingMinutes')
@@ -48,6 +55,7 @@ export class NrMenu {
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
+    private userService: UserService,
     private trackingService: TrackingService,
     private trackingConnectionService: TrackingConnectionService,
     private infographicService: InfographicService) {
@@ -93,9 +101,38 @@ export class NrMenu {
       return;
     }
 
-    this.trackingService.event('openInfograph');
+    this.trackingService.event('confirmInfograph');
 
-    // TODO: Show infographic
+    await this.userService.sendConfirmBookFinished();
+
+    this.router.navigateToRoute('finish');
+  }
+
+  private async openFinishDialog() {
+    const dialog = this.dialogService.open({
+      viewModel: ConfirmFinishDialog,
+      overlayDismiss: true,
+      lock: true,
+    });
+
+    await dialog;
+
+    this.applicationState.isMenuOpen = false;
+
+    this.trackingService.event('openFinishDialog');
+
+    const dialogResult = await dialog.whenClosed();
+
+    if (dialogResult.wasCancelled) {
+      this.trackingService.event('closeFinishDialog');
+      return;
+    }
+
+    this.trackingService.event('confirmFinish');
+
+    await this.userService.sendConfirmBookFinished();
+
+    this.router.navigateToRoute('finish');
   }
 
   private async withdraw() {

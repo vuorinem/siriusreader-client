@@ -26,7 +26,10 @@ export type EventType =
   | 'closeWithdrawal'
   | 'openInfographDialog'
   | 'closeInfographDialog'
-  | 'openInfograph'
+  | 'confirmInfograph'
+  | 'openFinishDialog'
+  | 'closeFinishDialog'
+  | 'confirmFinish'
 
   // Reading events
   | 'openBook'

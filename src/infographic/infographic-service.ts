@@ -1,5 +1,5 @@
-import { EventLogin } from './../auth/auth-service';
-import { SiriusConfig } from './../config/sirius-config';
+import { EventLogin } from '../auth/auth-service';
+import { SiriusConfig } from '../config/sirius-config';
 import { autoinject } from "aurelia-dependency-injection";
 import { HttpClient } from "aurelia-fetch-client";
 import { AuthService } from "auth/auth-service";
