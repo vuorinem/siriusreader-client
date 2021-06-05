@@ -49,11 +49,13 @@
         on <a href="mailto:keller@inf.ed.ac.uk">keller@inf.ed.ac.uk</a>.
       </p>
 
-      <p class="text-center my-5">
-        <a class="btn btn-primary btn-lg" route-href="infographic">
-          <i class="bi bi-file-earmark-bar-graph"></i> See Your Infographic
-        </a>
-      </p>
+      <form submit.trigger="confirm()">
+        <p class="text-center my-5">
+          <button type="submit" class="btn btn-primary btn-lg" disabled.bind="!canContinue">
+            <i class="bi bi-file-earmark-bar-graph"></i> See Your Infographic
+          </button>
+        </p>
+      </form>
 
       <h2>References</h2>
 
