@@ -1,15 +1,17 @@
 <template>
   <require from="../../information-sheet/information-sheet-content"></require>
 
-  <div class="row d-flex justify-content-center">
-    <div class="col-md-12 col-lg-8">
-      <form submit.trigger="confirm()">
+  <form submit.trigger="confirm()">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12 col-lg-10">
         <h1>Welcome to Sirius Reader!</h1>
 
         <p><b>Please read the below information in full before proceeding.</b></p>
+      </div>
 
-        <information-sheet-content></information-sheet-content>
+      <information-sheet-content></information-sheet-content>
 
+      <div class="col-md-12 col-lg-10">
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="information-sheet-confirm"
@@ -25,7 +27,8 @@
             Continue
           </button>
         </p>
-      </form>
+      </div>
     </div>
-  </div>
+    </div>
+  </form>
 </template>
