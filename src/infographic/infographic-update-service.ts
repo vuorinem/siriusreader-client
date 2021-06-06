@@ -7,7 +7,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { IUserData } from './i-user-data';
 
 @autoinject
-export class InfographicService {
+export class InfographicUpdateService {
   public isInfographicReady: boolean = false;
   public totalEngagedReadingMinutes: number = 0;
 

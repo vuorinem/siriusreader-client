@@ -2,7 +2,7 @@ import { UserService } from './../user/user-service';
 import { HttpClient } from 'aurelia-fetch-client';
 import { SiriusConfig } from './../config/sirius-config';
 import { InfographicDialog } from '../infographic/infographic-dialog';
-import { InfographicService } from '../infographic/infographic-service';
+import { InfographicUpdateService } from '../infographic/infographic-update-service';
 import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
@@ -27,9 +27,9 @@ export class NrMenu {
     return this.trackingConnectionService.hasConnectionProblem;
   }
 
-  @computedFrom('infographicService.isInfographicReady')
+  @computedFrom('infographicUpdateService.isInfographicReady')
   private get isInfographicReady() {
-    return this.infographicService.isInfographicReady;
+    return this.infographicUpdateService.isInfographicReady;
   }
 
   @computedFrom('applicationState.isReading')
@@ -37,14 +37,14 @@ export class NrMenu {
     return this.applicationState.isReading;
   }
 
-  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  @computedFrom('infographicUpdateService.totalEngagedReadingMinutes')
   private get readSeconds() {
-    return Math.floor(this.infographicService.totalEngagedReadingMinutes * 60 % 60)
+    return Math.floor(this.infographicUpdateService.totalEngagedReadingMinutes * 60 % 60)
   }
 
-  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  @computedFrom('infographicUpdateService.totalEngagedReadingMinutes')
   private get readMinutes() {
-    return Math.floor(this.infographicService.totalEngagedReadingMinutes);
+    return Math.floor(this.infographicUpdateService.totalEngagedReadingMinutes);
   }
 
   private showReadingTime = false;
@@ -58,7 +58,7 @@ export class NrMenu {
     private userService: UserService,
     private trackingService: TrackingService,
     private trackingConnectionService: TrackingConnectionService,
-    private infographicService: InfographicService) {
+    private infographicUpdateService: InfographicUpdateService) {
 
     this.showReadingTime = SiriusConfig.isReadingTimeDisplayed;
   }
