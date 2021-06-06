@@ -1,0 +1,66 @@
+<template>
+  <require from="library/nr-title-cover"></require>
+
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-12">
+      <div class="logos">
+        <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" class="university-logo" />
+        <img src="/siriusreader-logo-vertical.png" alt="Sirius Reader" />
+        <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" class="university-logo" />
+      </div>
+
+      <h1 class="text-center">Reading Behaviour</h1>
+      <h2 class="text-center text-muted">Infographic</h2>
+
+      <main class="row">
+        <section id="book" class="col-md-6">
+          <div class="loading" if.bind="!title">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+          <p class="infotext">You read</p>
+          <p class="details">
+            <span class="title">${title.title}</span><br />
+            <span class="author">by ${title.author}</span>
+          </p>
+        </section>
+
+        <section id="readermotivation" class="col-md-6">
+          <div class="loading" if.bind="!readerMotivation">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <canvas ref="readerMotivationChart"></canvas>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'intrinsic'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are intrinsically motivated to read. Intrinsically motivated readers read simply because reading is an
+            enjoyable activity. They tend to read more frequently than extrinsically motivated readers who read books
+            for instrumental purposes (for example to learn more on a topic or to improve reading ability). Intrinsic
+            motivation to read has been associated with a high reading ability!
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'competent'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are a highly competent reader. Reading competence is crucial for academic success, financial independence
+            and overall life success.
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'effortful'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            put a lot of effort in reading. Carefully reading a text can enhance your memory for the text contents,
+            however, it can difficult to keep up a leisurely reading habit if you put too much pressure on yourself.
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'nonfrequent'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are a nonfrequent reader. Your score in 'Effort' shows that you don't pressurise yourself into reading. In
+            order to develop a recreational reading habit, it is important to read voluntarily whenever you feel like
+            it!
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</template>
