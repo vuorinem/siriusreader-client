@@ -27,7 +27,7 @@
     <div if.bind="isDebugInfoVisible" class="book-debug-sections">
       <ul>
         <li repeat.for="section of sections">
-          <spin if.bind="readingState.section === section">${ section.url }</spin>
+          <span if.bind="readingState.section === section">${ section.url }</span>
           <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.url }</a>
         </li>
       </ul>
