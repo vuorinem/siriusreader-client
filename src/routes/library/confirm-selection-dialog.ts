@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { DialogController, DialogComponentActivate } from 'aurelia-dialog';
-import { ITitleDetails } from './i-title-details';
+import { ITitleDetails } from 'library/i-title-details';
 
 @autoinject
 export class ConfirmSelectionDialog implements DialogComponentActivate<ITitleDetails> {

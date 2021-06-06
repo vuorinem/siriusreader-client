@@ -6,8 +6,8 @@ import { DialogService } from 'aurelia-dialog';
 import { TimeoutService } from './../../utility/timeout-service';
 import { RoutableComponentActivate, Router } from 'aurelia-router';
 import { autoinject } from 'aurelia-framework';
-import { LibraryService } from './library-service';
-import { ITitle } from './i-title';
+import { LibraryService } from 'library/library-service';
+import { ITitle } from 'library/i-title';
 
 const MinTitleWidth = 200;
 const MaxVisibleTitles = 3;
