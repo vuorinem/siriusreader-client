@@ -107,6 +107,27 @@
             Your reading session length can show how you fit reading for fun in your everyday life!
           </p>
         </section>
+
+        <section id="sessionchart">
+          <div class="loading" if.bind="!readingSummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <div class="chart">
+            <canvas ref="readingSessionChart"></canvas>
+          </div>
+
+          <div class="chart-legend">
+            <ul>
+              <li repeat.for="type of engagementTypes">
+                <span class="legend-colour" css="background-color: ${type.colour};"></span>
+                <span class="legend-title">${type.title}</span>
+              </li>
+            </ul>
+          </div>
+
+          <h2>This is what your longest reading session looked like!</h2>
+        </section>
       </main>
     </div>
   </div>

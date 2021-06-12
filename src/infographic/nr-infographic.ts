@@ -3,16 +3,18 @@ import { InfographicService } from './infographic-service';
 import { autoinject, ComponentAttached, computedFrom } from 'aurelia-framework';
 import { IReaderMotivation } from './i-reader-motivation';
 import { ITitle } from 'library/i-title';
-import { BarController, BarElement, CategoryScale, Chart, LinearScale } from 'chart.js';
+import { BarController, BarElement, CategoryScale, Chart, Legend, LinearScale, Tooltip } from 'chart.js';
 
 Chart.register(
   LinearScale,
   BarController,
   CategoryScale,
   BarElement,
+  Tooltip,
 );
 
 import 'styles/infographic.scss';
+import { MinutesAndSecondsValueConverter } from './minutes-and-seconds-value-converter';
 
 @autoinject
 export class NrInfographic implements ComponentAttached {
@@ -22,6 +24,30 @@ export class NrInfographic implements ComponentAttached {
   private readingSummary?: IReadingSummary;
 
   private readerMotivationChart!: HTMLCanvasElement;
+  private readingSessionChart!: HTMLCanvasElement;
+
+  private engagementTypes = [
+    {
+      title: 'Slower than normal reading',
+      colour: '#600',
+    },
+    {
+      title: 'Deep reading',
+      colour: '#b00',
+    },
+    {
+      title: 'Scan reading',
+      colour: '#740',
+    },
+    {
+      title: 'Browsing',
+      colour: '#470',
+    },
+    {
+      title: 'Disengagement from book',
+      colour: '#555',
+    },
+  ];
 
   @computedFrom('readingSummary')
   private get readingSpeedToBaselineComparison() {
@@ -80,6 +106,7 @@ export class NrInfographic implements ComponentAttached {
 
   private async loadReadingSummary() {
     this.readingSummary = await this.infographicService.getReadingSummary();
+    this.drawReadingSessionChart();
   }
 
   private drawReaderMotivationChart() {
@@ -112,7 +139,7 @@ export class NrInfographic implements ComponentAttached {
       },
       options: {
         scales: {
-          yAxis: {
+          y: {
             min: 1,
             max: 7,
             ticks: {
@@ -127,6 +154,64 @@ export class NrInfographic implements ComponentAttached {
                   return '';
                 }
               }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private drawReadingSessionChart() {
+    if (!this.readingSummary) {
+      return;
+    }
+
+    const canvasContext = this.readingSessionChart.getContext("2d");
+
+    if (canvasContext === null) {
+      throw new Error("Unable to access canvas");
+    }
+
+    var myChart = new Chart(canvasContext, {
+      type: 'bar',
+      data: {
+        labels: [''],
+        datasets: this.readingSummary.longestReadingSessionEngagements.map(item => {
+          return {
+            label: item.engagementType,
+            data: [item.timeInMinutes],
+            backgroundColor: this.engagementTypes.find(type => type.title === item.engagementType)?.colour,
+          };
+        }),
+      },
+      options: {
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Time (minutes)',
+            },
+          },
+          y: {
+            stacked: true,
+            min: 0,
+            max: this.readingSummary.longestReadingSessionInMinutes,
+          },
+        },
+        interaction: {
+          mode: 'nearest',
+        },
+        plugins: {
+          tooltip: {
+            xAlign: 'center',
+            callbacks: {
+              label: items => {
+                const timeDisplay = MinutesAndSecondsValueConverter.print(items.raw as number);
+                return ` ${items.dataset.label} for ${timeDisplay}`;
+              },
             }
           }
         }
