@@ -1,5 +1,6 @@
+import { IReadingSummary } from './i-reading-summary';
 import { InfographicService } from './infographic-service';
-import { autoinject, ComponentAttached } from 'aurelia-framework';
+import { autoinject, ComponentAttached, computedFrom } from 'aurelia-framework';
 import { IReaderMotivation } from './i-reader-motivation';
 import { ITitle } from 'library/i-title';
 import { BarController, BarElement, CategoryScale, Chart, LinearScale } from 'chart.js';
@@ -18,8 +19,46 @@ export class NrInfographic implements ComponentAttached {
 
   private title?: ITitle;
   private readerMotivation?: IReaderMotivation;
+  private readingSummary?: IReadingSummary;
 
   private readerMotivationChart!: HTMLCanvasElement;
+
+  @computedFrom('readingSummary')
+  private get readingSpeedToBaselineComparison() {
+    if (!this.readingSummary) {
+      return '';
+    }
+
+    const readingSpeedDifferenceToBaseline =
+      this.readingSummary.averageReadingSpeedWordsPerMinute
+      - this.readingSummary.baselineReadingSpeedWordsPerMinute;
+
+    if (readingSpeedDifferenceToBaseline < 0) {
+      return 'slower than';
+    } else if (readingSpeedDifferenceToBaseline > 0) {
+      return 'faster than';
+    } else {
+      return 'similarly to';
+    }
+  }
+
+  @computedFrom('readingSummary')
+  private get readingSpeedToOverallAverageComparison() {
+    if (!this.readingSummary) {
+      return '';
+    }
+
+    const readingSpeedDifferenceToOverallAverage =
+      this.readingSummary.averageReadingSpeedWordsPerMinute - 250;
+
+    if (readingSpeedDifferenceToOverallAverage < 0) {
+      return 'slower than';
+    } else if (readingSpeedDifferenceToOverallAverage > 0) {
+      return 'faster than';
+    } else {
+      return 'similarly to';
+    }
+  }
 
   constructor(private infographicService: InfographicService) {
   }
@@ -27,14 +66,26 @@ export class NrInfographic implements ComponentAttached {
   public attached() {
     this.loadTitle();
     this.loadReaderMotivation();
+    this.loadReadingSummary();
   }
 
-  public async loadTitle() {
+  private async loadTitle() {
     this.title = await this.infographicService.getTitle();
   }
 
-  public async loadReaderMotivation() {
+  private async loadReaderMotivation() {
     this.readerMotivation = await this.infographicService.getReaderMotivation();
+    this.drawReaderMotivationChart();
+  }
+
+  private async loadReadingSummary() {
+    this.readingSummary = await this.infographicService.getReadingSummary();
+  }
+
+  private drawReaderMotivationChart() {
+    if (!this.readerMotivation) {
+      return;
+    }
 
     const canvasContext = this.readerMotivationChart.getContext("2d");
 
