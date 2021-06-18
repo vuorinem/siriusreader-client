@@ -3,10 +3,10 @@ import { HttpClient } from "aurelia-fetch-client";
 import { autoinject } from 'aurelia-framework';
 import { IReaderMotivation } from './i-reader-motivation';
 import { IReadingSummary } from './i-reading-summary';
+import { IChronologySummary } from './i-chronology-summary';
 
 @autoinject
 export class InfographicService {
-
   constructor(private http: HttpClient) {
   }
 
@@ -25,4 +25,8 @@ export class InfographicService {
     return await response.json() as IReadingSummary;
   }
 
+  public async getChronologySummary() {
+    const response = await this.http.fetch(`/infographic/chronology-summary`);
+    return await response.json() as IChronologySummary;
+  }
 }

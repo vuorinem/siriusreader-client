@@ -1,7 +1,7 @@
 import { IReadingEngagement } from './i-reading-engagement';
 
 export interface IReadingSummary {
-  averageReadingSpeedWordsPerMinute: number,
+  averageReadingSpeedWordsPerMinute?: number,
   baselineReadingSpeedWordsPerMinute: number,
   maximumReadingSpeedWordsPerMinute: number,
   readingSessionCount: number,

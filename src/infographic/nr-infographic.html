@@ -1,5 +1,6 @@
 <template>
   <require from="library/nr-title-cover"></require>
+  <require from="utility/number-value-converter"></require>
   <require from="./minutes-and-seconds-value-converter"></require>
 
   <div class="row d-flex justify-content-center">
@@ -77,11 +78,11 @@
           </h2>
           <p>
             Your reading speed in the test was
-            <b>${readingSummary.baselineReadingSpeedWordsPerMinute} words per minute (wpm)</b>.
+            <b>${readingSummary.baselineReadingSpeedWordsPerMinute | number:0} words per minute (wpm)</b>.
             This means that your deep reading speed (at which you read to fully understand content) varies between
-            <b>100-${readingSummary.maximumReadingSpeedWordsPerMinute} wpm</b>.
+            <b>100-${readingSummary.maximumReadingSpeedWordsPerMinute | number:0} wpm</b>.
             During the study, your average deep reading speed was
-            <b>${readingSummary.averageReadingSpeedWordsPerMinute} wpm</b>.
+            <b>${readingSummary.averageReadingSpeedWordsPerMinute | number:0} wpm</b>.
             Therefore, you read on average
             <b>${readingSpeedToBaselineComparison} your baseline reading speed</b>.
             Previous research has indicated that adults usually read at speed 250wpm, which means that you tend to read
@@ -113,20 +114,42 @@
             <span class="loading-spinner" title="Loading content..."></span>
           </div>
 
-          <div class="chart">
-            <canvas ref="readingSessionChart"></canvas>
+          <div class="chart-with-legend">
+            <div class="chart">
+              <canvas ref="readingSessionChart"></canvas>
+            </div>
+
+            <div class="chart-legend">
+              <ul>
+                <li repeat.for="type of engagementTypes">
+                  <span class="legend-colour" css="background-color: ${type.colour};"></span>
+                  <span class="legend-title">${type.title}</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="chart-legend">
-            <ul>
-              <li repeat.for="type of engagementTypes">
-                <span class="legend-colour" css="background-color: ${type.colour};"></span>
-                <span class="legend-title">${type.title}</span>
-              </li>
-            </ul>
-          </div>
 
           <h2>This is what your longest reading session looked like!</h2>
+
+          <p>
+            When we read a book to understand its contents, we usually read at a 'deep reading' speed. Slower reading
+            speeds than deep reading may occur if you became distracted during reading or a part of the text is
+            particularly difficult! 'Skim reading' and 'scan reading' refer to a higher reading speed, and 'browsing'
+            means that you turn the pages so fast that you spend less than a second on each page. You may also see some
+            black on your reading session timeline - it shows when you stopped reading during the reading session.
+          </p>
+        </section>
+
+        <section id="chronologychart" class="highlight">
+          <h2>Did you read the book chronologically from beginning to end?</h2>
+
+          <p>
+            Compare your reading process to the dashed line that represents what completely chronological reading would
+            look like.
+          </p>
+
+          <canvas class="chart" ref="chronologyChart"></canvas>
         </section>
       </main>
     </div>

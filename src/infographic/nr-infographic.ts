@@ -3,7 +3,9 @@ import { InfographicService } from './infographic-service';
 import { autoinject, ComponentAttached, computedFrom } from 'aurelia-framework';
 import { IReaderMotivation } from './i-reader-motivation';
 import { ITitle } from 'library/i-title';
-import { BarController, BarElement, CategoryScale, Chart, Legend, LinearScale, Tooltip } from 'chart.js';
+import { MinutesAndSecondsValueConverter } from './minutes-and-seconds-value-converter';
+import { IChronologySummary } from './i-chronology-summary';
+import { BarController, BarElement, CategoryScale, Chart, LinearScale, LineController, LineElement, PointElement, Tooltip } from 'chart.js';
 
 Chart.register(
   LinearScale,
@@ -11,10 +13,12 @@ Chart.register(
   CategoryScale,
   BarElement,
   Tooltip,
+  LineElement,
+  LineController,
+  PointElement,
 );
 
 import 'styles/infographic.scss';
-import { MinutesAndSecondsValueConverter } from './minutes-and-seconds-value-converter';
 
 @autoinject
 export class NrInfographic implements ComponentAttached {
@@ -22,9 +26,11 @@ export class NrInfographic implements ComponentAttached {
   private title?: ITitle;
   private readerMotivation?: IReaderMotivation;
   private readingSummary?: IReadingSummary;
+  private chronologySummary?: IChronologySummary;
 
   private readerMotivationChart!: HTMLCanvasElement;
   private readingSessionChart!: HTMLCanvasElement;
+  private chronologyChart!: HTMLCanvasElement;
 
   private engagementTypes = [
     {
@@ -51,7 +57,7 @@ export class NrInfographic implements ComponentAttached {
 
   @computedFrom('readingSummary')
   private get readingSpeedToBaselineComparison() {
-    if (!this.readingSummary) {
+    if (!this.readingSummary || !this.readingSummary.averageReadingSpeedWordsPerMinute) {
       return '';
     }
 
@@ -70,7 +76,7 @@ export class NrInfographic implements ComponentAttached {
 
   @computedFrom('readingSummary')
   private get readingSpeedToOverallAverageComparison() {
-    if (!this.readingSummary) {
+    if (!this.readingSummary || !this.readingSummary.averageReadingSpeedWordsPerMinute) {
       return '';
     }
 
@@ -93,6 +99,7 @@ export class NrInfographic implements ComponentAttached {
     this.loadTitle();
     this.loadReaderMotivation();
     this.loadReadingSummary();
+    this.loadChronologyData();
   }
 
   private async loadTitle() {
@@ -109,6 +116,11 @@ export class NrInfographic implements ComponentAttached {
     this.drawReadingSessionChart();
   }
 
+  private async loadChronologyData() {
+    this.chronologySummary = await this.infographicService.getChronologySummary();
+    this.drawChronologyChart();
+  }
+
   private drawReaderMotivationChart() {
     if (!this.readerMotivation) {
       return;
@@ -120,7 +132,7 @@ export class NrInfographic implements ComponentAttached {
       throw new Error("Unable to access canvas");
     }
 
-    var myChart = new Chart(canvasContext, {
+    new Chart(canvasContext, {
       type: 'bar',
       data: {
         datasets: [{
@@ -172,7 +184,7 @@ export class NrInfographic implements ComponentAttached {
       throw new Error("Unable to access canvas");
     }
 
-    var myChart = new Chart(canvasContext, {
+    new Chart(canvasContext, {
       type: 'bar',
       data: {
         labels: [''],
@@ -213,6 +225,90 @@ export class NrInfographic implements ComponentAttached {
                 return ` ${items.dataset.label} for ${timeDisplay}`;
               },
             }
+          }
+        }
+      }
+    });
+  }
+
+  private drawChronologyChart() {
+    if (!this.chronologySummary) {
+      return;
+    }
+
+    const canvasContext = this.chronologyChart.getContext("2d");
+
+    if (canvasContext === null) {
+      throw new Error("Unable to access canvas");
+    }
+
+    const locations: {x: number, y: number}[] = [{ x: 0, y: 0 }];
+    for (const position of this.chronologySummary.readingPositions) {
+      locations.push({
+        x: 100 * position.location / this.chronologySummary.charactersInBook,
+        y: position.timeInMinutes,
+      });
+    }
+
+    const lastTime = locations[locations.length - 1].y;
+
+    const trendline = [
+      { x: 0, y: 0 },
+      {
+        x: 100 * lastTime * this.chronologySummary.baselineLocationsPerMinute / this.chronologySummary.charactersInBook,
+        y: lastTime,
+      },
+    ];
+
+    new Chart(canvasContext, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            data: locations,
+            pointRadius: 0,
+            borderColor: '#ff0000',
+            borderWidth: 1,
+          },
+          {
+            data: trendline,
+            pointRadius: 0,
+            borderColor: '#777777',
+            borderWidth: 2,
+            borderDash: [3, 3],
+          }
+        ]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'linear',
+            min: 0,
+            max: 100,
+            ticks: {
+              callback: value => `${value} %`
+            },
+            title: {
+              display: true,
+              text: 'Location in book'
+            }
+          },
+          y: {
+            type: 'linear',
+            min: 0,
+            max: lastTime,
+            ticks: {
+              callback: value => Math.round(value as number),
+            },
+            title: {
+              display: true,
+              text: 'Time spent reading (minutes)'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            enabled: false,
           }
         }
       }
