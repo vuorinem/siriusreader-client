@@ -1,3 +1,4 @@
+import { ILocationSummary } from './i-location-summary';
 import { ITitle } from './../library/i-title';
 import { HttpClient } from "aurelia-fetch-client";
 import { autoinject } from 'aurelia-framework';
@@ -28,5 +29,10 @@ export class InfographicService {
   public async getChronologySummary() {
     const response = await this.http.fetch(`/infographic/chronology-summary`);
     return await response.json() as IChronologySummary;
+  }
+
+  public async getLocationSummary() {
+    const response = await this.http.fetch(`/infographic/location-summary`);
+    return await response.json() as ILocationSummary;
   }
 }

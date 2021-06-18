@@ -194,6 +194,10 @@ nr-infographic {
     }
 
     section#chronologychart {
-        grid-row-end: span 2;
+        grid-column: 1;
+    }
+
+    section#locationchart {
+        grid-column: 2;
     }
 }

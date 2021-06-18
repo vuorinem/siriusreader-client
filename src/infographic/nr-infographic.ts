@@ -5,7 +5,8 @@ import { IReaderMotivation } from './i-reader-motivation';
 import { ITitle } from 'library/i-title';
 import { MinutesAndSecondsValueConverter } from './minutes-and-seconds-value-converter';
 import { IChronologySummary } from './i-chronology-summary';
-import { BarController, BarElement, CategoryScale, Chart, LinearScale, LineController, LineElement, PointElement, Tooltip } from 'chart.js';
+import { ILocationSummary } from './i-location-summary';
+import { BarController, BarElement, CategoryScale, Chart, LinearScale, LineController, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
 
 Chart.register(
   LinearScale,
@@ -27,10 +28,12 @@ export class NrInfographic implements ComponentAttached {
   private readerMotivation?: IReaderMotivation;
   private readingSummary?: IReadingSummary;
   private chronologySummary?: IChronologySummary;
+  private locationSummary?: ILocationSummary;
 
   private readerMotivationChart!: HTMLCanvasElement;
   private readingSessionChart!: HTMLCanvasElement;
   private chronologyChart!: HTMLCanvasElement;
+  private locationSummaryChart!: HTMLCanvasElement;
 
   private engagementTypes = [
     {
@@ -92,6 +95,15 @@ export class NrInfographic implements ComponentAttached {
     }
   }
 
+  @computedFrom('locationSummary')
+  private get mostPopularReadingLocation() {
+    if (!this.locationSummary || this.locationSummary.locationCounts.length === 0) {
+      return '';
+    }
+
+    return this.locationSummary.locationCounts[0].location;
+  }
+
   constructor(private infographicService: InfographicService) {
   }
 
@@ -99,7 +111,8 @@ export class NrInfographic implements ComponentAttached {
     this.loadTitle();
     this.loadReaderMotivation();
     this.loadReadingSummary();
-    this.loadChronologyData();
+    this.loadChronologySummary();
+    this.loadLocationSummary();
   }
 
   private async loadTitle() {
@@ -116,9 +129,14 @@ export class NrInfographic implements ComponentAttached {
     this.drawReadingSessionChart();
   }
 
-  private async loadChronologyData() {
+  private async loadChronologySummary() {
     this.chronologySummary = await this.infographicService.getChronologySummary();
     this.drawChronologyChart();
+  }
+
+  private async loadLocationSummary() {
+    this.locationSummary = await this.infographicService.getLocationSummary();
+    this.drawLocationChart();
   }
 
   private drawReaderMotivationChart() {
@@ -242,7 +260,7 @@ export class NrInfographic implements ComponentAttached {
       throw new Error("Unable to access canvas");
     }
 
-    const locations: {x: number, y: number}[] = [{ x: 0, y: 0 }];
+    const locations: { x: number, y: number }[] = [{ x: 0, y: 0 }];
     for (const position of this.chronologySummary.readingPositions) {
       locations.push({
         x: 100 * position.location / this.chronologySummary.charactersInBook,
@@ -311,6 +329,40 @@ export class NrInfographic implements ComponentAttached {
             enabled: false,
           }
         }
+      }
+    });
+  }
+
+  private drawLocationChart() {
+    if (!this.locationSummary) {
+      return;
+    }
+
+    const canvasContext = this.locationSummaryChart.getContext("2d");
+
+    if (canvasContext === null) {
+      throw new Error("Unable to access canvas");
+    }
+
+    new Chart(canvasContext, {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: this.locationSummary.locationCounts,
+          backgroundColor: [
+            '#ff6384',
+            '#36a2eb',
+            '#cc65fe',
+            '#ffce56',
+          ],
+          parsing: {
+            xAxisKey: 'count',
+            yAxisKey: 'location',
+          },
+        }]
+      },
+      options: {
+        indexAxis: 'y',
       }
     });
   }

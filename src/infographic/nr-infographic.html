@@ -142,6 +142,10 @@
         </section>
 
         <section id="chronologychart" class="highlight">
+          <div class="loading" if.bind="!chronologySummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
           <h2>Did you read the book chronologically from beginning to end?</h2>
 
           <p>
@@ -150,6 +154,17 @@
           </p>
 
           <canvas class="chart" ref="chronologyChart"></canvas>
+        </section>
+
+        <section id="locationchart" class="highlight">
+          <h2>Your reading locations</h2>
+
+          <p>
+            Your most popular reading location was <b>${mostPopularReadingLocation}</b>.
+            All your top reading locations are shown below.
+          </p>
+
+          <canvas class="chart" ref="locationSummaryChart"></canvas>
         </section>
       </main>
     </div>
