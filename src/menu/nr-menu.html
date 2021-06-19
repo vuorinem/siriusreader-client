@@ -27,7 +27,7 @@
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right ${ isOpen ? 'show' : '' }">
-              <div class="dropdown-item d-flex">
+              <div class="dropdown-item d-flex" show.bind="applicationState.isReading">
                 <span class="flex-grow-1 text-left">Font</span>
                 <a class="ml-2" href="#" click.delegate="increaseFontSize()" title="Increase book font size">
                   <i class="bi bi-plus-square"></i>
