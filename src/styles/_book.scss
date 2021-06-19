@@ -78,8 +78,7 @@ nr-book {
                 width: calc(100% - 2 * #{$book-padding});
                 display: block;
                 position: absolute;
-                line-height: 2.2rem;
-                font-size: 1.1rem;
+                line-height: 2;
                 column-fill: auto;
                 /* Other column properties are managed in JS */
 

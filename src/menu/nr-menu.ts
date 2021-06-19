@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { UserService } from './../user/user-service';
 import { HttpClient } from 'aurelia-fetch-client';
 import { SiriusConfig } from './../config/sirius-config';
@@ -13,6 +14,9 @@ import { AuthService } from '../auth/auth-service';
 import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
 import { TrackingConnectionService } from 'tracking/tracking-connection-service';
 import { ConfirmFinishDialog } from './../routes/finish/confirm-finish-dialog';
+
+export const EventIncreaseFont = 'increasefont';
+export const EventDecreaseFont = 'decreasefont';
 
 @autoinject
 export class NrMenu {
@@ -52,6 +56,7 @@ export class NrMenu {
   constructor(
     private router: Router,
     private http: HttpClient,
+    private eventAggregator: EventAggregator,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
@@ -61,6 +66,16 @@ export class NrMenu {
     private infographicUpdateService: InfographicUpdateService) {
 
     this.showReadingTime = SiriusConfig.isReadingTimeDisplayed;
+  }
+
+  private increaseFontSize() {
+    this.eventAggregator.publish(EventIncreaseFont);
+    this.toggleMenu();
+  }
+
+  private decreaseFontSize() {
+    this.eventAggregator.publish(EventDecreaseFont);
+    this.toggleMenu();
   }
 
   private async openInformationSheet() {

@@ -51,7 +51,7 @@
       <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}"
         ref="bookSectionsElement" css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount}; visibility: ${ section.isHidden ? 'hidden' : 'visible' }">
+          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount}; visibility: ${ section.isHidden ? 'hidden' : 'visible' }; font-size: ${ fontSize }rem;">
         </nr-section>
       </div>
     </div>

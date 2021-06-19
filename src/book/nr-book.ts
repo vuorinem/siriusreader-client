@@ -1,3 +1,5 @@
+import { EventDecreaseFont, EventIncreaseFont } from './../menu/nr-menu';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { SiriusConfig } from './../config/sirius-config';
 import { NavigationEventSource, NavigationEventType } from './../tracking/event-type';
 import { UserService } from 'user/user-service';
@@ -29,6 +31,8 @@ const LongTouchThreshold = 1000;
 
 const LocationSavedMessageDisplaySeconds = 5;
 
+const FontSizeStoreItemName = 'fontsize';
+
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
   private isDebug = SiriusConfig.debug;
@@ -46,6 +50,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private isTransitioning: boolean = false;
   private totalCharacters: number = 0;
   private viewWidth: number = 0;
+  private fontSize: number = 1.1;
 
   private observers: Disposable[] = [];
 
@@ -114,6 +119,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   constructor(
+    private eventAggregator: EventAggregator,
     private taskQueue: TaskQueue,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
@@ -129,6 +135,17 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   public async attached() {
     this.load();
+
+    this.loadFontSize();
+
+    this.observers.push(
+      this.eventAggregator.subscribe(EventIncreaseFont, () => {
+        this.updateFontSize(0.1);
+      }));
+    this.observers.push(
+      this.eventAggregator.subscribe(EventDecreaseFont, () => {
+        this.updateFontSize(-0.1);
+      }));
   }
 
   public detached() {
@@ -679,6 +696,37 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     }
 
     return false;
+  }
+
+  private loadFontSize() {
+    const storedFontSize = window.localStorage.getItem(FontSizeStoreItemName);
+
+    if (storedFontSize) {
+      this.fontSize = parseFloat(storedFontSize);
+    }
+  }
+
+  private saveFontSize() {
+    window.localStorage.setItem(FontSizeStoreItemName, this.fontSize.toString());
+  }
+
+  private updateFontSize(sizeChange: number) {
+    const locationBeforeFontSizeChange = this.readingState.startLocation;
+
+    this.fontSize += sizeChange;
+    this.saveFontSize();
+
+    this.taskQueue.queueTask(async () => {
+      await this.refreshSectionWidths();
+      await this.jumpToLocation(locationBeforeFontSizeChange);
+      this.updateReadingStateAndProgress();
+
+      if (sizeChange > 0) {
+        this.trackingService.event('increaseFontSize');
+      } else {
+        this.trackingService.event('decreaseFontSize');
+      }
+    });
   }
 
   private handleWindowResize() {

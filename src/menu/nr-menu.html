@@ -27,6 +27,16 @@
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right ${ isOpen ? 'show' : '' }">
+              <div class="dropdown-item d-flex">
+                <span class="flex-grow-1 text-left">Font</span>
+                <a class="ml-2" href="#" click.delegate="increaseFontSize()" title="Increase book font size">
+                  <i class="bi bi-plus-square"></i>
+                </a>
+                <a class="ml-2" href="#" click.delegate="decreaseFontSize()" title="Decrease book font size">
+                  <i class="bi bi-dash-square"></i>
+                </a>
+              </div>
+              <div class="dropdown-divider"></div>
               <button class="dropdown-item" click.delegate="openFinishDialog()" show.bind="applicationState.isReading">
                 <span class="oi oi-task"></span> Finish
               </button>

@@ -20,6 +20,8 @@ export type EventType =
   // Menu events
   | 'openMenu'
   | 'closeMenu'
+  | 'increaseFontSize'
+  | 'decreaseFontSize'
   | 'openInformation'
   | 'closeInformation'
   | 'openWithdrawal'
