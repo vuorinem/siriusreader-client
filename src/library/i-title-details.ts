@@ -6,4 +6,5 @@ export interface ITitleDetails {
   reviews?: string;
   details?: string;
   firstPage?: string;
+  copyright?: string;
 }
