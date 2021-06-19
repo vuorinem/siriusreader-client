@@ -362,6 +362,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
       return true;
     }
 
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+      return true;
+    }
+
     if (event.deltaY > 0) {
       this.moveForward('wheel');
     } else {
