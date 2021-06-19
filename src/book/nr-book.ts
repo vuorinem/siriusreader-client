@@ -761,8 +761,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.viewWidth = this.getViewWidthInPixels();
 
     await this.refreshSectionWidths();
-
-    await this.jumpToLocation(locationBeforeResize);
+    await this.jumpToLocation(locationBeforeResize, 'open');
+    this.updateReadingStateAndProgress();
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {
