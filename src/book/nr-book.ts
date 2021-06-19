@@ -63,6 +63,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private browseStyle: BrowseStyle = 'turn';
   private isInitialized: boolean = false;
   private isLoading: boolean = false;
+  private isResizing: boolean = false;
 
   private touchStartX: number | null = null;
   private touchEndX: number | null = null;
@@ -72,13 +73,14 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private showLocationSavedMessage = false;
   private currentReportedLocation?: string | undefined;
 
-  @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'applicationState.isFocused',
-    'applicationState.isActive', 'dialogService.hasOpenDialog')
+  @computedFrom('applicationState.isMenuOpen', 'isInitialized', 'applicationState.isFocused',
+    'applicationState.isActive', 'dialogService.hasOpenDialog', 'isResizing')
   private get isContentHidden(): boolean {
     return this.dialogService.hasOpenDialog ||
       this.applicationState.isMenuOpen ||
       !this.applicationState.isActive ||
       !this.applicationState.isFocused ||
+      this.isResizing ||
       !this.isInitialized;
   }
 
@@ -738,8 +740,14 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private handleWindowResize() {
     this.taskQueue.queueTask(() => {
+      this.isResizing = true;
       this.timeoutService.debounce('resize', 500, async () => {
         this.refreshIfWindowIsResized();
+      });
+
+      // Ensure isResizing gets cleared even if timings get mixed up
+      this.timeoutService.debounce('resizeClear', 2000, () => {
+        this.isResizing = false;
       });
     });
   }
@@ -748,6 +756,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.trackingService.event('resize');
 
     if (!this.readingState.view || !this.bookContentElement) {
+      this.isResizing = false;
       return;
     }
 
@@ -755,11 +764,13 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     if (this.readingState.view.width === currentView.width &&
       this.readingState.view.height === currentView.height) {
+      this.isResizing = false;
       return;
     }
 
     if (currentView.height < 400 && currentView.width < 400 || currentView.height < 150) {
       // Prevent resizing on mobile when keyboard shown
+      this.isResizing = false;
       return;
     }
 
@@ -770,6 +781,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.refreshSectionWidths();
     await this.jumpToLocation(locationBeforeResize, 'open');
     this.updateReadingStateAndProgress();
+
+    this.isResizing = false;
   }
 
   private handleCopy(e: ClipboardEvent) {

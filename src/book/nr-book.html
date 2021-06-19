@@ -43,6 +43,12 @@
     </p>
   </div>
 
+  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="isResizing" click.delegate="isResizing = false">
+    <p class="inactive-message">
+      - Resizing window -
+    </p>
+  </div>
+
   <div class="container">
     <div class="book-content" ref="bookContentElement" mousedown.delegate="mouseDown($event)"
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
