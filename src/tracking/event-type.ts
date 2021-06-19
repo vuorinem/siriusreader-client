@@ -66,4 +66,5 @@ export type EventType =
   | 'close'
   | 'inactiveTimeout'
   | 'clickActivate'
+  | 'copyText'
   ;

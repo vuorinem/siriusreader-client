@@ -57,6 +57,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private onKeyDown: (e: KeyboardEvent) => void = e => this.handleKeyDown(e);
   private onWheel: (e: WheelEvent) => void = e => this.handleWheel(e);
   private onWindowResize: () => void = () => this.handleWindowResize();
+  private onCopy: (e: ClipboardEvent) => void = e => this.handleCopy(e);
 
   private canTriggerPageTurn: boolean = false;
   private browseStyle: BrowseStyle = 'turn';
@@ -152,6 +153,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('wheel', this.onWheel);
     window.removeEventListener('resize', this.onWindowResize);
+    this.bookContentElement.removeEventListener('copy', this.onCopy);
 
     let observer: Disposable | undefined;
     while (observer = this.observers.pop()) {
@@ -233,6 +235,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
     window.addEventListener('resize', this.onWindowResize, false);
+    this.bookContentElement.addEventListener('copy', this.onCopy);
 
     this.isInitialized = true;
   }
@@ -767,6 +770,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.refreshSectionWidths();
     await this.jumpToLocation(locationBeforeResize, 'open');
     this.updateReadingStateAndProgress();
+  }
+
+  private handleCopy(e: ClipboardEvent) {
+    this.trackingService.event('copyText');
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {
