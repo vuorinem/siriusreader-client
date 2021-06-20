@@ -6,5 +6,6 @@
   "isHighlightingEnabled": false,
   "isRegistrationDisabled": false,
   "isReadingTimeDisplayed": true,
-  "infographicRefreshIntervalInSeconds": 10
+  "infographicRefreshIntervalInSeconds": 10,
+  "bdk": "nonproduction"
 }
