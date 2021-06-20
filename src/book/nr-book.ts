@@ -215,7 +215,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     for (const sectionData of this.book.sections) {
       const section = new SectionModel({
-        url: sectionData.name,
+        number: sectionData.number,
+        title: sectionData.title,
         characters: sectionData.characters,
         previousSection: previousSection,
       });

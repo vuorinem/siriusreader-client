@@ -34,13 +34,13 @@ export class BookService {
     this.bookDetails = await response.json();
   }
 
-  public async getSection(sectionName: string): Promise<NodeList> {
+  public async getSection(sectionNumber: number): Promise<NodeList> {
     if (!this.book) {
       throw new Error("Book has not been selected");
     }
 
     const response = await this.http
-      .fetch(`/book/selected/${sectionName}`);
+      .fetch(`/book/selected/section/${sectionNumber}`);
 
     const responseHtml = await response.text();
     const document = this.domParser.parseFromString(responseHtml, "text/html");

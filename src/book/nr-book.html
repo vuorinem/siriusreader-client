@@ -19,7 +19,7 @@
         <b>View characters:</b> ${ readingState.characterCount }<br />
       </p>
       <p>
-        <b>Section:</b> ${ readingState.section.url } (${ readingState.sectionNumber } / ${ book.sections.length })<br />
+        <b>Section:</b> ${ readingState.section.title } (${ readingState.sectionNumber } / ${ book.sections.length })<br />
         <b>Section page:</b> ${ readingState.currentPage } / ${ readingState.sectionPageCount }<br />
         <b>Section characters:</b> ${ readingState.sectionCharacterCount }
       </p>
@@ -27,8 +27,8 @@
     <div if.bind="isDebugInfoVisible" class="book-debug-sections">
       <ul>
         <li repeat.for="section of sections">
-          <span if.bind="readingState.section === section">${ section.url }</span>
-          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.url }</a>
+          <span if.bind="readingState.section === section">${ section.title }</span>
+          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.title }</a>
         </li>
       </ul>
     </div>
