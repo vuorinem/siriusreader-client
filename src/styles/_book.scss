@@ -102,6 +102,10 @@ nr-book {
                     break-before: column;
                     margin-top: 2em;
                     text-align: center;
+
+                    &.nobreak {
+                        break-before: initial;
+                    }
                 }
 
                 .title {
