@@ -38,7 +38,7 @@ export class Login {
 
     try {
       this.isLoading = true;
-      const authenticationResult = await this.authService.authenticate(this.emailAddress, this.password);
+      const authenticationResult = await this.authService.signIn(this.emailAddress, this.password);
 
       this.password = "";
 

@@ -205,7 +205,7 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
           if (!userService.user) {
             await this.trackingService.stop();
 
-            authService.logout();
+            await authService.signOut();
 
             return next.cancel(new Redirect("login"));
           }

@@ -30,9 +30,6 @@ export class TrackingConnectionService {
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(SiriusConfig.apiUrl + '/hubs/tracking', {
-        accessTokenFactory: async () => {
-          return await this.authService.getToken() ?? '';
-        },
         logger: SiriusConfig.debug ? signalR.LogLevel.Information : signalR.LogLevel.Error,
       })
       .build();
