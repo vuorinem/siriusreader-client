@@ -170,7 +170,7 @@ export class NrMenu {
       return;
     }
 
-    this.authService.logout();
+    await this.authService.signOut();
     this.router.navigateToRoute("login");
   }
 

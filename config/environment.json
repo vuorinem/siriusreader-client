@@ -2,7 +2,6 @@
   "debug": true,
   "testing": false,
   "apiUrl": "http://localhost:62593",
-  "tokenEndpoint": "http://localhost:62593/connect/token",
   "isHighlightingEnabled": false,
   "isRegistrationDisabled": false,
   "isReadingTimeDisplayed": true,

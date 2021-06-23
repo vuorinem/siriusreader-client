@@ -19,7 +19,7 @@ export class Logout {
       // Ignore errors and logout anyway
     }
     
-    this.authService.logout();
+    await this.authService.signOut();
     this.router.navigateToRoute('login');
   }
 }

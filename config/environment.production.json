@@ -1,6 +1,7 @@
 {
   "debug": false,
   "testing": false,
+  "apiUrl": "/api",
   "isHighlightingEnabled": false,
   "isRegistrationDisabled": false,
   "isReadingTimeDisplayed": false,
