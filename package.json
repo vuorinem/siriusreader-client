@@ -7,7 +7,7 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
-    "@microsoft/signalr": "^3.1.12",
+    "@microsoft/signalr": "^5.0.7",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-binding": "^2.5.4",
     "aurelia-bootstrapper": "^2.3.3",
