@@ -36,8 +36,6 @@ export class AuthService {
         return response;
       }
     });
-
-    this.checkAuthenticationStatus();
   }
 
   public async signIn(email: string, password: string): Promise<IAuthenticationResult> {
@@ -79,7 +77,7 @@ export class AuthService {
     this.eventAggregator.publish(EventLogout);
   }
 
-  private async checkAuthenticationStatus() {
+  public async checkAuthenticationStatus() {
     const response = await this.http
       .fetch('/account/status');
 
@@ -90,8 +88,10 @@ export class AuthService {
     const status = await response.json() as IAccountStatus;
 
     if (status.isSignedIn && !this.isAuthenticatedInternal) {
+      this.isAuthenticatedInternal = true;
       this.eventAggregator.publish(EventLogin);
     } else if (!status.isSignedIn && this.isAuthenticatedInternal) {
+      this.isAuthenticatedInternal = false;
       this.eventAggregator.publish(EventLogout);
     }
   }

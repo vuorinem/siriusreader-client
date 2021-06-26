@@ -42,7 +42,9 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
     this.windowTrackingService.detach();
   }
 
-  public configureRouter(config: RouterConfiguration, router: Router) {
+  public async configureRouter(config: RouterConfiguration, router: Router) {
+    await this.authService.checkAuthenticationStatus();
+    
     this.router = router;
 
     config.title = "Sirius Reader";
