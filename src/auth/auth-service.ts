@@ -2,7 +2,7 @@ import { IAccountStatus } from './i-account-status';
 import { IAuthenticationResult } from './i-authentication-result';
 import { autoinject } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient } from "aurelia-fetch-client";
+import { HttpClient, json } from "aurelia-fetch-client";
 import { SiriusConfig } from "../config/sirius-config";
 
 export const EventLogin = "login";
@@ -38,14 +38,11 @@ export class AuthService {
     });
   }
 
-  public async signIn(email: string, password: string): Promise<IAuthenticationResult> {
+  public async signIn(email: string, password: string, isPersistent: boolean): Promise<IAuthenticationResult> {
     const response = await this.http
       .fetch('/account/signin', {
         method: "post",
-        body: JSON.stringify({ email, password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: json({ email, password, isPersistent }),
       });
 
     const result: IAuthenticationResult = {

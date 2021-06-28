@@ -7,6 +7,7 @@ import { TrackingService } from 'tracking/tracking-service';
 export class Login {
   private emailAddress: string = "";
   private password: string = "";
+  private isPersistent: boolean = false;
 
   private errorMessage?: string;
   private isError: boolean = false;
@@ -38,7 +39,7 @@ export class Login {
 
     try {
       this.isLoading = true;
-      const authenticationResult = await this.authService.signIn(this.emailAddress, this.password);
+      const authenticationResult = await this.authService.signIn(this.emailAddress, this.password, this.isPersistent);
 
       this.password = "";
 
