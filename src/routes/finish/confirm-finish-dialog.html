@@ -1,0 +1,18 @@
+<template>
+  <ux-dialog class="col-md-8">
+    <ux-dialog-body>
+      <h2>Finish reading?</h2>
+      <p>Are you sure you want to finish reading and proceed to the final questionnaire?.</p>
+      <p>Once you confirm you have finished reading, you can no longer access the story.</p>
+
+      <p>
+        <button class="btn btn-block btn-success" click.trigger="dialogController.ok()">
+          <span class="oi oi-check"></span> Yes, I'm finished reading
+        </button>
+        <button class="btn btn-block btn-primary" click.trigger="dialogController.cancel()">
+          <span class="oi oi-action-undo"></span> No, return to the story
+        </button>
+      </p>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

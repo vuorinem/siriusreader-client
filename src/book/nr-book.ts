@@ -1,3 +1,5 @@
+import { EventDecreaseFont, EventIncreaseFont } from './../menu/nr-menu';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { SiriusConfig } from './../config/sirius-config';
 import { NavigationEventSource, NavigationEventType } from './../tracking/event-type';
 import { UserService } from 'user/user-service';
@@ -29,6 +31,8 @@ const LongTouchThreshold = 1000;
 
 const LocationSavedMessageDisplaySeconds = 5;
 
+const FontSizeStoreItemName = 'fontsize';
+
 @autoinject
 export class NrBook implements ComponentAttached, ComponentDetached {
   private isDebug = SiriusConfig.debug;
@@ -46,17 +50,20 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private isTransitioning: boolean = false;
   private totalCharacters: number = 0;
   private viewWidth: number = 0;
+  private fontSize: number = 1.1;
 
   private observers: Disposable[] = [];
 
   private onKeyDown: (e: KeyboardEvent) => void = e => this.handleKeyDown(e);
   private onWheel: (e: WheelEvent) => void = e => this.handleWheel(e);
   private onWindowResize: () => void = () => this.handleWindowResize();
+  private onCopy: (e: ClipboardEvent) => void = e => this.handleCopy(e);
 
   private canTriggerPageTurn: boolean = false;
   private browseStyle: BrowseStyle = 'turn';
   private isInitialized: boolean = false;
   private isLoading: boolean = false;
+  private isResizing: boolean = false;
 
   private touchStartX: number | null = null;
   private touchEndX: number | null = null;
@@ -66,13 +73,14 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   private showLocationSavedMessage = false;
   private currentReportedLocation?: string | undefined;
 
-  @computedFrom("applicationState.isMenuOpen", 'isInitialized', 'applicationState.isFocused',
-    'applicationState.isActive', 'dialogService.hasOpenDialog')
+  @computedFrom('applicationState.isMenuOpen', 'isInitialized', 'applicationState.isFocused',
+    'applicationState.isActive', 'dialogService.hasOpenDialog', 'isResizing')
   private get isContentHidden(): boolean {
     return this.dialogService.hasOpenDialog ||
       this.applicationState.isMenuOpen ||
       !this.applicationState.isActive ||
       !this.applicationState.isFocused ||
+      this.isResizing ||
       !this.isInitialized;
   }
 
@@ -114,6 +122,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
   }
 
   constructor(
+    private eventAggregator: EventAggregator,
     private taskQueue: TaskQueue,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
@@ -129,12 +138,24 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   public async attached() {
     this.load();
+
+    this.loadFontSize();
+
+    this.observers.push(
+      this.eventAggregator.subscribe(EventIncreaseFont, () => {
+        this.updateFontSize(0.1);
+      }));
+    this.observers.push(
+      this.eventAggregator.subscribe(EventDecreaseFont, () => {
+        this.updateFontSize(-0.1);
+      }));
   }
 
   public detached() {
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('wheel', this.onWheel);
     window.removeEventListener('resize', this.onWindowResize);
+    this.bookContentElement.removeEventListener('copy', this.onCopy);
 
     let observer: Disposable | undefined;
     while (observer = this.observers.pop()) {
@@ -194,7 +215,8 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     for (const sectionData of this.book.sections) {
       const section = new SectionModel({
-        url: sectionData.name,
+        number: sectionData.number,
+        title: sectionData.title,
         characters: sectionData.characters,
         previousSection: previousSection,
       });
@@ -216,6 +238,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     window.addEventListener('keydown', this.onKeyDown, false);
     window.addEventListener('wheel', this.onWheel, false);
     window.addEventListener('resize', this.onWindowResize, false);
+    this.bookContentElement.addEventListener('copy', this.onCopy);
 
     this.isInitialized = true;
   }
@@ -342,6 +365,10 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
   private handleWheel(event: WheelEvent) {
     if (this.isContentHidden || this.isTransitioning) {
+      return true;
+    }
+
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
       return true;
     }
 
@@ -681,10 +708,47 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     return false;
   }
 
+  private loadFontSize() {
+    const storedFontSize = window.localStorage.getItem(FontSizeStoreItemName);
+
+    if (storedFontSize) {
+      this.fontSize = parseFloat(storedFontSize);
+    }
+  }
+
+  private saveFontSize() {
+    window.localStorage.setItem(FontSizeStoreItemName, this.fontSize.toString());
+  }
+
+  private updateFontSize(sizeChange: number) {
+    const locationBeforeFontSizeChange = this.readingState.startLocation;
+
+    this.fontSize += sizeChange;
+    this.saveFontSize();
+
+    this.taskQueue.queueTask(async () => {
+      await this.refreshSectionWidths();
+      await this.jumpToLocation(locationBeforeFontSizeChange);
+      this.updateReadingStateAndProgress();
+
+      if (sizeChange > 0) {
+        this.trackingService.event('increaseFontSize');
+      } else {
+        this.trackingService.event('decreaseFontSize');
+      }
+    });
+  }
+
   private handleWindowResize() {
     this.taskQueue.queueTask(() => {
+      this.isResizing = true;
       this.timeoutService.debounce('resize', 500, async () => {
         this.refreshIfWindowIsResized();
+      });
+
+      // Ensure isResizing gets cleared even if timings get mixed up
+      this.timeoutService.debounce('resizeClear', 2000, () => {
+        this.isResizing = false;
       });
     });
   }
@@ -693,6 +757,7 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     await this.trackingService.event('resize');
 
     if (!this.readingState.view || !this.bookContentElement) {
+      this.isResizing = false;
       return;
     }
 
@@ -700,11 +765,13 @@ export class NrBook implements ComponentAttached, ComponentDetached {
 
     if (this.readingState.view.width === currentView.width &&
       this.readingState.view.height === currentView.height) {
+      this.isResizing = false;
       return;
     }
 
     if (currentView.height < 400 && currentView.width < 400 || currentView.height < 150) {
       // Prevent resizing on mobile when keyboard shown
+      this.isResizing = false;
       return;
     }
 
@@ -713,8 +780,14 @@ export class NrBook implements ComponentAttached, ComponentDetached {
     this.viewWidth = this.getViewWidthInPixels();
 
     await this.refreshSectionWidths();
+    await this.jumpToLocation(locationBeforeResize, 'open');
+    this.updateReadingStateAndProgress();
 
-    await this.jumpToLocation(locationBeforeResize);
+    this.isResizing = false;
+  }
+
+  private handleCopy(e: ClipboardEvent) {
+    this.trackingService.event('copyText');
   }
 
   private handleHighlight(mouseX: number, mouseY: number): boolean {

@@ -78,8 +78,7 @@ nr-book {
                 width: calc(100% - 2 * #{$book-padding});
                 display: block;
                 position: absolute;
-                line-height: 2.2rem;
-                font-size: 1.1rem;
+                line-height: 2;
                 column-fill: auto;
                 /* Other column properties are managed in JS */
 
@@ -103,6 +102,10 @@ nr-book {
                     break-before: column;
                     margin-top: 2em;
                     text-align: center;
+
+                    &.nobreak {
+                        break-before: initial;
+                    }
                 }
 
                 .title {
@@ -153,12 +156,6 @@ nr-book {
                 }
             }
         }
-    }
-
-    nr-page {
-        padding: $spacer;
-        line-height: 2.2rem;
-        font-size: 1.1rem;
     }
 
     .book-progress {

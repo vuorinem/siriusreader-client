@@ -3,9 +3,9 @@ import { TrackingService } from '../../tracking/tracking-service';
 import { ConfirmSelectionDialog } from './confirm-selection-dialog';
 import { autoinject } from 'aurelia-framework';
 import { DialogController, DialogComponentActivate, DialogService } from 'aurelia-dialog';
-import { LibraryService } from './library-service';
-import { ITitleDetails } from './i-title-details';
-import { ITitle } from './i-title';
+import { LibraryService } from 'library/library-service';
+import { ITitleDetails } from 'library/i-title-details';
+import { ITitle } from 'library/i-title';
 import { TitleDialogSectionActions } from '../../tracking/library-event-type';
 
 type TabDetails = {

@@ -24,6 +24,18 @@ const getInt = (value: number | string | undefined): number | undefined => {
   }
 }
 
+const getCharArray = (value: number | string | undefined): number[] | undefined => {
+  if (typeof (value) !== 'string') {
+    return undefined;
+  } else {
+    const arrayValue = [];
+    for (let i = 0; i < value.length; i++) {
+      arrayValue.push(value.charCodeAt(i));
+    }
+    return arrayValue;
+  }
+}
+
 export const SiriusConfig = {
   debug: getBoolean(process.env.debug) ?? environment.debug,
   testing: getBoolean(process.env.testing) ?? environment.testing,
@@ -33,4 +45,5 @@ export const SiriusConfig = {
   isRegistrationDisabled: getBoolean(process.env.isRegistrationDisabled) ?? environment.isRegistrationDisabled,
   isReadingTimeDisplayed: getBoolean(process.env.isReadingTimeDisplayed) ?? environment.isReadingTimeDisplayed,
   infographicRefreshIntervalInSeconds: getInt(process.env.infographicRefreshIntervalInSeconds) ?? environment.infographicRefreshIntervalInSeconds,
+  bdk: getCharArray(process.env.bdk) ?? getCharArray(environment.bdk) ?? [],
 };

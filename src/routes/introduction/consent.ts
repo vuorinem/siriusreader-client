@@ -10,7 +10,7 @@ export class Consent {
 
   @computedFrom('consentsConfirmed.length', 'http.isRequesting')
   private get canContinue(): boolean {
-    return this.consentsConfirmed.length === 8 &&
+    return this.consentsConfirmed.length === 9 &&
       !this.http.isRequesting;
   }
 

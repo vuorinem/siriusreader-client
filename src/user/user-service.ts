@@ -116,6 +116,17 @@ export class UserService {
     this.userDetails = await response.json();
   }
 
+  public async sendConfirmDebrief() {
+    const response = await this.http
+      .fetch('/user/current/confirm-debrief', { method: 'post' });
+
+    if (!response.ok) {
+      throw Error('Error confirming debrief');
+    }
+
+    this.userDetails = await response.json();
+  }
+
   public isQuestionnaireAnswered(name: string): boolean {
     if (!this.userDetails) {
       return false;

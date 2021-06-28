@@ -6,10 +6,10 @@ const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack
 const project = require('./aurelia_project/aurelia.json');
 const package = require('./package.json');
 const environment = require('./config/environment.json');
-const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
-const { ProvidePlugin, DefinePlugin } = require('webpack');
+const { AureliaPlugin } = require('aurelia-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 // config helpers:
 const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || [];
@@ -19,7 +19,6 @@ const when = (condition, config, negativeConfig) =>
 // primary config:
 const outDir = path.resolve(__dirname, project.platform.output);
 const srcDir = path.resolve(__dirname, 'src');
-const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '/';
 
 // build defines for runtime configuration
@@ -31,14 +30,19 @@ for (const configName in environment) {
 console.log('Runtime configuration: ', runtimeConfig);
 
 const cssRules = [
-  { loader: 'css-loader' },
+  {
+    loader: 'css-loader',
+    options: {
+      esModule: false,
+    }
+  },
   {
     loader: 'postcss-loader',
     options: {
       postcssOptions: {
         plugins: () => [
-          require('autoprefixer')(),
-          require('cssnano')()
+          'autoprefixer',
+          'cssnano',
         ]
       }
     }
@@ -49,7 +53,9 @@ const sassRules = [
   {
     loader: "sass-loader",
     options: {
-      includePaths: ["node_modules"]
+      sassOptions: {
+        includePaths: ['node_modules']
+      }
     }
   }
 ];
@@ -63,14 +69,17 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
     alias: { 'aurelia-binding': path.resolve(__dirname, 'node_modules/aurelia-binding') }
   },
   entry: {
-    app: ['aurelia-bootstrapper']
+    app: [
+      'promise-polyfill/src/polyfill',
+      'aurelia-bootstrapper',
+    ]
   },
   mode: production ? 'production' : 'development',
   output: {
     path: outDir,
     publicPath: baseUrl,
     filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-    sourceMapFilename: production ? '[name].[chunkhash].bundle.map[query]' : '[name].[hash].bundle.map[query]',
+    sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
     chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
   },
   optimization: {
@@ -226,27 +235,23 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
         test: /environment\.json$/i, use: [
           { loader: "app-settings-loader", options: { env: production ? 'production' : 'development' } },
         ]
-      },
-      ...when(tests, {
-        test: /\.[jt]s$/i, loader: 'istanbul-instrumenter-loader',
-        include: srcDir, exclude: [/\.(spec|test)\.[jt]s$/i],
-        enforce: 'post', options: { esModules: true },
-      })
+      }
     ]
   },
   plugins: [
-    ...when(!tests, new DuplicatePackageCheckerPlugin()),
+    new DuplicatePackageCheckerPlugin(),
     new AureliaPlugin({
       features: {
         svg: false, // No svg element bindins, saves 20K
       }
     }),
     new DefinePlugin(runtimeConfig),
-    new ProvidePlugin({
-      'Promise': ['promise-polyfill', 'default']
-    }),
     new HtmlWebpackPlugin({
       template: 'index.ejs',
+      minify: production ? {
+        removeComments: true,
+        collapseWhitespace: true
+      } : undefined,
       metadata: {
         // available in index.ejs //
         baseUrl,
@@ -258,8 +263,11 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
       filename: production ? 'css/[name].[contenthash].bundle.css' : 'css/[name].[hash].bundle.css',
       chunkFilename: production ? 'css/[name].[contenthash].chunk.css' : 'css/[name].[hash].chunk.css'
     })),
-    ...when(!tests, new CopyWebpackPlugin([
-      { from: 'static', to: outDir, ignore: ['.*'] }])), // ignore dot (hidden) files
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'static', to: outDir, globOptions: { ignore: ['.*'] } }
+      ]
+    }),
     ...when(analyze, new BundleAnalyzerPlugin()),
     /**
      * Note that the usage of following plugin cleans the webpack output directory before build.

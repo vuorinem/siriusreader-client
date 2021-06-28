@@ -1,3 +1,4 @@
+import { SiriusConfig } from 'config/sirius-config';
 import { HttpClient } from 'aurelia-fetch-client';
 import { IBookDetails } from './i-book-details';
 import { autoinject, computedFrom } from "aurelia-framework";
@@ -34,15 +35,32 @@ export class BookService {
     this.bookDetails = await response.json();
   }
 
-  public async getSection(sectionName: string): Promise<NodeList> {
+  public async getSection(sectionNumber: number): Promise<NodeList> {
     if (!this.book) {
       throw new Error("Book has not been selected");
     }
 
     const response = await this.http
-      .fetch(`/book/selected/${sectionName}`);
+      .fetch(`/book/selected/section/${sectionNumber}`);
 
-    const responseHtml = await response.text();
+    if (response.body === null) {
+      throw new Error('No book content returned');
+    }
+
+    const body = await response.body.getReader().read();
+
+    if (body.value === undefined) {
+      throw new Error('No book content returned');
+    }
+
+    const htmlArray = new Uint8Array(body.value.length);
+    for (let i = 0; i < body.value.length; i++) {
+      htmlArray[i] = body.value[i] ^ SiriusConfig.bdk[i % SiriusConfig.bdk.length];
+    }
+
+    const blob = new Blob([htmlArray]);
+
+    const responseHtml = await blob.text();
     const document = this.domParser.parseFromString(responseHtml, "text/html");
     const bodyElements = document.getElementsByTagName("body");
 

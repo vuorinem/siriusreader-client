@@ -19,7 +19,7 @@
         <b>View characters:</b> ${ readingState.characterCount }<br />
       </p>
       <p>
-        <b>Section:</b> ${ readingState.section.url } (${ readingState.sectionNumber } / ${ book.sections.length })<br />
+        <b>Section:</b> ${ readingState.section.title } (${ readingState.sectionNumber } / ${ book.sections.length })<br />
         <b>Section page:</b> ${ readingState.currentPage } / ${ readingState.sectionPageCount }<br />
         <b>Section characters:</b> ${ readingState.sectionCharacterCount }
       </p>
@@ -27,8 +27,8 @@
     <div if.bind="isDebugInfoVisible" class="book-debug-sections">
       <ul>
         <li repeat.for="section of sections">
-          <spin if.bind="readingState.section === section">${ section.url }</spin>
-          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.url }</a>
+          <span if.bind="readingState.section === section">${ section.title }</span>
+          <a else click.delegate="jumpToLocation(section.startLocation)" href="#">${ section.title }</a>
         </li>
       </ul>
     </div>
@@ -43,6 +43,12 @@
     </p>
   </div>
 
+  <div class="overlay overlay-content d-flex align-items-center justify-content-center" show.bind="isResizing" click.delegate="isResizing = false">
+    <p class="inactive-message">
+      - Resizing window -
+    </p>
+  </div>
+
   <div class="container">
     <div class="book-content" ref="bookContentElement" mousedown.delegate="mouseDown($event)"
       mousemove.delegate="mouseMove($event)" mouseup.delegate="mouseUp($event)" mouseleave.trigger="mouseLeave($event)"
@@ -51,7 +57,7 @@
       <div class="book-sections animate-${browseStyle} ${isTransitioning ? 'transitioning' : ''}"
         ref="bookSectionsElement" css="transform: translateX(${ -currentViewOffset }px);">
         <nr-section repeat.for="section of sections" section.bind="section"
-          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount}; visibility: ${ section.isHidden ? 'hidden' : 'visible' }">
+          css="transform: translateX(${ section.left }px); column-gap: ${columnGap}px; column-width: ${columnWidth}; column-count: ${columnCount}; visibility: ${ section.isHidden ? 'hidden' : 'visible' }; font-size: ${ fontSize }rem;">
         </nr-section>
       </div>
     </div>

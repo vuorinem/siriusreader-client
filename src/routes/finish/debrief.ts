@@ -1,19 +1,32 @@
-import { UserService } from 'user/user-service';
-import { autoinject, computedFrom } from 'aurelia-framework';
+import { HttpClient } from "aurelia-fetch-client";
+import { autoinject, computedFrom } from "aurelia-framework";
+import { Router } from "aurelia-router";
+import { UserService } from "user/user-service";
 
 @autoinject
 export class Debrief {
 
-  @computedFrom('userService.user')
-  private get isIntrinsic(): boolean {
-    if (!this.userService.user) {
-      return false;
-    }
-
-    return this.userService.user.isIntrinsicCondition ?? false;
+  @computedFrom('http.isRequesting')
+  private get canContinue(): boolean {
+    return !this.http.isRequesting;
   }
 
-  constructor(private userService: UserService) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private userService: UserService) {
+  }
+
+  private async confirm() {
+    if (!this.canContinue) {
+      return;
+    }
+
+    if (!this.userService.user?.isDebriefConfirmed) {
+      await this.userService.sendConfirmDebrief();
+    }
+
+    this.router.navigate("infographic");
   }
 
 }

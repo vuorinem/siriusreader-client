@@ -164,14 +164,6 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
         },
       },
       {
-        name: "confirm-finish",
-        route: "confirm-finish",
-        moduleId: PLATFORM.moduleName("./routes/confirm-finish"),
-        settings: {
-          auth: true,
-        },
-      },
-      {
         name: "finish",
         route: "finish",
         moduleId: PLATFORM.moduleName("./routes/finish/index"),

@@ -40,8 +40,10 @@ export class Main {
         this.router.navigate("/finish/questionnaire22");
       } else if (!this.userService.isQuestionnaireAnswered('questionnaire3')) {
         this.router.navigate("/finish/questionnaire3");
-      } else {
+      } else if(!this.userService.user.isDebriefConfirmed) {
         this.router.navigate("/finish/debrief");
+      } else {
+        this.router.navigate("/finish/infographic");
       }
     } else {
       await this.bookService.loadSelectedBook();

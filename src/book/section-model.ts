@@ -4,7 +4,8 @@ import { computedFrom } from 'aurelia-framework';
 export class SectionModel {
   public element!: HTMLElement;
   public viewModel!: NrSection;
-  public url: string;
+  public number: number;
+  public title: string;
   public characters: number;
   public isLoading: boolean = false;
   public isLoaded: boolean = false;
@@ -41,8 +42,9 @@ export class SectionModel {
     return Math.ceil(this.width / this.pageWidth);
   }
 
-  constructor({ url, characters, previousSection }: { url: string, characters: number, previousSection?: SectionModel }) {
-    this.url = url;
+  constructor({ number, title, characters, previousSection }: { number: number, title: string, characters: number, previousSection?: SectionModel }) {
+    this.number = number;
+    this.title = title;
     this.characters = characters;
     this.previousSection = previousSection;
 

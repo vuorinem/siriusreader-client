@@ -1,4 +1,4 @@
-import { ITitleDetails } from './../routes/library/i-title-details';
+import { ITitleDetails } from 'library/i-title-details';
 
 export type TitleDialogSections = keyof(ITitleDetails);
 

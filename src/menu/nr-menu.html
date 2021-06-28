@@ -11,7 +11,7 @@
         <div class="status-icon" if.bind="showReadingTime">
           Read <b>${readMinutes}</b> m <b>${readSeconds}</b> s
         </div>
-        <nav show.bind="isInfographicReady">
+        <nav show.bind="isInfographicReady && isReading">
           <button class="btn btn-sm btn-info mx-2" title="Infographic is available"
             click.delegate="openInfographicDialog()">
             <i class="bi bi-file-earmark-bar-graph"></i>
@@ -27,9 +27,19 @@
               <span show.bind="isOpen" class="oi oi-caret-top"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right text-right ${ isOpen ? 'show' : '' }">
-              <a class="dropdown-item" href="confirm-finish" show.bind="applicationState.isReading">
+              <div class="dropdown-item d-flex" show.bind="applicationState.isReading">
+                <span class="flex-grow-1 text-left">Font</span>
+                <a class="ml-2" href="#" click.delegate="increaseFontSize()" title="Increase book font size">
+                  <i class="bi bi-plus-square"></i>
+                </a>
+                <a class="ml-2" href="#" click.delegate="decreaseFontSize()" title="Decrease book font size">
+                  <i class="bi bi-dash-square"></i>
+                </a>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" click.delegate="openFinishDialog()" show.bind="applicationState.isReading">
                 <span class="oi oi-task"></span> Finish
-              </a>
+              </button>
               <a class="dropdown-item" href="#" click.delegate="openInformationSheet()">
                 <span class="oi oi-info"></span> Information
               </a>

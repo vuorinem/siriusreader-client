@@ -20,13 +20,18 @@ export type EventType =
   // Menu events
   | 'openMenu'
   | 'closeMenu'
+  | 'increaseFontSize'
+  | 'decreaseFontSize'
   | 'openInformation'
   | 'closeInformation'
   | 'openWithdrawal'
   | 'closeWithdrawal'
   | 'openInfographDialog'
   | 'closeInfographDialog'
-  | 'openInfograph'
+  | 'confirmInfograph'
+  | 'openFinishDialog'
+  | 'closeFinishDialog'
+  | 'confirmFinish'
 
   // Reading events
   | 'openBook'
@@ -61,4 +66,5 @@ export type EventType =
   | 'close'
   | 'inactiveTimeout'
   | 'clickActivate'
+  | 'copyText'
   ;

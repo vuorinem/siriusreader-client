@@ -17,9 +17,9 @@
       ${ option }
     </label>
   </div>
-  <div if.bind="question.questionType === 'number'" class="row">
+  <div if.bind="question.questionType === 'age'" class="row">
     <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-      <input type="number" value.bind="value" class="form-control" name.bind="name" required.bind="question.isRequired" />
+      <input type="number" value.bind="value" class="form-control" name.bind="name" required.bind="question.isRequired" min="18" max="140" />
     </div>
   </div>
   <div if.bind="question.questionType === 'education'" class="">

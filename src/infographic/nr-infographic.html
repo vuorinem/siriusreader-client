@@ -1,0 +1,172 @@
+<template>
+  <require from="library/nr-title-cover"></require>
+  <require from="utility/number-value-converter"></require>
+  <require from="./minutes-and-seconds-value-converter"></require>
+
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-12">
+      <div class="logos">
+        <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" class="university-logo" />
+        <img src="/siriusreader-logo-vertical.png" alt="Sirius Reader" />
+        <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" class="university-logo" />
+      </div>
+
+      <h1 class="text-center">
+        Reading Behaviour
+        <span class="subtitle text-muted">Infographic</span>
+      </h1>
+
+      <main class="infographic">
+        <section id="book">
+          <div class="loading" if.bind="!title">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <img class="rounded img-fluid" nr-title-cover="${title.bookId}" alt="${title.title}">
+          <h2>You read</h2>
+          <p class="details">
+            <span class="title">${title.title}</span><br />
+            <span class="author">by ${title.author}</span>
+          </p>
+        </section>
+
+        <section id="readermotivation">
+          <div class="loading" if.bind="!readerMotivation">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <canvas class="chart" ref="readerMotivationChart"></canvas>
+
+          <h2>Are you an avid reader?</h2>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'intrinsic'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are intrinsically motivated to read. Intrinsically motivated readers read simply because reading is an
+            enjoyable activity. They tend to read more frequently than extrinsically motivated readers who read books
+            for instrumental purposes (for example to learn more on a topic or to improve reading ability). Intrinsic
+            motivation to read has been associated with a high reading ability!
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'competent'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are a highly competent reader. Reading competence is crucial for academic success, financial independence
+            and overall life success.
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'effortful'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            put a lot of effort in reading. Carefully reading a text can enhance your memory for the text contents,
+            however, it can difficult to keep up a leisurely reading habit if you put too much pressure on yourself.
+          </p>
+
+          <p class="infotext" if.bind="readerMotivation.motivationType === 'nonfrequent'">
+            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            are a nonfrequent reader. Your score in 'Effort' shows that you don't pressurise yourself into reading. In
+            order to develop a recreational reading habit, it is important to read voluntarily whenever you feel like
+            it!
+          </p>
+        </section>
+
+        <section id="readingspeed" class="highlight">
+          <div class="loading" if.bind="!readingSummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <h2>
+            <i class="icon highlight bi bi-stopwatch"></i>
+            Your reading speed
+          </h2>
+          <p>
+            Your reading speed in the test was
+            <b>${readingSummary.baselineReadingSpeedWordsPerMinute | number:0} words per minute (wpm)</b>.
+            This means that your deep reading speed (at which you read to fully understand content) varies between
+            <b>100-${readingSummary.maximumReadingSpeedWordsPerMinute | number:0} wpm</b>.
+            During the study, your average deep reading speed was
+            <b>${readingSummary.averageReadingSpeedWordsPerMinute | number:0} wpm</b>.
+            Therefore, you read on average
+            <b>${readingSpeedToBaselineComparison} your baseline reading speed</b>.
+            Previous research has indicated that adults usually read at speed 250wpm, which means that you tend to read
+            <b>${readingSpeedToOverallAverageComparison} overall average</b>.
+          </p>
+        </section>
+
+        <section id="readingsessions" class="highlight">
+          <div class="loading" if.bind="!readingSummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <h2>
+            <span class="intro">Your reading was divided in</span>
+            <span class="reading-session-count highlight">${readingSummary.readingSessionCount}</span>
+            <span class="outro">reading sessions.</span>
+          </h2>
+          <p>
+            Your longest reading session lasted for
+            <b>${readingSummary.longestReadingSessionInMinutes | minutesAndSeconds}</b>,
+            and your average reading session was
+            <b>${readingSummary.averageReadingSessionInMinutes | minutesAndSeconds}</b>.
+            Your reading session length can show how you fit reading for fun in your everyday life!
+          </p>
+        </section>
+
+        <section id="sessionchart">
+          <div class="loading" if.bind="!readingSummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <div class="chart-with-legend">
+            <div class="chart">
+              <canvas ref="readingSessionChart"></canvas>
+            </div>
+
+            <div class="chart-legend">
+              <ul>
+                <li repeat.for="type of engagementTypes">
+                  <span class="legend-colour" css="background-color: ${type.colour};"></span>
+                  <span class="legend-title">${type.title}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+          <h2>This is what your longest reading session looked like!</h2>
+
+          <p>
+            When we read a book to understand its contents, we usually read at a 'deep reading' speed. Slower reading
+            speeds than deep reading may occur if you became distracted during reading or a part of the text is
+            particularly difficult! 'Skim reading' and 'scan reading' refer to a higher reading speed, and 'browsing'
+            means that you turn the pages so fast that you spend less than a second on each page. You may also see some
+            black on your reading session timeline - it shows when you stopped reading during the reading session.
+          </p>
+        </section>
+
+        <section id="chronologychart" class="highlight">
+          <div class="loading" if.bind="!chronologySummary">
+            <span class="loading-spinner" title="Loading content..."></span>
+          </div>
+
+          <h2>Did you read the book chronologically from beginning to end?</h2>
+
+          <p>
+            Compare your reading process to the dashed line that represents what completely chronological reading would
+            look like.
+          </p>
+
+          <canvas class="chart" ref="chronologyChart"></canvas>
+        </section>
+
+        <section id="locationchart" class="highlight">
+          <h2>Your reading locations</h2>
+
+          <p>
+            Your most popular reading location was <b>${mostPopularReadingLocation}</b>.
+            All your top reading locations are shown below.
+          </p>
+
+          <canvas class="chart" ref="locationSummaryChart"></canvas>
+        </section>
+      </main>
+    </div>
+  </div>
+</template>

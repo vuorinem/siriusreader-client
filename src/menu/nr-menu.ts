@@ -1,7 +1,9 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { UserService } from './../user/user-service';
 import { HttpClient } from 'aurelia-fetch-client';
 import { SiriusConfig } from './../config/sirius-config';
-import { InfographicDialog } from './../infographics/infographic-dialog';
-import { InfographicService } from './../infographics/infographic-service';
+import { InfographicDialog } from '../infographic/infographic-dialog';
+import { InfographicUpdateService } from '../infographic/infographic-update-service';
 import { ApplicationState } from './../state/application-state';
 import { Router } from 'aurelia-router';
 import { InformationSheetDialog } from './../information-sheet/information-sheet-dialog';
@@ -11,6 +13,10 @@ import { autoinject, computedFrom } from 'aurelia-framework';
 import { AuthService } from '../auth/auth-service';
 import { WithdrawDialog } from '../withdrawal/withdraw-dialog';
 import { TrackingConnectionService } from 'tracking/tracking-connection-service';
+import { ConfirmFinishDialog } from './../routes/finish/confirm-finish-dialog';
+
+export const EventIncreaseFont = 'increasefont';
+export const EventDecreaseFont = 'decreasefont';
 
 @autoinject
 export class NrMenu {
@@ -25,19 +31,24 @@ export class NrMenu {
     return this.trackingConnectionService.hasConnectionProblem;
   }
 
-  @computedFrom('infographicService.isInfographicReady')
+  @computedFrom('infographicUpdateService.isInfographicReady')
   private get isInfographicReady() {
-    return this.infographicService.isInfographicReady;
+    return this.infographicUpdateService.isInfographicReady;
   }
 
-  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  @computedFrom('applicationState.isReading')
+  private get isReading() {
+    return this.applicationState.isReading;
+  }
+
+  @computedFrom('infographicUpdateService.totalEngagedReadingMinutes')
   private get readSeconds() {
-    return Math.floor(this.infographicService.totalEngagedReadingMinutes * 60 % 60)
+    return Math.floor(this.infographicUpdateService.totalEngagedReadingMinutes * 60 % 60)
   }
 
-  @computedFrom('infographicService.totalEngagedReadingMinutes')
+  @computedFrom('infographicUpdateService.totalEngagedReadingMinutes')
   private get readMinutes() {
-    return Math.floor(this.infographicService.totalEngagedReadingMinutes);
+    return Math.floor(this.infographicUpdateService.totalEngagedReadingMinutes);
   }
 
   private showReadingTime = false;
@@ -45,14 +56,26 @@ export class NrMenu {
   constructor(
     private router: Router,
     private http: HttpClient,
+    private eventAggregator: EventAggregator,
     private dialogService: DialogService,
     private applicationState: ApplicationState,
     private authService: AuthService,
+    private userService: UserService,
     private trackingService: TrackingService,
     private trackingConnectionService: TrackingConnectionService,
-    private infographicService: InfographicService) {
+    private infographicUpdateService: InfographicUpdateService) {
 
     this.showReadingTime = SiriusConfig.isReadingTimeDisplayed;
+  }
+
+  private increaseFontSize() {
+    this.eventAggregator.publish(EventIncreaseFont);
+    this.toggleMenu();
+  }
+
+  private decreaseFontSize() {
+    this.eventAggregator.publish(EventDecreaseFont);
+    this.toggleMenu();
   }
 
   private async openInformationSheet() {
@@ -93,9 +116,38 @@ export class NrMenu {
       return;
     }
 
-    this.trackingService.event('openInfograph');
+    this.trackingService.event('confirmInfograph');
 
-    // TODO: Show infographic
+    await this.userService.sendConfirmBookFinished();
+
+    this.router.navigateToRoute('finish');
+  }
+
+  private async openFinishDialog() {
+    const dialog = this.dialogService.open({
+      viewModel: ConfirmFinishDialog,
+      overlayDismiss: true,
+      lock: true,
+    });
+
+    await dialog;
+
+    this.applicationState.isMenuOpen = false;
+
+    this.trackingService.event('openFinishDialog');
+
+    const dialogResult = await dialog.whenClosed();
+
+    if (dialogResult.wasCancelled) {
+      this.trackingService.event('closeFinishDialog');
+      return;
+    }
+
+    this.trackingService.event('confirmFinish');
+
+    await this.userService.sendConfirmBookFinished();
+
+    this.router.navigateToRoute('finish');
   }
 
   private async withdraw() {

@@ -35,13 +35,13 @@ export class NrSection {
   }
 
   public async load(): Promise<boolean> {
-    if (!this.section.url || this.section.isLoaded || this.section.isLoading) {
+    if (!this.section.number || this.section.isLoaded || this.section.isLoading) {
       return false;
     }
 
     this.section.isLoading = true;
 
-    const sectionNodes = await this.bookService.getSection(this.section.url);
+    const sectionNodes = await this.bookService.getSection(this.section.number);
 
     const loaderPromises: Promise<void>[] = [];
 
