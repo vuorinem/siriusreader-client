@@ -43,8 +43,12 @@ export class App implements ConfiguresRouter, ComponentAttached, ComponentDetach
   }
 
   public async configureRouter(config: RouterConfiguration, router: Router) {
-    await this.authService.checkAuthenticationStatus();
-    
+    try {
+      await this.authService.checkAuthenticationStatus();
+    } catch {
+      // Ignore errors to allow front-end application to start up
+    }
+
     this.router = router;
 
     config.title = "Sirius Reader";
