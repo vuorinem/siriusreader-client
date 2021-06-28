@@ -1,3 +1,4 @@
+import { ApplicationState } from './../state/application-state';
 import { EventLogin } from '../auth/auth-service';
 import { SiriusConfig } from '../config/sirius-config';
 import { autoinject } from "aurelia-dependency-injection";
@@ -14,7 +15,8 @@ export class InfographicUpdateService {
   constructor(
     private http: HttpClient,
     private eventAggregator: EventAggregator,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private applicationState: ApplicationState) {
 
     this.tryRefresh();
 
@@ -23,7 +25,7 @@ export class InfographicUpdateService {
   }
 
   private async tryRefresh() {
-    if (this.authService.isAuthenticated) {
+    if (this.authService.isAuthenticated && this.applicationState.isReading) {
       this.updateInfographic();
     } else {
       this.isInfographicReady = false;
