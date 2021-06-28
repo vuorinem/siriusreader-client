@@ -35,14 +35,15 @@ export class InfographicUpdateService {
       method: 'post',
     });
 
-    const userData: IUserData | null = await response.json();
-
-    if (userData) {
-      this.isInfographicReady = userData.isInfographicReady;
-      this.totalEngagedReadingMinutes = userData.totalEngagedReadingMinutes;
-    } else {
+    if (!response.ok) {
+      throw new Error("Unable to update infographic");
+    } else if (response.status == 204) { // No content
       this.isInfographicReady = false;
       this.totalEngagedReadingMinutes = 0;
+    } else {
+      const userData: IUserData = await response.json();
+      this.isInfographicReady = userData.isInfographicReady;
+      this.totalEngagedReadingMinutes = userData.totalEngagedReadingMinutes;
     }
   }
 }
