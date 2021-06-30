@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - draconistest
+name: DEV SiriusReaderTest
 
 on:
   push:
@@ -10,8 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  apiUrl: "'https://siriusreadertest-api.azurewebsites.net'"
-  tokenEndpoint: "'https://siriusreadertest-api.azurewebsites.net/connect/token'"
+  bdk: "'${{ secrets.DEV_SIRIUSREADERTEST_BOOKENCRYPTIONKEY }}'"
 
 jobs:
   build:
@@ -33,7 +29,7 @@ jobs:
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
-        name: draconis-client
+        name: siriusreader
         path: ./dist
 
   deploy:
@@ -47,13 +43,13 @@ jobs:
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
       with:
-        name: draconis-client
+        name: siriusreader
 
     - name: 'Deploy to Azure Web App'
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'draconistest'
+        app-name: 'siriusreadertest'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_37f297a87e294b2abf2b72eb2ad1d4e3 }}
+        publish-profile: ${{ secrets.DEV_SIRIUSREADERTEST_PUBLISHPROFILE }}
         package: .
