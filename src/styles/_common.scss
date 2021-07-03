@@ -1,0 +1,17 @@
+.university-logos {
+    margin-top: 1rem;
+    text-align: center;
+    
+    img {
+        max-height: 2rem;
+        margin: 0.5rem;
+    }
+
+    img:first-child {
+        margin-left: 0;
+    }
+
+    img:last-child {
+        margin-right: 0;
+    }
+}

@@ -1,42 +1,48 @@
 <template>
   <ux-dialog class="col-md-8">
-    <ux-dialog-header>
-      <h3>Thank you for rating the summaries!</h3>
-    </ux-dialog-header>
-
     <ux-dialog-body>
       <p class="text-center">
         <img src="/siriusreader-logo.png" class="img-fluid" />
       </p>
+      <h2 class="text-center mb-4">Thank you for selecting a book!</h2>
       <p class="text-justify">
-        Your short story is: <b>${ book.title }</b> by ${ book.author }
+        The book you selected is: <b>${ book.title }</b> by ${ book.author }
       </p>
       <p class="text-justify">
-        Your short story has been borrowed from the Sirius Reader library and it will be opened on the Sirius Reader after
-        you click the below button.
+        The book has been borrowed from Sirius Reader's library and it will be opened on Sirius Reader after you click
+        the below button.
       </p>
       <p class="text-justify">
-        You can read the story at your convenience on any device with internet access by using the URL
-        <mark>siriusreader.com</mark>. The Sirius Reader will save your progress and bookmark your place in the short story so
-        you can log out and back in any time you want.
+        You can read the story at your convenience on any device with browser access by using the URL
+        <mark>siriusreader.com</mark>. Sirius Reader will save your progress and bookmark your place in the book
+        automatically so you can log out and back in any time you want. story so you can log out and back in any time
+        you want.
       </p>
       <p class="text-justify">
-        In the right-hand corner menu you can find a timer that tells you how much time you have left to read the short
-        story before it is automatically returned to the Sirius Reader library. If you finish reading the story early,
-        you can return it before the due date by clicking 'finish reading'. Note that returning the story early means
-        that you can no longer go back to it.
+        In the right-hand corner you can see a menu from where you can access the information sheet or change font size.
+        Once your reading behaviour infographic is ready to be generated, a notification will appear next to the menu
+        icon.
       </p>
       <p class="text-justify">
-        After your story has been returned to the Sirius Reader library, you will be redirected to two final questionnaires. You
-        have 2 days to answer to both questionnaires after the story reading due date has passed. Once you have finished
-        the questionnaires, the experimenter will contact you to arrange the payment of compensation.
+        If you wish to stop reading, you can click on 'Finish reading early' in the menu. If you decide to finish before
+        the infographic notification, the infographic cannot be generated. Note that returning the book early means that
+        you can no longer go back to it.
       </p>
       <p class="text-justify">
-        You can withdraw from the study at any point without loss of compensation by selecting 'withdraw' from the menu.
-        From the same menu you can also access the information form at any time during the study.
+        After your book has been returned to Sirius Library, you will be redirected to two final questionnaires. Once
+        you have finished the questionnaires, you will able to view and download your infographic!
       </p>
       <p class="text-justify">
         Note that the e-reader background colour in Sirius Reader is gray. This is to enhance reading comfort.
+      </p>
+      <p class="text-center university-logos mt-4 mb-1">
+        <img src="/uni-aberdeen-logo.png" alt="University of Aberdeen" />
+        <img src="/uni-edinburgh-logo.png" alt="The University of Edinburgh" />
+      </p>
+      <p class="text-center">
+        <small>
+          This experimental study is conducted by a research team in University Edinburgh and University of Aberdeen.
+        </small>
       </p>
     </ux-dialog-body>
 
