@@ -57,6 +57,14 @@
         </p>
       </form>
 
+      <form submit.trigger="confirm()" if.bind="!isInfographicAvailable">
+        <p class="text-center my-5">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="oi oi-account-logout"></i> Logout
+          </button>
+        </p>
+      </form>
+
       <h2>References</h2>
 
       <ul>
