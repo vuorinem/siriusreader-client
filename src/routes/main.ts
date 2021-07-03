@@ -40,7 +40,7 @@ export class Main {
         this.router.navigate("/finish/questionnaire22");
       } else if (!this.userService.isQuestionnaireAnswered('questionnaire3')) {
         this.router.navigate("/finish/questionnaire3");
-      } else if(!this.userService.user.isDebriefConfirmed) {
+      } else if(!this.userService.user.isDebriefConfirmed || !this.userService.user.isInfographicReady) {
         this.router.navigate("/finish/debrief");
       } else {
         this.router.navigate("/finish/infographic");
