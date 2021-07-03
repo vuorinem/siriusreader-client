@@ -10,46 +10,46 @@
       </p>
 
       <p class="text-justify">
-        The purpose of the experiment is to observe adults’ reading behaviour during recreational, electronic reading
-        and enhance our understanding of how motivation and interest influence that reading behaviour. We expect
-        participants who are more interested in the book they read during the study to be more likely to continue
-        reading it after they receive the infographic notification and are given the opportunity to finish the study. We
-        also expect to see differences in participants overall reading behaviour, such as whether they read the book
-        chronologically from beginning to end, and how often they get distracted during reading.
+        The purpose of the experiment is to observe adults’ reading behaviour during recreational, electronic reading and
+        enhance our understanding of how motivation and interest influence that reading behaviour. We expect participants
+        who are more interested in the book they read during the study to be more likely to continue reading it after they
+        receive the infographic notification and are given the opportunity to finish the study. We also expect to see
+        differences in participants overall reading behaviour, such as whether they read the book chronologically from
+        beginning to end, and how often they get distracted during reading.
       </p>
 
       <p class="text-justify">
         The Sirius Reader allows the observation of reading behaviour by tracking the frequency of your page turns and
         disengagements from the story, which devices you used for reading, and the timing and duration of your reading
-        sessions. Questionnaires were used to assess your general reading habits as well as your opinions on the story
-        you read during the study. We also tracked your engagement with the different books in Sirius Reader library in
-        order to study if text selection behaviour (such as extensive exploration of available options) is related to
-        motivation and reading behaviour.
+        sessions. Questionnaires were used to assess your general reading habits as well as your opinions on the story you
+        read during the study. We also tracked your engagement with the different books in Sirius Reader library in order to
+        study if text selection behaviour (such as extensive exploration of available options) is related to motivation and
+        reading behaviour.
       </p>
 
       <p class="text-justify">
         Previous research has shown that a high reading ability is critical for financial, academic and social success
-        (Rapp, Van Den Broek, McMaster, Kendeou, &amp; Espin, 2007), and frequency of recreational reading has been
-        recognised as a robust predictor of reading skills (McGeown, Duncan, Griffiths, &amp; Stothard, 2015; Mol &amp;
-        Bus, 2011; Twist, Schagen, &amp; Hodgson, 2007). Despite of its importance, 36% of adults and 44% of young
-        adults do not read for pleasure (Department for Culture Media and Sport, 2015). Avid readers tend to be
-        intrinsically motivated, and so they engage in reading simply because they enjoy it as an activity (Deci &amp;
-        Ryan, 2000). To increase intrinsically motivated recreational reading, more information is needed about what
-        drives reading engagement and how individuals read in the context of their daily lives, especially on electronic
-        devices. Our findings help shed light on the topic and thus provide a foundation for future research and the
-        development of interventions.
+        (Rapp, Van Den Broek, McMaster, Kendeou, & Espin, 2007), and frequency of recreational reading has been recognised
+        as a robust predictor of reading skills (McGeown, Duncan, Griffiths, & Stothard, 2015; Mol & Bus, 2011; Twist,
+        Schagen, & Hodgson, 2007). Despite of its importance, 36% of adults and 44% of young adults do not read for pleasure
+        (Department for Culture Media and Sport, 2015). Avid readers tend to be intrinsically motivated, and so they engage
+        in reading simply because they enjoy it as an activity (Deci & Ryan, 2000). To increase intrinsically motivated
+        recreational reading, more information is needed about what drives reading engagement and how individuals read in
+        the context of their daily lives, especially on electronic devices. Our findings help shed light on the topic and
+        thus provide a foundation for future research and the development of interventions.
       </p class="text-justify">
 
       <p class="text-justify">
         Your data will be stored anonymously in a secure database and on a password-protected computer, and none of the
         information can be linked to you personally. The data is managed by the researcher, supervisor and the website
         programmer, but it may also be shared with the wider research community in the future. If you have any questions
-        about this research, feel free to contact Pauliina Vuorinen on <a
-          href="mailto:p.t.e.vuorinen@sms.ed.ac.uk">p.t.e.vuorinen@sms.ed.ac.uk</a> or the supervisor Prof Frank Keller
-        on <a href="mailto:keller@inf.ed.ac.uk">keller@inf.ed.ac.uk</a>.
+        about this research, feel free to contact Pauliina Vuorinen on
+        <a href="mailto:p.t.e.vuorinen@sms.ed.ac.uk">p.t.e.vuorinen@sms.ed.ac.uk</a>
+        or the supervisor Prof Frank Keller on
+        <a href="mailto:keller@inf.ed.ac.uk">keller@inf.ed.ac.uk</a>.
       </p>
 
-      <form submit.trigger="confirm()">
+      <form submit.trigger="confirm()" if.bind="isInfographicAvailable">
         <p class="text-center my-5">
           <button type="submit" class="btn btn-primary btn-lg" disabled.bind="!canContinue">
             <i class="bi bi-file-earmark-bar-graph"></i> See Your Infographic
@@ -60,21 +60,32 @@
       <h2>References</h2>
 
       <ul>
-        <li>Deci, E. L., &amp; Ryan, R. M. (2000). The darker and brighter sides of human existence: Basic psychological
-          needs as a unifying concept. Psychological Inquiry, 11(4), 37–41. https://doi.org/10.1207/S15327965PLI1104
+        <li>
+          Deci, E. L., & Ryan, R. M. (2000). The darker and brighter sides of human existence: Basic psychological needs as a
+          unifying concept. Psychological Inquiry, 11(4), 37–41. https://doi.org/10.1207/S15327965PLI1104
         </li>
-        <li>Department for Culture Media and Sport. (2015). Taking Part 2014/15, Focus On: Free Time Activities (No.
-          November; pp. 1–13).</li>
-        <li>McGeown, S. P., Duncan, L. G., Griffiths, Y. M., &amp; Stothard, S. E. (2015). Exploring the relationship
-          between adolescent’s reading skills, reading motivation and reading habits. Reading and Writing, 28(4),
-          545–569. https://doi.org/10.1007/s11145-014-9537-9</li>
-        <li>Mol, S. E., &amp; Bus, A. G. (2011). To Read or Not to Read: A Meta-Analysis of Print Exposure From Infancy
-          to Early Adulthood. Psychological Bulletin, 137(2), 267–296. https://doi.org/10.1037/a0021890</li>
-        <li>Rapp, D. N., Van Den Broek, P., McMaster, K. L., Kendeou, P., &amp; Espin, C. A. (2007). Higher-order
-          comprehension processes in struggling readers: A perspective for research and intervention. Scientific Studies
-          of Reading, 11(4), 289–312. https://doi.org/10.1080/10888430701530417</li>
-        <li>Twist, L., Schagen, I., &amp; Hodgson, C. (2007). PIRLS 2006: Readers and Reading. National Report for
-          England 2006. Retrieved from https://eric.ed.gov/?id=ED504613</li>
+        <li>
+          Department for Culture Media and Sport. (2015). Taking Part 2014/15, Focus On: Free Time Activities (No. November;
+          pp. 1–13).
+        </li>
+        <li>
+          McGeown, S. P., Duncan, L. G., Griffiths, Y. M., & Stothard, S. E. (2015). Exploring the relationship between
+          adolescent’s reading skills, reading motivation and reading habits. Reading and Writing, 28(4), 545–569.
+          https://doi.org/10.1007/s11145-014-9537-9
+        </li>
+        <li>
+          Mol, S. E., & Bus, A. G. (2011). To Read or Not to Read: A Meta-Analysis of Print Exposure From Infancy to Early
+          Adulthood. Psychological Bulletin, 137(2), 267–296. https://doi.org/10.1037/a0021890
+        </li>
+        <li>
+          Rapp, D. N., Van Den Broek, P., McMaster, K. L., Kendeou, P., & Espin, C. A. (2007). Higher-order comprehension
+          processes in struggling readers: A perspective for research and intervention. Scientific Studies of Reading, 11(4),
+          289–312. https://doi.org/10.1080/10888430701530417
+        </li>
+        <li>
+          Twist, L., Schagen, I., & Hodgson, C. (2007). PIRLS 2006: Readers and Reading. National Report for England 2006.
+          Retrieved from https://eric.ed.gov/?id=ED504613
+        </li>
       </ul>
     </div>
   </div>

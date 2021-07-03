@@ -3,6 +3,7 @@ export interface IUserDetails {
   isConsentConfirmed: boolean;
   isBookSelected: boolean;
   isBookOpened: boolean;
+  isInfographicReady: boolean;
   isBookFinished: boolean;
   isLocationPromptBlocked: boolean;
   readingSpeedWordsPerMinute: number;

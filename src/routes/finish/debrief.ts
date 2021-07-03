@@ -11,6 +11,11 @@ export class Debrief {
     return !this.http.isRequesting;
   }
 
+  @computedFrom('userService.user.isInfographicReady')
+  private get isInfographicAvailable(): boolean {
+    return this.userService.user?.isInfographicReady ?? false;
+  }
+
   constructor(
     private router: Router,
     private http: HttpClient,
