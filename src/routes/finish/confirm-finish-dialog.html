@@ -1,8 +1,15 @@
 <template>
   <ux-dialog class="col-md-8">
     <ux-dialog-body>
-      <h2>Finish reading?</h2>
-      <p>Are you sure you want to finish reading and proceed to the final questionnaire?.</p>
+      <h2>
+        ${ isInfographicReady ? 'Finish reading?' : 'Finish reading early?' }
+      </h2>
+      <p>Are you sure you want to finish reading and proceed to the final questionnaire?</p>
+
+      <p if.bind="!isInfographicReady" class="text-danger">
+        We don't have enough data to create your personalised infographic if you finish reading now.
+      </p>
+
       <p>Once you confirm you have finished reading, you can no longer access the story.</p>
 
       <p>

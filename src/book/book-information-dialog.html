@@ -24,7 +24,7 @@
         icon.
       </p>
       <p class="text-justify">
-        If you wish to stop reading, you can click on 'Finish reading early' in the menu. If you decide to finish before
+        If you wish to stop reading, you can click on <em>Finish reading</em> in the menu. If you decide to finish before
         the infographic notification, the infographic cannot be generated. Note that returning the book early means that
         you can no longer go back to it.
       </p>
@@ -44,10 +44,12 @@
           This experimental study is conducted by a research team in University Edinburgh and University of Aberdeen.
         </small>
       </p>
-    </ux-dialog-body>
 
-    <ux-dialog-footer>
-      <button click.trigger="dialogController.ok()">Close</button>
-    </ux-dialog-footer>
+      <p class="text-center">
+        <button class="btn btn-success" click.trigger="dialogController.ok()">
+          <span class="oi oi-check"></span> Continue to the book
+        </button>
+      </p>
+    </ux-dialog-body>
   </ux-dialog>
 </template>

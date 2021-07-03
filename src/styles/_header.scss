@@ -42,6 +42,9 @@ header {
             background-color: rgba(255, 255, 255, 0.9);
 
             .dropdown-item {
+                padding-left: 1em;
+                padding-right: 1em;
+
                 span.oi {
                     float: left;
                     line-height: inherit;

@@ -1,3 +1,4 @@
+import { UserService } from './../user/user-service';
 import { ApplicationState } from './../state/application-state';
 import { EventLogin } from '../auth/auth-service';
 import { SiriusConfig } from '../config/sirius-config';
@@ -9,13 +10,16 @@ import { IUserData } from './i-user-data';
 
 @autoinject
 export class InfographicUpdateService {
-  public isInfographicReady: boolean = false;
+  
   public totalEngagedReadingMinutes: number = 0;
+
+  private isInfographicReady: boolean = false;
 
   constructor(
     private http: HttpClient,
     private eventAggregator: EventAggregator,
     private authService: AuthService,
+    private userService: UserService,
     private applicationState: ApplicationState) {
 
     this.tryRefresh();
@@ -44,8 +48,13 @@ export class InfographicUpdateService {
       this.totalEngagedReadingMinutes = 0;
     } else {
       const userData: IUserData = await response.json();
+
       this.isInfographicReady = userData.isInfographicReady;
       this.totalEngagedReadingMinutes = userData.totalEngagedReadingMinutes;
+
+      if (this.userService.user?.isInfographicReady !== this.isInfographicReady) {
+        await this.userService.load();
+      }
     }
   }
 }

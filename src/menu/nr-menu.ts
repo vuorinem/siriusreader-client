@@ -31,9 +31,9 @@ export class NrMenu {
     return this.trackingConnectionService.hasConnectionProblem;
   }
 
-  @computedFrom('infographicUpdateService.isInfographicReady')
+  @computedFrom('userService.user.isInfographicReady')
   private get isInfographicReady() {
-    return this.infographicUpdateService.isInfographicReady;
+    return this.userService.user?.isInfographicReady;
   }
 
   @computedFrom('applicationState.isReading')
@@ -128,6 +128,7 @@ export class NrMenu {
       viewModel: ConfirmFinishDialog,
       overlayDismiss: true,
       lock: true,
+      model: this.userService.user?.isInfographicReady,
     });
 
     await dialog;
