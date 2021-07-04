@@ -82,6 +82,11 @@ nr-book {
                 column-fill: auto;
                 /* Other column properties are managed in JS */
 
+                img {
+                    max-width: calc(100% - 2 * #{$book-padding});
+                    max-height: 100%;
+                }
+
                 img.cover,
                 .title,
                 .copyright {
@@ -90,11 +95,19 @@ nr-book {
                 }
 
                 img.cover {
-                    max-width: calc(100% - 2 * #{$book-padding});
-                    max-height: 100%;
                     padding: 0;
+                }
+
+                img.cover,
+                img.section-spacer,
+                img.content-image {
                     display: block;
                     margin: auto;
+                }
+
+                img.content-image {
+                    padding-top: 1rem;
+                    padding-bottom: 1rem;
                 }
 
                 h1,
