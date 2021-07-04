@@ -15,8 +15,8 @@
         </button>
       </p>
 
-      <div class="btn btn-primary btn-block text-left mb-3" click.delegate="selectOther()" if.bind="showOther">
-        <form submit.delegate="send(otherLocation)">
+      <div class="btn btn-primary btn-block text-left mb-3" if.bind="showOther">
+        <form submit.trigger="send(otherLocation)">
           <div class="input-group">
             <input type="text" value.bind="otherLocation" class="form-control" ref="otherInput"
               placeholder="Please type in the location">
