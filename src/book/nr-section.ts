@@ -124,6 +124,10 @@ export class NrSection {
       return;
     }
 
-    a.removeAttribute('href');
+    const rel = a.getAttribute('rel');
+
+    if (!rel) {
+      a.removeAttribute('href');
+    }
   }
 }
