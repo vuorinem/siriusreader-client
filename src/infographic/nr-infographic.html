@@ -40,29 +40,29 @@
           <h2>Are you an avid reader?</h2>
 
           <p class="infotext" if.bind="readerMotivation.motivationType === 'intrinsic'">
-            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
-            are intrinsically motivated to read. Intrinsically motivated readers read simply because reading is an
-            enjoyable activity. They tend to read more frequently than extrinsically motivated readers who read books
-            for instrumental purposes (for example to learn more on a topic or to improve reading ability). Intrinsic
-            motivation to read has been associated with a high reading ability!
+            Your answers indicate that you
+            are intrinsically motivated to read. Intrinsically motivated readers are avid readers who read simply
+            because reading is an
+            enjoyable activity. This motivation type has been associated with a high reading ability!
           </p>
 
           <p class="infotext" if.bind="readerMotivation.motivationType === 'competent'">
-            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
-            are a highly competent reader. Reading competence is crucial for academic success, financial independence
+            Your answers indicate that you
+            are a highly competent reader. Reading competence is crucial for academic achievement, financial
+            independence,
             and overall life success.
           </p>
 
           <p class="infotext" if.bind="readerMotivation.motivationType === 'effortful'">
-            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
+            Your answers indicate that you
             put a lot of effort in reading. Carefully reading a text can enhance your memory for the text contents,
             however, it can difficult to keep up a leisurely reading habit if you put too much pressure on yourself.
           </p>
 
           <p class="infotext" if.bind="readerMotivation.motivationType === 'nonfrequent'">
-            Your answers to the general reading motivation questionnaire at the beginning of the study indicate that you
-            are a nonfrequent reader. Your score in 'Effort' shows that you don't pressurise yourself into reading. In
-            order to develop a recreational reading habit, it is important to read voluntarily whenever you feel like
+            Your answers indicate that you
+            may be a nonfrequent reader. Your score in 'Effort' shows that you don't pressurise yourself into reading,
+            which is important for reading voluntarily whenever you feel like
             it!
           </p>
         </section>
@@ -76,18 +76,22 @@
             <i class="icon highlight bi bi-stopwatch"></i>
             Your reading speed
           </h2>
-          <p>
-            Your reading speed in the test was
-            <b>${readingSummary.baselineReadingSpeedWordsPerMinute | number:0} words per minute (wpm)</b>.
-            This means that your deep reading speed (at which you read to fully understand content) varies between
-            <b>100-${readingSummary.maximumReadingSpeedWordsPerMinute | number:0} wpm</b>.
-            During the study, your average deep reading speed was
-            <b>${readingSummary.averageReadingSpeedWordsPerMinute | number:0} wpm</b>.
-            Therefore, you read on average
-            <b>${readingSpeedToBaselineComparison} your baseline reading speed</b>.
-            Previous research has indicated that adults usually read at speed 250wpm, which means that you tend to read
-            <b>${readingSpeedToOverallAverageComparison} overall average</b>.
-          </p>
+          <ul>
+            <li>Your reading speed in the test was
+              <b>${readingSummary.baselineReadingSpeedWordsPerMinute | number:0} words per minute (wpm)</b>.
+              This means that your deep reading speed (at which you read to fully understand content) varies between
+              <b>100-${readingSummary.maximumReadingSpeedWordsPerMinute | number:0} wpm</b>.
+            </li>
+            <li>During the study, your average deep reading speed was
+              <b>${readingSummary.averageReadingSpeedWordsPerMinute | number:0} wpm</b>.
+              Therefore, you read on average
+              <b>${readingSpeedToBaselineComparison} your baseline reading speed</b>.
+            </li>
+            <li>Previous research has indicated that adults usually read at speed 250wpm, which means that you tend to
+              read
+              <b>${readingSpeedToOverallAverageComparison} overall average</b>.
+            </li>
+          </ul>
         </section>
 
         <section id="readingsessions" class="highlight">
@@ -100,11 +104,15 @@
             <span class="reading-session-count highlight">${readingSummary.readingSessionCount}</span>
             <span class="outro">reading sessions.</span>
           </h2>
+          <ul>
+            <li>Your longest reading session lasted for
+              <b>${readingSummary.longestReadingSessionInMinutes | minutesAndSeconds}</b>.
+            </li>
+            <li>Your average reading session was
+              <b>${readingSummary.averageReadingSessionInMinutes | minutesAndSeconds}</b>.
+            </li>
+          </ul>
           <p>
-            Your longest reading session lasted for
-            <b>${readingSummary.longestReadingSessionInMinutes | minutesAndSeconds}</b>,
-            and your average reading session was
-            <b>${readingSummary.averageReadingSessionInMinutes | minutesAndSeconds}</b>.
             Your reading session length can show how you fit reading for fun in your everyday life!
           </p>
         </section>
@@ -113,7 +121,7 @@
           <div class="loading" if.bind="!readingSummary">
             <span class="loading-spinner" title="Loading content..."></span>
           </div>
-
+          <h2>This is what your longest reading session looked like:</h2>
           <div class="chart-with-legend">
             <div class="chart">
               <canvas ref="readingSessionChart"></canvas>
@@ -128,8 +136,6 @@
               </ul>
             </div>
           </div>
-
-          <h2>This is what your longest reading session looked like!</h2>
 
           <p>
             When we read a book to understand its contents, we usually read at a 'deep reading' speed. Slower reading
@@ -148,8 +154,9 @@
           <h2>Did you read the book chronologically from beginning to end?</h2>
 
           <p>
-            Compare your reading process to the dashed line that represents what completely chronological reading would
-            look like.
+            Compare your reading process to the dashed line that represents what chronological reading at a steady speed
+            would have
+            looked like.
           </p>
 
           <canvas class="chart" ref="chronologyChart"></canvas>
