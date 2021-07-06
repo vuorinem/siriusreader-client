@@ -24,6 +24,29 @@ import 'styles/infographic.scss';
 @autoinject
 export class NrInfographic implements ComponentAttached {
 
+  private TimelineColours = [
+    { title: 'Slower than normal reading', colour: '#7EB2FD' },
+    { title: 'Deep reading', colour: '#FA9746' },
+    { title: 'Skim reading', colour: '#B6453D' },
+    { title: 'Scan reading', colour: '#FFE66D' },
+    { title: 'Browsing', colour: '#DFB9CC' },
+    { title: 'Information or menu', colour: '#6BAA75' },
+    { title: 'Disengagement from book', colour: '#222' },
+  ];
+
+  private ChartColours = [
+    '#2B468B',
+    '#7EB2FD',
+    '#FA9746',
+    '#B6453D',
+    '#000000',
+    '#6BAA75',
+    '#F4F1BB',
+    '#FFE66D',
+    '#A8577E',
+    '#DFB9CC',
+  ];
+
   private title?: ITitle;
   private readerMotivation?: IReaderMotivation;
   private readingSummary?: IReadingSummary;
@@ -34,29 +57,6 @@ export class NrInfographic implements ComponentAttached {
   private readingSessionChart!: HTMLCanvasElement;
   private chronologyChart!: HTMLCanvasElement;
   private locationSummaryChart!: HTMLCanvasElement;
-
-  private engagementTypes = [
-    {
-      title: 'Slower than normal reading',
-      colour: '#600',
-    },
-    {
-      title: 'Deep reading',
-      colour: '#b00',
-    },
-    {
-      title: 'Scan reading',
-      colour: '#740',
-    },
-    {
-      title: 'Browsing',
-      colour: '#470',
-    },
-    {
-      title: 'Disengagement from book',
-      colour: '#555',
-    },
-  ];
 
   @computedFrom('readingSummary')
   private get readingSpeedToBaselineComparison() {
@@ -155,12 +155,7 @@ export class NrInfographic implements ComponentAttached {
       data: {
         datasets: [{
           data: this.readerMotivation.scores,
-          backgroundColor: [
-            '#ff6384',
-            '#36a2eb',
-            '#cc65fe',
-            '#ffce56',
-          ],
+          backgroundColor: this.ChartColours,
           parsing: {
             xAxisKey: 'name',
             yAxisKey: 'value',
@@ -210,7 +205,7 @@ export class NrInfographic implements ComponentAttached {
           return {
             label: item.engagementType,
             data: [item.timeInMinutes],
-            backgroundColor: this.engagementTypes.find(type => type.title === item.engagementType)?.colour,
+            backgroundColor: this.TimelineColours.find(type => type.title === item.engagementType)?.colour,
           };
         }),
       },
@@ -349,12 +344,7 @@ export class NrInfographic implements ComponentAttached {
       data: {
         datasets: [{
           data: this.locationSummary.locationCounts,
-          backgroundColor: [
-            '#ff6384',
-            '#36a2eb',
-            '#cc65fe',
-            '#ffce56',
-          ],
+          backgroundColor: this.ChartColours,
           parsing: {
             xAxisKey: 'count',
             yAxisKey: 'location',

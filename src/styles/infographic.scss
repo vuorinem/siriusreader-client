@@ -149,15 +149,16 @@ nr-infographic {
         grid-column: 1 / span 2;
 
         .chart-with-legend {
+            margin-top: 1rem;
             display: grid;
             grid-template-columns: 3fr 1fr;
-            grid-template-rows: 10rem auto auto;
+            grid-template-rows: 15rem auto auto;
 
             .chart {
                 grid-row: 1;
                 grid-column: 1;
                 position: relative;
-                height: 10rem;
+                height: 13rem;
             }
 
             .chart-legend {
