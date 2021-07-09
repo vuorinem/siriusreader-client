@@ -47,16 +47,28 @@ export class BookService {
       throw new Error('No book content returned');
     }
 
-    const body = await response.body.getReader().read();
+    const bodyLength = response.headers.get('content-length');
 
-    if (body.value === undefined) {
+    if (bodyLength === null) {
       throw new Error('No book content returned');
     }
 
-    const htmlArray = new Uint8Array(body.value.length);
-    for (let i = 0; i < body.value.length; i++) {
-      htmlArray[i] = body.value[i] ^ SiriusConfig.bdk[i % SiriusConfig.bdk.length];
-    }
+    const htmlArray = new Uint8Array(parseInt(bodyLength));
+    let totalIndex = 0;
+    let chunk: ReadableStreamDefaultReadResult<Uint8Array>;
+    const reader = response.body.getReader();
+
+    do {
+      chunk = await reader.read();
+
+      if (chunk.value === undefined) {
+        break;
+      }
+
+      for (let chunkIndex = 0; chunkIndex < chunk.value.length; chunkIndex++, totalIndex++) {
+        htmlArray[totalIndex] = chunk.value[chunkIndex] ^ SiriusConfig.bdk[totalIndex % SiriusConfig.bdk.length];
+      }
+    } while (!chunk.done);
 
     const blob = new Blob([htmlArray]);
 
